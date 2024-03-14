@@ -1,6 +1,6 @@
 :root {
-  --color-212529: #212529;
-  --color-ffd333: #ffd333;
+  --color-212529: #151719;
+  --color-ffd333: #f56308;
   --color-47ad24: #47ad24;
   --color-e52e2e: #e52e2e;
   --color-828599: #828599;
@@ -41,4 +41,17 @@
   font: 14px;
   font-family: Roboto !important;
   color: var(--color-828599);
+}
+.main.ant-layout-content.css-dev-only-do-not-override-1rqnfsa{
+  margin: 0px !important;
+  min-height: auto !important;
+  padding: 20px !important;
+}
+
+
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark, :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark>.ant-menu, .ant-layout-sider-children{
+  background: #111213 !important;
+}
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark .ant-menu-item-selected, :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark>.ant-menu .ant-menu-item-selected{
+  background: linear-gradient(2deg, rgb(198, 54, 2), #ff6a00);
 }

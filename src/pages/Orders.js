@@ -5,6 +5,7 @@ import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { getOrders } from "../features/auth/authSlice";
+import { Container } from "react-bootstrap";
 const columns = [
   {
     title: "SNo",
@@ -65,10 +66,16 @@ const Orders = () => {
     });
   }
   return (
-    <div>
-      <h3 className="mb-4 title">Orders</h3>
-      <div>{<Table columns={columns} dataSource={data1} />}</div>
-    </div>
+    <Container className="container-fluid px-3 pt-4">
+      <div>
+        <div className="text-center bg-dark ">
+          <h2 className="text-uppercase p-2 page-title">Orders</h2>
+        </div>
+        <div>
+          <div>{<Table columns={columns} dataSource={data1} />}</div>
+        </div>
+      </div>
+    </Container>
   );
 };
 

@@ -2,6 +2,7 @@ import React from "react";
 import { BsArrowDownRight, BsArrowUpRight } from "react-icons/bs";
 import { Column } from "@ant-design/plots";
 import { Table } from "antd";
+import { Container } from "react-bootstrap";
 const columns = [
   {
     title: "SNo",
@@ -110,8 +111,11 @@ const Dashboard = () => {
     },
   };
   return (
+    <Container  className="container-fluid px-3 pt-4">
     <div>
-      <h3 className="mb-4 title">Dashboard</h3>
+    <div className="text-center bg-dark ">
+        <h2 className="text-uppercase p-2 page-title">Dashboard</h2>
+        </div>
       <div className="d-flex justify-content-between align-items-center gap-3">
         <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
           <div>
@@ -163,6 +167,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
+    </Container>
   );
 };
 

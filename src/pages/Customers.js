@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../features/cutomers/customerSlice";
+import { Container } from "react-bootstrap";
 const columns = [
   {
     title: "SNo",
@@ -41,12 +42,18 @@ const Customers = () => {
   }
 
   return (
+    <Container  className="container-fluid px-3 pt-4">
     <div>
-      <h3 className="mb-4 title">Customers</h3>
+    <div className="text-center bg-dark ">
+        <h2 className="text-uppercase p-2 page-title">Customers</h2>
+        </div>
+    <div>
       <div>
         <Table columns={columns} dataSource={data1} />
       </div>
     </div>
+    </div>
+    </Container>
   );
 };
 

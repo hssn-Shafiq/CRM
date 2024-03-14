@@ -13,11 +13,12 @@ import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { ImBlog } from "react-icons/im";
 import { IoIosNotifications } from "react-icons/io";
-import { FaClipboardList, FaBloggerB } from "react-icons/fa";
+import { FaClipboardList, FaBloggerB, FaPen, FaPenAlt, FaPenSquare, FaFolderPlus, FaShoppingBag } from "react-icons/fa";
 import { SiBrandfolder } from "react-icons/si";
-import { BiCategoryAlt } from "react-icons/bi";
+import { BiCategoryAlt, BiEdit, BiUser } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
+import { BsCardList } from "react-icons/bs";
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -27,11 +28,12 @@ const MainLayout = () => {
   const navigate = useNavigate();
   return (
     <Layout /* onContextMenu={(e) => e.preventDefault()} */>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+      <Sider  trigger={null} collapsible collapsed={collapsed}>
         <div className="logo">
           <h2 className="text-white fs-5 text-center py-3 mb-0">
-            <span className="sm-logo">DC</span>
-            <span className="lg-logo">Dev Corner</span>
+          <span className="sm-logo">C.C</span>
+            <span className="lg-logo"> <img src="/images/CC TM Logo cheetaa.png" width={220}/></span>
+          
           </h2>
         </div>
         <Menu
@@ -71,97 +73,62 @@ const MainLayout = () => {
                   label: "Product List",
                 },
                 {
-                  key: "brand",
-                  icon: <SiBrandfolder className="fs-4" />,
-                  label: "Brand",
+                  key: "Delete-product",
+                  icon: <AiOutlineShoppingCart className="fs-4" />,
+                  label: "Delete Product",
                 },
                 {
-                  key: "list-brand",
-                  icon: <SiBrandfolder className="fs-4" />,
-                  label: "Brand List ",
+                  key: "Add-Designer",
+                  icon: <FaPenSquare className="fs-4" />,
+                  label: "Add Designer",
                 },
+
                 {
                   key: "category",
                   icon: <BiCategoryAlt className="fs-4" />,
                   label: "Category",
                 },
+
                 {
-                  key: "list-category",
-                  icon: <BiCategoryAlt className="fs-4" />,
-                  label: "Category List",
+                  key: "Product-Type",
+                  icon: <BsCardList className="fs-4" />,
+                  label: "Product Type",
                 },
                 {
-                  key: "color",
-                  icon: <AiOutlineBgColors className="fs-4" />,
-                  label: "Color",
-                },
-                {
-                  key: "list-color",
-                  icon: <AiOutlineBgColors className="fs-4" />,
-                  label: "Color List",
+                  key: "Add-Edits",
+                  icon: <BiEdit className="fs-4" />,
+                  label: "Add Edits",
                 },
               ],
             },
             {
               key: "orders",
-              icon: <FaClipboardList className="fs-4" />,
+              icon: <FaShoppingBag className="fs-4" />,
               label: "Orders",
             },
             {
               key: "marketing",
-              icon: <RiCouponLine className="fs-4" />,
-              label: "Marketing",
+              icon: <FaFolderPlus className="fs-4" />,
+              label: "Admin Collection",
               children: [
                 {
-                  key: "coupon",
-                  icon: <ImBlog className="fs-4" />,
-                  label: "Add Coupon",
-                },
-                {
-                  key: "coupon-list",
-                  icon: <RiCouponLine className="fs-4" />,
-                  label: "Coupon List",
+                  key: "Add-Collections",
+                  icon: <FaFolderPlus className="fs-4" />,
+                  label: "Add Collection",
                 },
               ],
             },
             {
-              key: "blogs",
-              icon: <FaBloggerB className="fs-4" />,
-              label: "Blogs",
-              children: [
-                {
-                  key: "blog",
-                  icon: <ImBlog className="fs-4" />,
-                  label: "Add Blog",
-                },
-                {
-                  key: "blog-list",
-                  icon: <FaBloggerB className="fs-4" />,
-                  label: "Blog List",
-                },
-                {
-                  key: "blog-category",
-                  icon: <ImBlog className="fs-4" />,
-                  label: "Add Blog Category",
-                },
-                {
-                  key: "blog-category-list",
-                  icon: <FaBloggerB className="fs-4" />,
-                  label: "Blog Category List",
-                },
-              ],
-            },
-            {
-              key: "enquiries",
-              icon: <FaClipboardList className="fs-4" />,
-              label: "Enquiries",
+              key: "RegisteredUser",
+              icon: <BiUser className="fs-4" />,
+              label: "Registered User",
             },
           ]}
         />
       </Sider>
       <Layout className="site-layout">
         <Header
-          className="d-flex justify-content-between ps-1 pe-5"
+          className="sticky-top d-flex justify-content-between ps-1 pe-5"
           style={{
             padding: 0,
             background: colorBgContainer,
@@ -187,7 +154,8 @@ const MainLayout = () => {
                 <img
                   width={32}
                   height={32}
-                  src="https://stroyka-admin.html.themeforest.scompiler.ru/variants/ltr/images/customers/customer-4-64x64.jpg"
+                  src="/images/CC TM Logo.png"
+                  className="object-fit-cover"
                   alt=""
                 />
               </div>
@@ -197,8 +165,8 @@ const MainLayout = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h5 className="mb-0">Navdeep</h5>
-                <p className="mb-0">navdeepdahiya753@gmail.com</p>
+                <h5 className="mb-0">Admin</h5>
+                <p className="mb-0">Admin@circulardashbord.com</p>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li>
@@ -225,9 +193,6 @@ const MainLayout = () => {
         </Header>
         <Content
           style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
             background: colorBgContainer,
           }}
         >
