@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 
 import { IoIosNotifications } from "react-icons/io";
-import {  FaPenSquare, FaFolderPlus, FaShoppingBag, FaHandHoldingUsd, FaUserFriends } from "react-icons/fa";
+import {  FaPenSquare, FaFolderPlus, FaShoppingBag, FaUserTie, FaHandshake,} from "react-icons/fa";
 import { BiCategoryAlt, BiCheckSquare, BiEdit, BiUser } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -118,13 +118,13 @@ const MainLayout = () => {
             },
             {
               key: "Lender",
-              icon: <FaHandHoldingUsd className="fs-4" />,
+              icon: <FaHandshake className="fs-4" />,
               label: "Lender",
             },
             {
-              key: "Render",
-              icon: <FaUserFriends className="fs-4" />,
-              label: "Render",
+              key: "Renter",
+              icon: <FaUserTie className="fs-4" />,
+              label: "Renter",
             },
             {
               key: "Product-Approval",

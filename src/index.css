@@ -4,7 +4,9 @@
   font-family: poppins, sans-serif;
 }
 
-
+.bg-warning{
+  background: orangered !important;
+}
 .btn,button{
   background:linear-gradient(2deg, orangered, #ff6a00);
   border: none;

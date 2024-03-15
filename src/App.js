@@ -21,8 +21,8 @@ import AddEdits from "./pages/AddEdits";
 import AddCollections from "./pages/AddCollections";
 import RegisteredUser from "./pages/RegisteredUser";
 import Lender from "./pages/Lender";
-import Render from "./pages/Render";
 import ProductApproval from "./pages/ProductApproval";
+import Renter from "./pages/Renter";
 function App() {
   return (
     <Router>
@@ -34,7 +34,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="RegisteredUser" element={<RegisteredUser />} />
           <Route path="enquiries/:id" element={<ViewEnq />} />
-          <Route path="Render" element={<Render />} />
+          <Route path="Renter" element={<Renter />} />
           <Route path="Add-Collections" element={<AddCollections />} />
           <Route path="coupon/:id" element={<AddCoupon />} />
           <Route path="orders" element={<Orders />} />
