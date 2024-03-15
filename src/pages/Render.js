@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteACoupon, getAllCoupon } from "../features/coupon/couponSlice";
 import CustomModal from "../components/CustomModal";
+import { Container } from "react-bootstrap";
 
 const columns = [
   {
@@ -34,7 +35,7 @@ const columns = [
   },
 ];
 
-const Couponlist = () => {
+const Render = () => {
   const [open, setOpen] = useState(false);
   const [couponId, setcouponId] = useState("");
   const showModal = (e) => {
@@ -84,21 +85,27 @@ const Couponlist = () => {
     }, 100);
   };
   return (
-    <div>
-      <h3 className="mb-4 title">Coupons</h3>
+    <Container className="container-fluid px-3 pt-4">
       <div>
-        <Table columns={columns} dataSource={data1} />
+        <div className="text-center  ">
+          <h2 className="text-uppercase p-2 page-title">Render</h2>
+        </div>
+        <div>
+          <div>
+            <Table columns={columns} dataSource={data1} />
+          </div>
+          <CustomModal
+            hideModal={hideModal}
+            open={open}
+            performAction={() => {
+              deleteCoupon(couponId);
+            }}
+            title="Are you sure you want to delete this Coupon?"
+          />
+        </div>
       </div>
-      <CustomModal
-        hideModal={hideModal}
-        open={open}
-        performAction={() => {
-          deleteCoupon(couponId);
-        }}
-        title="Are you sure you want to delete this Coupon?"
-      />
-    </div>
+    </Container>
   );
 };
 
-export default Couponlist;
+export default Render;

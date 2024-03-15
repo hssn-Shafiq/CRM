@@ -53,5 +53,8 @@
   background: #111213 !important;
 }
 :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark .ant-menu-item-selected, :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark>.ant-menu .ant-menu-item-selected{
-  background: linear-gradient(2deg, rgb(198, 54, 2), #ff6a00);
+  background: white;
+  color: black;
+  font-size: 16px;
+  font-weight: 600;
 }

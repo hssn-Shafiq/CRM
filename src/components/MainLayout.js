@@ -4,18 +4,16 @@ import {
   AiOutlineDashboard,
   AiOutlineShoppingCart,
   AiOutlineUser,
-  AiOutlineBgColors,
 } from "react-icons/ai";
-import { RiCouponLine } from "react-icons/ri";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
-import { ImBlog } from "react-icons/im";
+
 import { IoIosNotifications } from "react-icons/io";
-import { FaClipboardList, FaBloggerB, FaPen, FaPenAlt, FaPenSquare, FaFolderPlus, FaShoppingBag } from "react-icons/fa";
-import { SiBrandfolder } from "react-icons/si";
-import { BiCategoryAlt, BiEdit, BiUser } from "react-icons/bi";
+import {  FaPenSquare, FaFolderPlus, FaShoppingBag, FaHandHoldingUsd, FaUserFriends } from "react-icons/fa";
+import { BiCategoryAlt, BiCheckSquare, BiEdit, BiUser } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import { BsCardList } from "react-icons/bs";
@@ -117,6 +115,21 @@ const MainLayout = () => {
                   label: "Add Collection",
                 },
               ],
+            },
+            {
+              key: "Lender",
+              icon: <FaHandHoldingUsd className="fs-4" />,
+              label: "Lender",
+            },
+            {
+              key: "Render",
+              icon: <FaUserFriends className="fs-4" />,
+              label: "Render",
+            },
+            {
+              key: "Product-Approval",
+              icon: <BiCheckSquare className="fs-4" />,
+              label: "Product Approval",
             },
             {
               key: "RegisteredUser",

@@ -144,7 +144,7 @@ const Addcat = () => {
     <>
       <main>
         <div className="container-fluid px-3 pt-4">
-          <div className="text-center bg-dark ">
+          <div className="text-center  ">
             <h2 className="text-uppercase p-2 page-title">
               Manage Product Category
             </h2>
@@ -176,7 +176,7 @@ const Addcat = () => {
                 </div>
               </form>
               <div className="mt-3 pt-3">
-                <div className="text-center bg-dark ">
+                <div className="text-center  ">
                   <h5 className="text-uppercase p-2 page-title">
                     All Categories
                   </h5>

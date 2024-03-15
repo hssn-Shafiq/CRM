@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  
   const handleLogin = (e) => {
     e.preventDefault();
     // For demonstration, check if email and password match predefined values

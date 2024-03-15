@@ -80,13 +80,13 @@ main::-webkit-scrollbar {
   width: 0px;
 }
 .page-title{
-  background:linear-gradient(2deg, orangered, #ff6a00,red);
-  font-weight: 800;
-  font-family: sans-serif;
+  font-weight: 700;
+  font-family: poppins;
   letter-spacing: 1.1px;
+  word-spacing: 8px;
   font-size: 30px;
   background-clip: text;
-  color: transparent;
+  color: black;
 }
 .ant-menu-title-content {
   font-size: 16px;

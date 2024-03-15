@@ -10,6 +10,7 @@ import {
   resetState,
 } from "../features/brand/brandSlice";
 import CustomModal from "../components/CustomModal";
+import { Container } from "react-bootstrap";
 
 const columns = [
   {
@@ -27,7 +28,7 @@ const columns = [
   },
 ];
 
-const Brandlist = () => {
+const Lender = () => {
   const [open, setOpen] = useState(false);
   const [brandId, setbrandId] = useState("");
   const showModal = (e) => {
@@ -76,21 +77,25 @@ const Brandlist = () => {
     }, 100);
   };
   return (
-    <div>
-      <h3 className="mb-4 title">Brands</h3>
+    <Container className="container-fluid px-3 pt-4">
       <div>
-        <Table columns={columns} dataSource={data1} />
+        <div className="text-center  ">
+          <h2 className="text-uppercase p-2 page-title">Lenders</h2>
+        </div>
+        <div>
+          <Table columns={columns} dataSource={data1} />
+        </div>
+        <CustomModal
+          hideModal={hideModal}
+          open={open}
+          performAction={() => {
+            deleteBrand(brandId);
+          }}
+          title="Are you sure you want to delete this brand?"
+        />
       </div>
-      <CustomModal
-        hideModal={hideModal}
-        open={open}
-        performAction={() => {
-          deleteBrand(brandId);
-        }}
-        title="Are you sure you want to delete this brand?"
-      />
-    </div>
+    </Container>
   );
 };
 
-export default Brandlist;
+export default Lender;

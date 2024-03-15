@@ -10,6 +10,7 @@ import {
   resetState,
 } from "../features/pcategory/pcategorySlice";
 import CustomModal from "../components/CustomModal";
+import { Container } from "react-bootstrap";
 
 const columns = [
   {
@@ -28,7 +29,7 @@ const columns = [
   },
 ];
 
-const Categorylist = () => {
+const ProductApproval = () => {
   const [open, setOpen] = useState(false);
   const [pCatId, setpCatId] = useState("");
   const showModal = (e) => {
@@ -76,8 +77,12 @@ const Categorylist = () => {
     }, 100);
   };
   return (
+    <Container  className="container-fluid px-3 pt-4">
     <div>
-      <h3 className="mb-4 title">Product Categories</h3>
+    <div className="text-center  ">
+        <h2 className="text-uppercase p-2 page-title">Approve  products</h2>
+        </div>
+    <div>
       <div>
         <Table columns={columns} dataSource={data1} />
       </div>
@@ -90,7 +95,9 @@ const Categorylist = () => {
         title="Are you sure you want to delete this Product Category?"
       />
     </div>
+    </div>
+    </Container>
   );
 };
 
-export default Categorylist;
+export default ProductApproval;

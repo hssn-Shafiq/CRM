@@ -134,7 +134,7 @@ const AddEdits = () => {
   return (
     <>
       <div className="container-fluid px-3 pt-4">
-        <div className="text-center bg-dark ">
+        <div className="text-center  ">
           <h2 className="text-uppercase p-2 page-title">Manage All Edits</h2>
         </div>
         <div className="row ">
@@ -212,7 +212,7 @@ const AddEdits = () => {
               )}
             </Form>
 
-            <div className="text-center bg-dark ">
+            <div className="text-center  ">
               <h2 className="text-uppercase p-2 page-title">All Edits</h2>
             </div>
             <table className="table">

@@ -100,7 +100,7 @@ const ProductType = () => {
   return (
     <>
         <div className="container-fluid px-3 pt-4">
-          <div className="text-center bg-dark ">
+          <div className="text-center  ">
             <h2 className="text-uppercase p-2 page-title">
               Manage Product Type
             </h2>
@@ -117,7 +117,7 @@ const ProductType = () => {
               {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
             </Form>
             <div className="mt-4">
-            <div className="text-center bg-dark ">
+            <div className="text-center  ">
             <h2 className="text-uppercase p-2 page-title">
               All Product Type
             </h2>
