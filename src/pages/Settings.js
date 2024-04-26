@@ -23,7 +23,7 @@ const columns = [
   },
 ];
 
-const Customers = () => {
+const Settings = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUsers());
@@ -45,11 +45,11 @@ const Customers = () => {
     <Container  className="container-fluid px-3 pt-4">
     <div>
     <div className="text-center  ">
-        <h2 className="text-uppercase p-2 page-title">Customers</h2>
+        <h2 className="text-uppercase p-2 page-title">Settings</h2>
         </div>
     <div>
       <div>
-        <Table columns={columns} dataSource={data1} />
+        {/* <Table columns={columns} dataSource={data1} /> */}
       </div>
     </div>
     </div>
@@ -57,4 +57,4 @@ const Customers = () => {
   );
 };
 
-export default Customers;
+export default Settings;

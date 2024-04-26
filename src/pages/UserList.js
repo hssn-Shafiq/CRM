@@ -3,7 +3,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import axios from "axios";
-const ProductType = () => {
+import { Link } from "react-router-dom";
+const UserList = () => {
   const [type, setType] = useState("");
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -17,7 +18,9 @@ const ProductType = () => {
 
   const fetchTypes = async () => {
     try {
-      const response = await axios.get("https://circularclientapi.azurewebsites.net/api/product-types");
+      const response = await axios.get(
+        "https://circularclientapi.azurewebsites.net/api/product-types"
+      );
       console.log("Response data:", response.data);
       const typesData = response.data.results || [];
       setTypes(typesData);
@@ -39,18 +42,29 @@ const ProductType = () => {
           }
         );
       } else {
-        response = await axios.post("https://circularclientapi.azurewebsites.net/api/product-types", {
-          type: type,
-        });
+        response = await axios.post(
+          "https://circularclientapi.azurewebsites.net/api/product-types",
+          {
+            type: type,
+          }
+        );
       }
 
       if (response.status === 200 || response.status === 201) {
-        setSuccessMessage(editingTypeId ? "Product type updated successfully!" : "Product type added successfully!");
+        setSuccessMessage(
+          editingTypeId
+            ? "Product type updated successfully!"
+            : "Product type added successfully!"
+        );
         setType("");
         setEditingTypeId(null);
         fetchTypes();
       } else {
-        setError(editingTypeId ? "Failed to update product type. Please try again later." : "Failed to add product type. Please try again later.");
+        setError(
+          editingTypeId
+            ? "Failed to update product type. Please try again later."
+            : "Failed to add product type. Please try again later."
+        );
       }
     } catch (error) {
       console.error("Error:", error);
@@ -72,7 +86,9 @@ const ProductType = () => {
 
   const handleDelete = async (typeId) => {
     try {
-      const response = await axios.delete(`https://circularclientapi.azurewebsites.net/api/product-types/${typeId}`);
+      const response = await axios.delete(
+        `https://circularclientapi.azurewebsites.net/api/product-types/${typeId}`
+      );
       if (response.status === 200) {
         setSuccessMessage("Product type deleted successfully!");
         fetchTypes();
@@ -99,39 +115,70 @@ const ProductType = () => {
 
   return (
     <>
-        <div className="container-fluid px-3 pt-4">
-          <div className="text-center  ">
-            <h2 className="text-uppercase p-2 page-title">
-              Manage Product Type
-            </h2>
-          </div>
+      <div className="container-fluid px-3 pt-4">
+        <div className="text-center  ">
+          <h2 className="text-uppercase p-2 page-title">Manage All Users</h2>
+        </div>
         <div className="row ">
           <div className="col-lg-12 mt-4">
             <Form onSubmit={handleSubmit}>
-              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                <Form.Label><b>Product Type</b></Form.Label>
-                <Form.Control type="text" value={type} onChange={(e) => setType(e.target.value)} placeholder="Product type" required />
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>
+                  <b>User List</b>
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  placeholder="User role"
+                  required
+                />
               </Form.Group>
-              <Button type="submit">{editingTypeId ? "Update" : "Submit"}</Button>
+              <Button type="submit">
+                {editingTypeId ? "Update" : "Submit"}
+              </Button>
               {error && <p style={{ color: "red" }}>{error}</p>}
-              {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
+              {successMessage && (
+                <p style={{ color: "green" }}>{successMessage}</p>
+              )}
             </Form>
             <div className="mt-4">
-            <div className="text-center  ">
-            <h2 className="text-uppercase p-2 page-title">
-              All Product Type
-            </h2>
-          </div>
+              <div className="text-center  ">
+                <h2 className="text-uppercase p-2 page-title">All Users</h2>
+              </div>
               <Table striped bordered hover>
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Product Type</th>
-                    <th>Actions</th>
+                    <th>Users</th>
+                    <th>Users Role</th>
+                    <th>Modify</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {types.map((type, index) => (
+                  <tr>
+                    <td>1</td>
+                    <td >John Anderson</td>
+                    <td >Admin</td>
+                    <td className="d-flex align-items-center justify-content-evenly"><Button
+                              onClick={() => handleEdit(type.id)}
+                              variant="success"
+                              className="ml-3"
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              onClick={() => handleDelete(type.id)}
+                              variant="danger"
+                              className="ml-3"
+                            >
+                              Delete
+                            </Button></td>
+                  </tr>
+                  {/* {types.map((type, index) => (
                     <tr key={type.id}>
                       <td>{index + 1}</td>
                       <td>
@@ -148,18 +195,41 @@ const ProductType = () => {
                       <td className="d-flex align-items-center justify-content-evenly">
                         {editableRows[type.id] ? (
                           <>
-                            <Button onClick={() => handleSave()} variant="success">Save</Button>
-                            <Button onClick={() => handleCancel()} variant="secondary" className="ml-3">Cancel</Button>
+                            <Button
+                              onClick={() => handleSave()}
+                              variant="success"
+                            >
+                              Save
+                            </Button>
+                            <Button
+                              onClick={() => handleCancel()}
+                              variant="secondary"
+                              className="ml-3"
+                            >
+                              Cancel
+                            </Button>
                           </>
                         ) : (
                           <>
-                            <Button onClick={() => handleEdit(type.id)} variant="success" className="ml-3">Edit</Button>
-                            <Button onClick={() => handleDelete(type.id)} variant="danger" className="ml-3">Delete</Button>
+                            <Button
+                              onClick={() => handleEdit(type.id)}
+                              variant="success"
+                              className="ml-3"
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              onClick={() => handleDelete(type.id)}
+                              variant="danger"
+                              className="ml-3"
+                            >
+                              Delete
+                            </Button>
                           </>
                         )}
                       </td>
                     </tr>
-                  ))}
+                  ))} */}
                 </tbody>
               </Table>
             </div>
@@ -170,4 +240,4 @@ const ProductType = () => {
   );
 };
 
-export default ProductType;
+export default UserList;

@@ -1,36 +1,81 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import {
   AiOutlineDashboard,
+  AiOutlineSetting,
   AiOutlineShoppingCart,
-  AiOutlineUser,
+  AiOutlineUserSwitch,
 } from "react-icons/ai";
-
-import { ToastContainer } from "react-toastify";
+import { FaUpload, FaUserLock } from "react-icons/fa6";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
-
+import { FcDataConfiguration } from "react-icons/fc";
 import { IoIosNotifications } from "react-icons/io";
-import {  FaPenSquare, FaFolderPlus, FaShoppingBag, FaUserTie, FaHandshake,} from "react-icons/fa";
-import { BiCategoryAlt, BiCheckSquare, BiEdit, BiUser } from "react-icons/bi";
+import {  FaMobileAlt, FaDatabase,} from "react-icons/fa";
+import { BiCategoryAlt, BiCustomize, BiUser } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import { BsCardList } from "react-icons/bs";
+import { MdOutlineDeleteSweep } from "react-icons/md";
+import {getUserFromLocalStorage} from "../utils/localstorage";
+import {getAuth} from "firebase/auth"
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [userData, setUserData] = useState(null);
+    const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+    const auth = getAuth();
+
+    useEffect(() => {
+      const user = getUserFromLocalStorage();
+      setUserData(user);
+    }, [])
+
+    const handleLogout= () => {
+      auth.signOut();
+      localStorage.removeItem('user');
+      toast.success("you are logged out")
+
+      setTimeout(() => {
+        navigate("/")
+      },1000)
+    }
+
+    const handleMenuClick = ({ key }) => {
+      if (key === 'signout') {
+       auth.signOut();
+        return;
+      }
+  
+      if (key !== '') {
+        // Check if user is authenticated
+        const user = auth.currentUser;
+        if (!user) {
+          // User is not logged in, redirect to login page
+          toast.error('Please login to continue');
+
+          setTimeout(() => {
+            navigate('/');
+          },1000)
+          return;
+        }
+      }
+  
+      // Navigate to the selected page
+      navigate(key);
+    }
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const navigate = useNavigate();
   return (
     <Layout /* onContextMenu={(e) => e.preventDefault()} */>
       <Sider  trigger={null} collapsible collapsed={collapsed}>
         <div className="logo">
-          <h2 className="text-white fs-5 text-center py-3 mb-0">
-          <span className="sm-logo">C.C</span>
-            <span className="lg-logo"> <img src="/images/CC TM Logo cheetaa.png" width={220}/></span>
+          <h2 className="text-white fs-5 text-center py-2 mb-0">
+          <span className="sm-logo"><img src="/images/logo2.png" width={50} /></span>
+            <span className="lg-logo"> <img src="/images/logo white.png" width={200}/></span>
           
           </h2>
         </div>
@@ -38,104 +83,116 @@ const MainLayout = () => {
           theme="dark"
           mode="inline"
           defaultSelectedKeys={[""]}
-          onClick={({ key }) => {
-            if (key == "signout") {
-            } else {
-              navigate(key);
-            }
-          }}
+          onClick={handleMenuClick}
           items={[
             {
               key: "",
               icon: <AiOutlineDashboard className="fs-4" />,
               label: "Dashboard",
             },
+            
             {
-              key: "customers",
-              icon: <AiOutlineUser className="fs-4" />,
-              label: "Customers",
-            },
-            {
-              key: "Catalog",
+              key: "Manage Users",
               icon: <AiOutlineShoppingCart className="fs-4" />,
-              label: "Catalog",
+              label: "Manage Users",
               children: [
                 {
-                  key: "product",
-                  icon: <AiOutlineShoppingCart className="fs-4" />,
-                  label: "Add Product",
-                },
-                {
-                  key: "list-product",
-                  icon: <AiOutlineShoppingCart className="fs-4" />,
-                  label: "Product List",
-                },
-                {
-                  key: "Delete-product",
-                  icon: <AiOutlineShoppingCart className="fs-4" />,
-                  label: "Delete Product",
-                },
-                {
-                  key: "Add-Designer",
-                  icon: <FaPenSquare className="fs-4" />,
-                  label: "Add Designer",
-                },
-
-                {
-                  key: "category",
-                  icon: <BiCategoryAlt className="fs-4" />,
-                  label: "Category",
-                },
-
-                {
-                  key: "Product-Type",
+                  key: "User-List",
                   icon: <BsCardList className="fs-4" />,
-                  label: "Product Type",
+                  label: "All Users",
+                },
+                // {
+                //   key: "VisitorProfile/UploadVisitorCheels",
+                //   icon: <AiOutlineShoppingCart className="fs-4" />,
+                //   label: "Add Cheels",
+                // },
+                {
+                  key: "AccessPermissions/UserRole",
+                  icon: <AiOutlineUserSwitch className="fs-4" />,
+                  label: "User Role",
                 },
                 {
-                  key: "Add-Edits",
-                  icon: <BiEdit className="fs-4" />,
-                  label: "Add Edits",
+                  key: "AccessPermissions/UserPermission",
+                  icon: <FaUserLock className="fs-4" />,
+                  label: "User Permission",
                 },
+                // {
+                //   key: "Add-Designer",
+                //   icon: <FaPenSquare className="fs-4" />,
+                //   label: "Add Designer",
+                // },
+
+                {
+                  key: "User-Details",
+                  icon: <BiCategoryAlt className="fs-4" />,
+                  label: "User Details",
+                },
+
+                // {
+                //   key: "Product-Type",
+                //   icon: <BsCardList className="fs-4" />,
+                //   label: "Product Type",
+                // },
+                // {
+                //   key: "Add-Edits",
+                //   icon: <BiEdit className="fs-4" />,
+                //   label: "Add Edits",
+                // },
               ],
             },
+            // {
+            //   key: "orders",
+            //   icon: <FcDataConfiguration className="fs-4" />,
+            //   label: "Orders",
+            // },
             {
-              key: "orders",
-              icon: <FaShoppingBag className="fs-4" />,
-              label: "Orders",
-            },
-            {
-              key: "marketing",
-              icon: <FaFolderPlus className="fs-4" />,
-              label: "Admin Collection",
+              key: "Admin For Mobile",
+              icon: <FaMobileAlt className="fs-4" />,
+              label: "Admin For Mobile",
               children: [
                 {
-                  key: "Add-Collections",
-                  icon: <FaFolderPlus className="fs-4" />,
-                  label: "Add Collection",
+                  key: "ManageMobileData",
+                  icon: <FaDatabase className="fs-4" />,
+                  label: "Manage Mobile Data",
+                },
+                {
+                  key: "UploadMobileData",
+                  icon: <FaUpload className="fs-4" />,
+                  label: "Upload Mobile Data",
+                },
+                {
+                  key: "DeleteMobileData",
+                  icon: <MdOutlineDeleteSweep className="fs-4" />,
+                  label: "Delete Mobile Data",
                 },
               ],
             },
             {
-              key: "Lender",
-              icon: <FaHandshake className="fs-4" />,
-              label: "Lender",
+              key: "customization",
+              icon: <BiCustomize className="fs-4" />,
+              label: "Customization",
             },
             {
-              key: "Renter",
-              icon: <FaUserTie className="fs-4" />,
-              label: "Renter",
+              key: "Configration",
+              icon: <FcDataConfiguration className="fs-4" />,
+              label: "Configration",
             },
             {
-              key: "Product-Approval",
-              icon: <BiCheckSquare className="fs-4" />,
-              label: "Product Approval",
+              key: "settings",
+              icon: <AiOutlineSetting className="fs-4" />,
+              label: "Settings",
             },
+            // {
+            //   key: "Product-Approval",
+            //   icon: <BiCheckSquare className="fs-4" />,
+            //   label: "Product Approval",
+            // },
             {
               key: "RegisteredUser",
               icon: <BiUser className="fs-4" />,
               label: "Registered User",
             },
+            
           ]}
         />
       </Sider>
@@ -167,26 +224,28 @@ const MainLayout = () => {
                 <img
                   width={32}
                   height={32}
-                  src="/images/CC TM Logo.png"
+                  src="/images/logo2.jpg"
                   className="object-fit-cover"
                   alt=""
                 />
               </div>
-              <div
+              {userData ? (
+                <>
+                 <div
                 role="button"
                 id="dropdownMenuLink"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
                 <h5 className="mb-0">Admin</h5>
-                <p className="mb-0">Admin@circulardashbord.com</p>
+                <p className="mb-0">{userData.email}</p>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li>
                   <Link
                     className="dropdown-item py-1 mb-1"
                     style={{ height: "auto", lineHeight: "20px" }}
-                    to="/"
+                    
                   >
                     View Profile
                   </Link>
@@ -195,12 +254,25 @@ const MainLayout = () => {
                   <Link
                     className="dropdown-item py-1 mb-1"
                     style={{ height: "auto", lineHeight: "20px" }}
-                    to="/"
+                    onClick={handleLogout}
                   >
                     Signout
                   </Link>
                 </li>
               </div>
+                </>
+
+              ): (
+                <div className="">
+                  <Link
+                    to="/"
+                    className="nav-link"
+                  >
+                    <b>Login</b>
+                  </Link>
+                </div>
+              )}
+             
             </div>
           </div>
         </Header>

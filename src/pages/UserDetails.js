@@ -2,7 +2,7 @@ import { React, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Addcat = () => {
+const UserDetails = () => {
   const [categoryData, setCategoryData] = useState({
     type: "",
     deleted: false,
@@ -144,49 +144,20 @@ const Addcat = () => {
     <>
       <main>
         <div className="container-fluid px-3 pt-4">
-          <div className="text-center  ">
-            <h2 className="text-uppercase p-2 page-title">
-              Manage Product Category
-            </h2>
-          </div>
           <div className="row ">
             <div className="col-lg-12 p-3">
-              <form onSubmit={handleSubmit}>
-                <div className="row mt-2">
-                  <div className="form-group-admin col-lg-12">
-                    <label htmlFor="type" className="my-2"><b>Type:</b></label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="type"
-                      placeholder="Enter type"
-                      value={categoryData.type}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="form-group-admin col-lg-12 text-center mt-4 mb-3">
-                  <button
-                    type="submit"
-                    className="btn btn-primary category-btn p-3 "
-                  >
-                    Create Category
-                  </button>
-                </div>
-              </form>
               <div className="mt-3 pt-3">
                 <div className="text-center  ">
                   <h5 className="text-uppercase p-2 page-title">
-                    All Categories
+                    User Details
                   </h5>
                 </div>
                 <table className="table table-bordered table-hover">
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Category Type</th>
-                      <th>Actions</th>
+                      <th>User Name</th>
+                      <th>Details</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -247,4 +218,4 @@ const Addcat = () => {
   );
 };
 
-export default Addcat;
+export default UserDetails;

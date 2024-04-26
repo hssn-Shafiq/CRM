@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
-const AddCollections = () => {
+const DeleteMobileData = () => {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState("");
 
@@ -22,23 +22,7 @@ const AddCollections = () => {
     }
   };
 
-  const handleCreateCategory = async () => {
-    try {
-      const response = await axios.post("https://circularclientapi.azurewebsites.net/api/product-gen-categories", {
-        type: newCategory
-      });
-      if (response.status === 200) {
-        toast.success("Category created successfully!");
-        fetchCategories(); // Refresh categories after creating a new one
-        setNewCategory(""); // Clear input field
-      } else {
-        toast.error("Failed to create category");
-      }
-    } catch (error) {
-      toast.error("Failed to create category");
-      console.error("Error creating category:", error);
-    }
-  };
+
 
   const handleDelete = async (categoryId) => {
     try {
@@ -79,12 +63,12 @@ const AddCollections = () => {
       <div className="container-fluid px-3 pt-4">
           <div className="text-center  ">
             <h2 className="text-uppercase p-2 page-title">
-              Manage All Collections
+              Delete Data For Mobile Apps
             </h2>
           </div>
           <div className="row " >
             <div className="col-lg-12 p-3">
-              <div>
+              {/* <div>
                 <h2 className="text-center text-light">Create New Category</h2>
                 <div className="input-group mb-3">
                   <input
@@ -98,7 +82,7 @@ const AddCollections = () => {
                     Create
                   </button>
                 </div>
-              </div>
+              </div> */}
               <hr />
               <div>
                 <h2 className="text-center text-light">Admin Collections</h2>
@@ -150,4 +134,4 @@ const AddCollections = () => {
   );
 };
 
-export default AddCollections;
+export default DeleteMobileData;

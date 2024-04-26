@@ -4,7 +4,11 @@ import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteACoupon, getAllCoupon } from "../features/coupon/couponSlice";
+import {
+  deleteABrand,
+  getBrands,
+  resetState,
+} from "../features/brand/brandSlice";
 import CustomModal from "../components/CustomModal";
 import { Container } from "react-bootstrap";
 
@@ -13,20 +17,9 @@ const columns = [
     title: "SNo",
     dataIndex: "key",
   },
-
   {
     title: "Name",
     dataIndex: "name",
-    sorter: (a, b) => a.name.length - b.name.length,
-  },
-  {
-    title: "Discount",
-    dataIndex: "discount",
-    sorter: (a, b) => a.discount - b.discount,
-  },
-  {
-    title: "Expiry",
-    dataIndex: "expiry",
     sorter: (a, b) => a.name.length - b.name.length,
   },
   {
@@ -35,12 +28,12 @@ const columns = [
   },
 ];
 
-const Renter = () => {
+const Customization = () => {
   const [open, setOpen] = useState(false);
-  const [couponId, setcouponId] = useState("");
+  const [brandId, setbrandId] = useState("");
   const showModal = (e) => {
     setOpen(true);
-    setcouponId(e);
+    setbrandId(e);
   };
 
   const hideModal = () => {
@@ -48,27 +41,26 @@ const Renter = () => {
   };
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAllCoupon());
+    dispatch(resetState());
+    dispatch(getBrands());
   }, []);
-  const couponState = useSelector((state) => state.coupon.coupons);
+  const brandState = useSelector((state) => state.brand.brands);
   const data1 = [];
-  for (let i = 0; i < couponState.length; i++) {
+  for (let i = 0; i < brandState.length; i++) {
     data1.push({
       key: i + 1,
-      name: couponState[i].name,
-      discount: couponState[i].discount,
-      expiry: new Date(couponState[i].expiry).toLocaleString(),
+      name: brandState[i].title,
       action: (
         <>
           <Link
-            to={`/admin/coupon/${couponState[i]._id}`}
+            to={`/admin/brand/${brandState[i]._id}`}
             className=" fs-3 text-danger"
           >
             <BiEdit />
           </Link>
           <button
             className="ms-3 fs-3 text-danger bg-transparent border-0"
-            onClick={() => showModal(couponState[i]._id)}
+            onClick={() => showModal(brandState[i]._id)}
           >
             <AiFillDelete />
           </button>
@@ -76,36 +68,34 @@ const Renter = () => {
       ),
     });
   }
-  const deleteCoupon = (e) => {
-    dispatch(deleteACoupon(e));
+  const deleteBrand = (e) => {
+    dispatch(deleteABrand(e));
 
     setOpen(false);
     setTimeout(() => {
-      dispatch(getAllCoupon());
+      dispatch(getBrands());
     }, 100);
   };
   return (
     <Container className="container-fluid px-3 pt-4">
       <div>
         <div className="text-center  ">
-          <h2 className="text-uppercase p-2 page-title">Renter</h2>
+          <h2 className="text-uppercase p-2 page-title">Customization</h2>
         </div>
         <div>
-          <div>
-            <Table columns={columns} dataSource={data1} />
-          </div>
-          <CustomModal
-            hideModal={hideModal}
-            open={open}
-            performAction={() => {
-              deleteCoupon(couponId);
-            }}
-            title="Are you sure you want to delete this Coupon?"
-          />
+          {/* <Table columns={columns} dataSource={data1} /> */}
         </div>
+        <CustomModal
+          hideModal={hideModal}
+          open={open}
+          performAction={() => {
+            deleteBrand(brandId);
+          }}
+          title="Are you sure you want to delete this brand?"
+        />
       </div>
     </Container>
   );
 };
 
-export default Renter;
+export default Customization;
