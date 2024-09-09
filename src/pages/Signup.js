@@ -4,8 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../firebase/Config";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { addDoc, collection } from "firebase/firestore";
-import { getDatabase } from "firebase/database";
+import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { Navigate } from "react-router-dom";
 import { storeUserToLocalStorage} from "../utils/localstorage"
 const Register = () => {
@@ -14,7 +13,7 @@ const Register = () => {
   const [name, setName] = useState("");
   const auth = getAuth();
   const navigate = useNavigate();
-  const db = getDatabase();
+  const db = getFirestore();
   const handleLogin = async (e) => {
     e.preventDefault();
     // For demonstration, check if email and password match predefined values
@@ -29,10 +28,10 @@ const Register = () => {
         storeUserToLocalStorage({email});
         toast.success("signup successfully", user.email);
         console.log("registered is", user);
-
         try {
-          const docRef = addDoc(collection(db, "GTFS"), {
+          const docRef = addDoc(collection(db, "Users"), {
             userName: name,
+            userEmail: email,
           });
           toast.success("Document written with ID: ", docRef.id);
         } catch (e) {
@@ -57,7 +56,7 @@ const Register = () => {
       <div className="container-fluid admin-login-container admin-signup-container d-flex align-items-center justify-content-center m-0">
         <div className="content">
           <div className="text-center">
-            <img src="/images/logo.jpg" width={260} alt="CC TM Logo" />
+            <img src="/images/logo.png" width={260} alt="CC TM Logo" />
           </div>
           <form
             className="content__form d-flex flex-column gap-3 "

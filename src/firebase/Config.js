@@ -2,13 +2,13 @@ import { initializeApp } from 'firebase/app';
 import {getFirestore} from "firebase/firestore"
 import {getStorage} from 'firebase/storage';
 const firebaseConfig = {
-  apiKey: "AIzaSyBd41f3jaGi_3TJYg1JcqR_nA2VuernmRk",
-  authDomain: "gtfs-fdd83.firebaseapp.com",
-  projectId: "gtfs-fdd83",
-  storageBucket: "gtfs-fdd83.appspot.com",
-  messagingSenderId: "621027464537",
-  appId: "1:621027464537:web:5c5331b3944bd311d3a848",
-  measurementId: "G-4HK51ZCL10"
+  apiKey: "AIzaSyCzFX1hnJ381ApNQH2u2FTg80FHKRH5ZHM",
+  authDomain: "crm-project-a8b51.firebaseapp.com",
+  projectId: "crm-project-a8b51",
+  storageBucket: "crm-project-a8b51.appspot.com",
+  messagingSenderId: "715765740841",
+  appId: "1:715765740841:web:83421807c36a23894b7338",
+  measurementId: "G-WQ01E8M136"
 };
 
 const app = initializeApp(firebaseConfig);
