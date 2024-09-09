@@ -1,3 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body{
+  font-family: "Poppins", sans-serif;
+}
 :root {
   --color-212529: #151719;
   --color-ffd333: #f56308;
@@ -6,6 +11,7 @@
   --color-828599: #828599;
   --color-3d464d: #ed464d;
   --color-c3d4da: #ced4da;
+  --bg-main: #1d1e22;
 }
 
 .green {
@@ -50,11 +56,26 @@
 
 
 :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark, :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark>.ant-menu, .ant-layout-sider-children{
-  background: #111213 !important;
+  background: #1d1e22 !important;
 }
 :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark .ant-menu-item-selected, :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark>.ant-menu .ant-menu-item-selected{
-  background: white;
-  color: black;
+  background: #2c2f36;
+  color: white;
   font-size: 16px;
   font-weight: 600;
+  border-right: 4px solid #4cbf9d;
+  border-radius: 0px;
+  transition: all .3s ease;
+}
+
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark .ant-menu-item:hover, .ant-menu-submenu.ant-menu-submenu-inline:hover{
+  background: #2c2f36 !important;
+  border-right: 4px solid #4cbf9d;
+  border-radius: 0px;
+}
+.ant-menu-submenu .ant-menu-submenu-title .ant-menu-item-icon{
+  font-size: 1rem !important;
+}
+.ant-menu-title-content{
+  font-size: 1rem;
 }

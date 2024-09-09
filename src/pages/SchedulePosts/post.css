@@ -1,0 +1,77 @@
+/* CustomStyles.css */
+
+.w-30{
+    width: 30% !important;
+}
+.bg-main{
+    /* background: #1d1e22 !important; */
+    background: var(--bg-main) !important;
+
+}
+.border-main{
+    border: 1px solid rgb(62, 64, 70) !important;
+
+}
+  .account-list {
+    background: var(--bg-main);
+
+    padding: 15px;
+    border-radius: 10px;
+    min-height: 350px;
+    border: 1px solid rgb(62, 64, 70);
+    position: relative;
+    /* width: 250px; */
+    /* width: 100%; */
+  }
+
+  .account-list  .account-list-footer{
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    text-align: center;
+    border-top: 1px solid rgb(62, 64, 70);
+  }
+  .account-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-family: "Poppins", sans-serif;
+    letter-spacing: 1px;
+    /* background-color: #444; */
+    border-bottom: 1.2px solid rgb(62, 64, 70);
+    position: relative;
+  }
+  .account-item svg{
+    position: absolute;
+    /* font-size: 12px !important; */
+    width: 14px;
+    height: 14px;
+    bottom: 7px;
+  }
+  .account-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    object-position: top;
+  }
+  .posts_updates_main .posts_updates_header input[type="search"]::placeholder{
+    color: rgba(243, 243, 246, 0.715);
+  }
+  .posts_updates_main .posts_updates_header input[type="search"], .posts_updates_main .posts_updates_header select {
+    background: var(--bg-main);
+    border: 1px solid  rgb(62, 64, 70) !important;
+    color: hsla(240, 14%, 96%, 1);
+    position: relative;
+  }
+ .soical_post_editable .card {
+    border: none;
+  }
+  
+ .soical_post_editable .card .card-title {
+    font-size: 1.1rem;
+  }
+  
+ .soical_post_editable .card .card-text {
+    font-size: 1rem;
+  }
+  

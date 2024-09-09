@@ -6,14 +6,14 @@ import {
   AiOutlineShoppingCart,
   AiOutlineUserSwitch,
 } from "react-icons/ai";
-import { FaUpload, FaUserLock } from "react-icons/fa6";
+import { FaCalendar, FaCopy, FaFacebook, FaGoogle, FaInstagram, FaLinkedin, FaPinterest, FaPlus, FaTiktok, FaTwitter, FaUpload, FaUser, FaUserLock, FaUsers } from "react-icons/fa6";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { FcDataConfiguration } from "react-icons/fc";
 import { IoIosNotifications } from "react-icons/io";
-import {  FaMobileAlt, FaDatabase,} from "react-icons/fa";
+import {  FaMobileAlt, FaDatabase, FaPlusCircle,} from "react-icons/fa";
 import { BiCategoryAlt, BiCustomize, BiUser } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -93,7 +93,7 @@ const MainLayout = () => {
             
             {
               key: "Manage Users",
-              icon: <AiOutlineShoppingCart className="fs-4" />,
+              icon: <FaUser className="fs-4" />,
               label: "Manage Users",
               children: [
                 {
@@ -147,23 +147,28 @@ const MainLayout = () => {
             // },
             {
               key: "Admin For Mobile",
-              icon: <FaMobileAlt className="fs-4" />,
-              label: "Admin For Mobile",
+              icon: <FaCopy className="fs-4" />,
+              label: "Schedule Posts",
               children: [
                 {
-                  key: "ManageMobileData",
-                  icon: <FaDatabase className="fs-4" />,
-                  label: "Manage Mobile Data",
+                  key: "SchedulePosts/Create-Post",
+                  icon: <FaPlusCircle className="fs-4" />,
+                  label: "Create Post",
                 },
                 {
-                  key: "UploadMobileData",
-                  icon: <FaUpload className="fs-4" />,
-                  label: "Upload Mobile Data",
+                  key: "SchedulePosts/Calendar",
+                  icon: <FaCalendar className="fs-4" />,
+                  label: "Calendar",
                 },
                 {
-                  key: "DeleteMobileData",
-                  icon: <MdOutlineDeleteSweep className="fs-4" />,
-                  label: "Delete Mobile Data",
+                  key: "SchedulePosts/Posts",
+                  icon: <FaCopy className="fs-4" />,
+                  label: "Posts",
+                },
+                {
+                  key: "SchedulePosts/SocialAccounts",
+                  icon: <FaUsers className="fs-4" />,
+                  label: "Social Accounts",
                 },
               ],
             },
@@ -195,13 +200,31 @@ const MainLayout = () => {
             
           ]}
         />
-      </Sider>
-      <Layout className="site-layout">
+        <div className="mt-5 bg-dark p-3 text-light social_login">
+            {/* <h5 className="w-100 fs-5 bg-light text-dark rounded-4 p-2"><BiUser className="fs-4" /> Hassan</h5> */}
+            <h5 className="w-100 fs-5 mb-0">Linked Accounts</h5>
+            <div className="linked-accounts my-2 d-flex gap-1">
+            <span className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark" style={{width: "20px", height:"20px"}}><FaFacebook /> </span>
+            <span className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark" style={{width: "20px", height:"20px"}}><FaInstagram /> </span>
+            <span className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark" style={{width: "20px", height:"20px"}}><FaLinkedin /> </span>
+            <span className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark" style={{width: "20px", height:"20px"}}><FaTwitter /> </span>
+            <span className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark" style={{width: "20px", height:"20px"}}><FaPinterest /> </span> <span className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark" style={{width: "20px", height:"20px"}}><FaGoogle /> </span>
+            <span className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark" style={{width: "20px", height:"20px"}}><FaTiktok /> </span>
+            </div>
+
+           <Link to="SchedulePosts/SocialAccounts">
+           <button className="btn btn-primary btn-sm fw-medium w-100 d-flex align-items-center justify-content-center gap-2"><FaPlusCircle   />  Add Social Account</button>
+           </Link> 
+          </div>
+      </Sider> 
+      <Layout className="site-layout">  
         <Header
           className="sticky-top d-flex justify-content-between ps-1 pe-5"
           style={{
             padding: 0,
-            background: colorBgContainer,
+            background: "#1d1e22",
+            color: "#fff",
+            borderBottom: "2px solid hsla(225, 6%, 26%, 1)"
           }}
         >
           {React.createElement(
@@ -278,7 +301,8 @@ const MainLayout = () => {
         </Header>
         <Content
           style={{
-            background: colorBgContainer,
+            background: "rgb(25 25 25)",
+            color: "#fff",
           }}
         >
           <ToastContainer

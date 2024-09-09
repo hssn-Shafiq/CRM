@@ -8,8 +8,8 @@ import MainLayout from "./components/MainLayout";
 import Productlist from "./pages/Productlist";
 import Addcolor from "./pages/UserList";
 import Addcat from "./pages/UserDetails";
-import Addbrand from "./pages/AddDesigner";
-import AddCoupon from "./pages/ManageMobileData";
+import Posts from "./pages/SchedulePosts/Posts";
+// import AddCoupon from "./pages/ManageMobileData";
 import ViewEnq from "./pages/ViewEnq";
 import ViewOrder from "./pages/ViewOrder";
 import AddEdits from "./pages/AddEdits";
@@ -25,9 +25,10 @@ import UserPermission from "./pages/AccessPermissions/UserPermission";
 import UserRole from "./pages/AccessPermissions/UserRole";
 import Customization from "./pages/Customization";
 import Configration from "./pages/Configration";
-import ManageMobileData from "./pages/ManageMobileData";
-import UploadMobileData from "./pages/UploadMobileData";
-import DeleteMobileData from "./pages/DeleteMobileData";
+import CreatePosts from "./pages/SchedulePosts/CreatePosts";
+import Calendar from "./pages/SchedulePosts/Calendar";
+import SocialAccounts from "./pages/SchedulePosts/SocialAccounts";
+
 function App() {
   return (
     <Router>
@@ -41,10 +42,12 @@ function App() {
           <Route path="RegisteredUser" element={<RegisteredUser />} />
           <Route path="enquiries/:id" element={<ViewEnq />} />
           <Route path="Configration" element={<Configration />} />
-          <Route path="ManageMobileData" element={<ManageMobileData />} />
-          <Route path="coupon/:id" element={<AddCoupon />} />
-          <Route path="UploadMobileData" element={<UploadMobileData />} />
-          <Route path="DeleteMobileData" element={<DeleteMobileData />} />
+          {/* <Route path="coupon/:id" element={<AddCoupon />} /> */}
+          
+          <Route path="SchedulePosts/Create-Post" element={<CreatePosts />} />
+          <Route path="SchedulePosts/Calendar" element={<Calendar />} />
+          <Route path="SchedulePosts/SocialAccounts" element={<SocialAccounts />} />
+          <Route path="SchedulePosts/Posts" element={<Posts />} />
 
           <Route path="order/:id" element={<ViewOrder />} />
           <Route path="Settings" element={<Settings />} />
@@ -55,8 +58,6 @@ function App() {
           <Route path="category" element={<Addcat />} />
           <Route path="User-Details" element={<UserDetails />} />
           <Route path="Customization" element={<Customization />} />
-          <Route path="add-designer" element={<Addbrand />} />
-          <Route path="brand/:id" element={<Addbrand />} />
           <Route path="list-product" element={<Productlist />} />
           <Route path="AccessPermissions/UserPermission" element={<UserPermission />} />
           <Route path="AccessPermissions/UserRole" element={<UserRole />} />
