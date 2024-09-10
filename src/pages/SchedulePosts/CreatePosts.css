@@ -4,7 +4,9 @@
         border-radius: 10px;
     }
     .card-body{
-        background-color: rgb(59, 59, 59);
+        background-color:  var(--bg-main);
+        border-radius: 10px;
+        border: 1px solid rgb(62, 64, 70);
     }
     .btn-social-media {
         margin-right: 10px;
