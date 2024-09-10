@@ -8,7 +8,7 @@ const CreatePosts = () => {
   return (
     <>
       <main>
-        <div className="create-post">
+        <div className="create-post mb-5">
           <div className="container mt-4">
             <div className="row">
               <div className="col-md-8">
@@ -77,8 +77,7 @@ const CreatePosts = () => {
                           className="form-control"
                           id="postText"
                           placeholder="Write something or use shortcodes, spintax ..."
-                          rows={9}
-                          defaultValue={"                                    "}
+                          rows={5}
                         />
                       </div>
                       <div className="button-section-text-area d-flex justify-content-between align-content-center">
@@ -104,20 +103,17 @@ const CreatePosts = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="input-group mb-3">
+                      <div className="input-group mb-3 ">
                         <input
-                          className="form-control"
+                          className="form-control bg-dark text-light"
                           id="inputGroupFile02"
                           type="file"
-                        />
-                        <label
-                          className="input-group-text"
-                          htmlFor="inputGroupFile02"
-                        >
+                        />  
+                        <label className="input-group-text bg-dark text-light" htmlFor="inputGroupFile02">
                           Upload
                         </label>
                       </div>
-                      <div className="dropup-center dropup">
+                      {/* <div className="dropup-center dropup">
                         <button
                           aria-expanded="false"
                           className="btn fw-bold text-light"
@@ -147,7 +143,7 @@ const CreatePosts = () => {
                             </a>
                           </li>
                         </ul>
-                      </div>
+                      </div> */}
                       <div className="d-flex justify-content-end">
                         <button
                           className="btn btn-outline-secondary responsive-buttons fw-semibold me-3"
