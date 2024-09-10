@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./CreatePosts.css";
+import SocialMediaPostSelector from "../../components/SocialMediaPostSelector";
+import PostForm from "../../components/PostForm";
 
 const CreatePosts = () => {
   return (
@@ -55,13 +57,10 @@ const CreatePosts = () => {
                         </ul>
                       </div>
 
-                      <div className="social-create-post">
-                        <img src="" alt="" />
-                        <img src="public/images/icons8-instagram-128.png" alt="" />
-                        {/* <img src="public/images/" alt="" /> */}
-                      </div>
+
                       <div className="d-flex align-items-center" />
                     </div>
+                    <SocialMediaPostSelector/>
                     <button
                       className="btn btn-labels rounded-5 my-3"
                       data-bs-target="#addLabelModal"
@@ -71,7 +70,8 @@ const CreatePosts = () => {
                       <i className="fa-solid fa-tags me-2" />
                       Add labels
                     </button>
-                    <form id="postForm">
+                    <PostForm/>
+                    {/* <form id="postForm">
                       <div className="form-group mb-3">
                         <textarea
                           className="form-control"
@@ -108,42 +108,11 @@ const CreatePosts = () => {
                           className="form-control bg-dark text-light"
                           id="inputGroupFile02"
                           type="file"
-                        />  
+                        />
                         <label className="input-group-text bg-dark text-light" htmlFor="inputGroupFile02">
                           Upload
                         </label>
                       </div>
-                      {/* <div className="dropup-center dropup">
-                        <button
-                          aria-expanded="false"
-                          className="btn fw-bold text-light"
-                          data-bs-toggle="dropdown"
-                          type="button"
-                        >
-                          <i className="fa-solid fa-layer-group" />
-                          Bulk Options
-                        </button>
-                        <ul className="dropdown-menu">
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              <i className="fa-solid fa-plus me-2 text-secondary"></i>
-                              Add Post
-                            </a>
-                          </li>
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              <i className="fa-solid fa-cloud-arrow-up me-2 text-secondary"></i>
-                              Upload Media
-                            </a>
-                          </li>
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              <i className="fa-solid fa-file-csv me-2 text-secondary"></i>
-                              Import CSV
-                            </a>
-                          </li>
-                        </ul>
-                      </div> */}
                       <div className="d-flex justify-content-end">
                         <button
                           className="btn btn-outline-secondary responsive-buttons fw-semibold me-3"
@@ -200,7 +169,7 @@ const CreatePosts = () => {
                           </ul>
                         </div>
                       </div>
-                    </form>
+                    </form> */}
                   </div>
                 </div>
               </div>
