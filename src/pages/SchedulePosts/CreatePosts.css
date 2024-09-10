@@ -33,6 +33,10 @@
     .top-button{
         background: rgb(29,195,140);
     }
+    .btn-emoji:hover{
+        background: rgb(29,195,140);
+
+    }
     .btn-publish{
         color: gray;
     }

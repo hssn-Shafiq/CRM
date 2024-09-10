@@ -95,7 +95,7 @@ const CreatePosts = () => {
                           <div className="btn responsive-buttons me-1 fw-bold btn-outline-secondary">
                             I
                           </div>
-                          <div className="btn responsive-buttons me-1 btn-outline-success me-3">
+                          <div className="btn responsive-buttons me-1 btn-emoji me-3">
                             <i className="fa-regular fa-face-smile"></i>
                           </div>
                         </div>
