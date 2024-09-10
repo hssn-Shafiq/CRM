@@ -1,0 +1,106 @@
+.create-post {
+    .card{
+        border: none;
+        border-radius: 10px;
+    }
+    .card-body{
+        background-color: rgb(59, 59, 59);
+    }
+    .btn-social-media {
+        margin-right: 10px;
+    }
+
+    .btn-social-media.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+    .card-header {
+        font-weight: bold;
+    }
+
+    .form-group textarea {
+        resize: none;
+    }
+
+    .bulk-option {
+        color: white;
+
+    }
+    .btn-labels{
+        background: rgb(29,195,140);
+    }
+    .top-button{
+        background: rgb(29,195,140);
+    }
+    .btn-publish{
+        color: gray;
+    }
+    .btn-publish:hover{
+        background-color: rgb(29,195,140);
+        color: #000;
+    }
+
+    .button-section-text-area {
+        position: relative;
+        bottom: 65px;
+    }
+
+    .btn-schedule {
+        background: rgb(29, 195, 140);
+    }
+
+    .btn-schedule:hover {
+        background: rgb(53, 211, 158);
+    }
+
+    .color-picker {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 10px;
+    }
+
+    .color-picker span {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+
+    .color-picker span:hover {
+        border-color: #000;
+    }
+
+    .manage {
+        color: grey;
+    }
+
+    .search-icon {
+        position: relative;
+        top: 22px;
+        left: 6px;
+        z-index: 1;
+    }
+
+}
+
+@media (min-width:315px) and (max-width:720px) {
+    .create-post {
+        .responsive-buttons {
+            font-size: 10px;
+            font-weight: bolder;
+        }
+
+        .button-section-text-area {
+            position: relative;
+            bottom: 80px;
+        }
+
+        .card {
+            margin-top: 15px;
+        }
+
+    }
+
+}
