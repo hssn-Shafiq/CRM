@@ -20,7 +20,7 @@ const SocialAccounts = () => {
                 aria-expanded="false"
               >
                 <i className="fa-solid fa-chart-simple icon-drowp-status" />
-                Status
+               Status
               </button>
               <ul
                 className="dropdown-menu dropdown-menu-custom"
@@ -118,7 +118,7 @@ const SocialAccounts = () => {
                 <li>
                   <a className="dropdown-item dropdown-item-custom" href="#">
                     <i className="fa-brands fa-square-google-plus" />
-                    Google
+                     Google
                   </a>
                 </li>
               </ul>
