@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 // import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import './CreatePosts.css'
-
+import "./CreatePosts.css";
 
 const CreatePosts = () => {
-
   return (
     <>
       <main>
@@ -56,6 +54,12 @@ const CreatePosts = () => {
                           </li>
                         </ul>
                       </div>
+
+                      <div className="social-create-post">
+                        <img src="" alt="" />
+                        <img src="public/images/icons8-instagram-128.png" alt="" />
+                        {/* <img src="public/images/" alt="" /> */}
+                      </div>
                       <div className="d-flex align-items-center" />
                     </div>
                     <button
@@ -64,7 +68,7 @@ const CreatePosts = () => {
                       data-bs-toggle="modal"
                       type="button"
                     >
-                      <i className="fa-solid fa-tags me-2" /> 
+                      <i className="fa-solid fa-tags me-2" />
                       Add labels
                     </button>
                     <form id="postForm">
@@ -106,7 +110,10 @@ const CreatePosts = () => {
                           id="inputGroupFile02"
                           type="file"
                         />
-                        <label className="input-group-text" htmlFor="inputGroupFile02">
+                        <label
+                          className="input-group-text"
+                          htmlFor="inputGroupFile02"
+                        >
                           Upload
                         </label>
                       </div>
