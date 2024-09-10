@@ -561,7 +561,7 @@
       background-color: #00a9ff;
       border-radius: 50%;
       position: absolute;
-      left: 10%;
+      left: 15%;
       top: 15px;
       z-index: 1;
     }
@@ -667,6 +667,7 @@
     .icon-drowp-status {
       color: #f3f3f6a5;
       font-size: 14px;
+      margin-right: 5px;
     }
 
     .icon-drowp-account-fb {
@@ -821,7 +822,7 @@
         margin-left: 0px;
       }
       .account-connect-custom h5{
-        font-size: 15px;
+        font-size: 12px !important;
       }
       .header-custom .search-box-custom {
         margin-left: 0px;
@@ -830,6 +831,10 @@
 
       .dropdown-menu-custom {
         width: 92%;
+      }
+      .pulse-circle
+      {
+        left: 43%;
       }
     }
 
