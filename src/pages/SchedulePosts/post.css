@@ -1,77 +1,433 @@
 /* CustomStyles.css */
 
-.w-30{
-    width: 30% !important;
+.w-30 {
+  width: 30% !important;
 }
-.bg-main{
-    /* background: #1d1e22 !important; */
-    background: var(--bg-main) !important;
+
+.bg-main {
+  /* background: #1d1e22 !important; */
+  background: var(--bg-main) !important;
 
 }
-.border-main{
-    border: 1px solid rgb(62, 64, 70) !important;
+
+.border-main {
+  border: 1px solid rgb(62, 64, 70) !important;
 
 }
-  .account-list {
-    background: var(--bg-main);
 
-    padding: 15px;
+.account-list {
+  background: var(--bg-main);
+
+  padding: 15px;
+  border-radius: 10px;
+  min-height: 350px;
+  border: 1px solid rgb(62, 64, 70);
+  position: relative;
+  /* width: 250px; */
+  /* width: 100%; */
+}
+
+.account-list .account-list-footer {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  text-align: center;
+  border-top: 1px solid rgb(62, 64, 70);
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-family: "Poppins", sans-serif;
+  letter-spacing: 1px;
+  /* background-color: #444; */
+  border-bottom: 1.2px solid rgb(62, 64, 70);
+  position: relative;
+}
+
+.account-item svg {
+  position: absolute;
+  /* font-size: 12px !important; */
+  width: 14px;
+  height: 14px;
+  bottom: 7px;
+}
+
+.account-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  object-position: top;
+}
+
+.posts_updates_main .posts_updates_header input[type="search"]::placeholder {
+  color: rgba(243, 243, 246, 0.715);
+}
+
+.posts_updates_main .posts_updates_header input[type="search"],
+.posts_updates_main .posts_updates_header select {
+  background: var(--bg-main);
+  border: 1px solid rgb(62, 64, 70) !important;
+  color: hsla(240, 14%, 96%, 1);
+  position: relative;
+}
+
+.soical_post_editable .card {
+  border: none;
+}
+
+.soical_post_editable .card .card-title {
+  font-size: 1.1rem;
+}
+
+.soical_post_editable .card .card-text {
+  font-size: 1rem;
+}
+
+
+/* ==================================== calender_main_class ============================ */
+.calender_main_class {
+
+
+  background-color: #333333 !important;
+  height: auto;
+
+  .calender {
+
+
+    .calender_select {
+      background-color: #2c2f35;
+      color: #777F8D !important;
+      width: 140px;
+      font-size: 14px;
+      border-radius: 10px;
+
+      img {
+        float: right;
+        position: relative;
+        top: 9px;
+        right: 33px;
+      }
+
+
+      select {
+        background-color: #2c2f35;
+        color: #777F8D !important;
+        width: 140px;
+        font-size: 14px;
+
+        option {
+          background-color: #777F8D !important;
+          color: black !important;
+        }
+      }
+
+      .form-select:focus {
+        box-shadow: none;
+      }
+
+    }
+
+    .calender_btn {
+      button {
+        background-color: #2c2f35;
+        color: #777F8D !important;
+        width: fit-content;
+        font-size: 14px;
+        border-radius: 10px;
+      }
+    }
+
+    @media (max-width:768px) and (min-width:320px) {
+      .calender_select {
+        width: 90px;
+
+        select {
+          width: fit-content;
+        }
+      }
+    }
+
+
+  }
+
+  .days_section {
+    background-color: #1C1E22;
+    color: #777F8D;
+    font-size: 14px;
+
+    button {
+      width: 16px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #777F8D;
+      color: #777F8D;
+      margin: 2px;
+
+      &:hover {
+        border: 1px solid white;
+        color: white;
+      }
+    }
+
+  }
+
+  .date_table {
+    background-color: #17181c;
+    overflow-y: auto;
+    height: 410px;
+    font-size: 14px;
+
+    .time-slot {
+
+      height: 100px;
+      border-bottom: 1px dashed #8b517d;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      color: #8b517d;
+
+    }
+
+    .time-label {
+      font-weight: bold;
+      margin-right: 15px;
+      color: #fff;
+    }
+  }
+
+  .bacground_clean_black {
+    background-color: #17181c;
+    height: 500px;
+  }
+
+
+  /* weekly section   */
+  .calendar-container {
+    background-color: #2c2f35 !important;
     border-radius: 10px;
-    min-height: 350px;
-    border: 1px solid rgb(62, 64, 70);
-    position: relative;
-    /* width: 250px; */
-    /* width: 100%; */
+    height: 500px;
+
+
+    .calendar-header {
+      color: #b0b0b0;
+      text-align: start;
+
+      .calendar-cell {
+        border-left: 1px solid #333;
+        border-top: 1px solid #333;
+        color: #fff;
+        font-size: 14px;
+
+        position: relative;
+      }
+    }
   }
 
-  .account-list  .account-list-footer{
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    text-align: center;
-    border-top: 1px solid rgb(62, 64, 70);
+  .calendar-container_bottom {
+
+    background-color: #1d1d1d;
+    margin-top: 14px;
+
+    .calendar-header {
+      color: #b0b0b0;
+      text-align: center;
+      padding-bottom: 10px;
+
+      .calendar-cell {
+        border-left: 1px solid #333;
+        border-top: 1px solid #333;
+        height: 30px;
+        background-color: #2c2f35 !important;
+        color: #fff;
+        text-align: center;
+        position: relative;
+      }
+    }
+
+
+    .calendar-cell {
+      border-left: 1px solid #333;
+      border-top: 1px solid #333;
+      height: 300px;
+      color: #fff;
+      text-align: center;
+      position: relative;
+
+      .hidden_portion_model {
+        background: none;
+        border: none;
+        width: inherit;
+        border: 1px solid rgba(0, 0, 255, 0.551) !important;
+        padding: 6px;
+        border-radius: 5px;
+
+        span {
+          background: none;
+          border: 1px solid rgba(0, 0, 255, 0.551);
+          padding: 2px;
+          border-radius: 50%;
+          color: white;
+        }
+      }
+
+
+    }
+
+
+    .calendar-cell:first-child {
+      border-left: none;
+    }
+
+
+    .calendar-cell.active {
+      background-color: #282828;
+      color: #8b517d !important;
+    }
+
+
+    .date-number {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+
+      padding: 5px 10px;
+      border-radius: 15px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+
   }
-  .account-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    font-family: "Poppins", sans-serif;
-    letter-spacing: 1px;
-    /* background-color: #444; */
-    border-bottom: 1.2px solid rgb(62, 64, 70);
-    position: relative;
+
+  /* Adjust for small screens */
+  @media (max-width: 768px) {
+    .calendar-cell {
+      height: 80px;
+      font-size: 12px;
+    }
+
+    .date-number {
+      font-size: 12px;
+      padding: 3px 8px;
+    }
   }
-  .account-item svg{
-    position: absolute;
-    /* font-size: 12px !important; */
-    width: 14px;
-    height: 14px;
-    bottom: 7px;
+
+
+  .monthly_portion {
+    .calendar-box {
+      background-color: #1e1e1e;
+      padding: 0px 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      color: #fff;
+      font-size: 14px !important;
+    }
+
+
+    .weekdays-header {
+      color: #b0b0b0;
+      text-align: center;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #333;
+
+      .calendar-day {
+        border-left: 1px solid #333;
+        border-top: 1px solid #333;
+        min-height: 30px;
+        position: relative;
+        text-align: left;
+        padding: 10px;
+        color: #b0b0b0;
+      }
+    }
+
+
+    .calendar-day {
+      border-left: 1px solid #333;
+      border-top: 1px solid #333;
+      min-height: 100px;
+      position: relative;
+      text-align: right;
+      padding: 10px;
+      color: #b0b0b0;
+    }
+
+
+    .calendar-day:first-child {
+      border-left: none;
+    }
+
+
+    .date-label {
+      font-size: 12px;
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      color: #fff;
+    }
+
+
+    .highlight-date {
+      background-color: #282828;
+    }
+
+    .highlight-date .date-label {
+      background-color: #ff6600;
+      color: #fff;
+      padding: 5px 8px;
+      border-radius: 10px;
+    }
+
+
+    .event-icon {
+      position: absolute;
+      bottom: 5px;
+      left: 5px;
+      color: #fff;
+      font-size: 16px;
+    }
+
+
+    @media (max-width: 768px) {
+      .calendar-day {
+        min-height: 80px;
+        font-size: 12px;
+      }
+
+      .date-label {
+        font-size: 10px;
+      }
+    }
+
+    /* ================== Modal ============== */
+
+    .modal-dialog-end {
+      margin: 0;
+      position: absolute;
+      overflow-y: auto;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      max-width: 90%;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      /* overflow: hidden; */
+    }
+
+    .modal-content {
+      height: 100%;
+      border-radius: 0;
+    }
+
+    .modal-content {
+      background-color: #000;
+      font-size: 14px;
+      color: #fff;
+    }
   }
-  .account-item img {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    object-position: top;
-  }
-  .posts_updates_main .posts_updates_header input[type="search"]::placeholder{
-    color: rgba(243, 243, 246, 0.715);
-  }
-  .posts_updates_main .posts_updates_header input[type="search"], .posts_updates_main .posts_updates_header select {
-    background: var(--bg-main);
-    border: 1px solid  rgb(62, 64, 70) !important;
-    color: hsla(240, 14%, 96%, 1);
-    position: relative;
-  }
- .soical_post_editable .card {
-    border: none;
-  }
-  
- .soical_post_editable .card .card-title {
-    font-size: 1.1rem;
-  }
-  
- .soical_post_editable .card .card-text {
-    font-size: 1rem;
-  }
-  
+}
