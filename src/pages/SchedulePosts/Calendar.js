@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "./post.css";
 
 const Calendar = (e) => {
@@ -8,6 +10,15 @@ const Calendar = (e) => {
   const showSection = (section) => {
     setCurrentSection(section);
   };
+
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    setShowCalendar(false); // Close calendar after selecting a date
+  };
+  
   return (
     
    <>
@@ -101,13 +112,27 @@ const Calendar = (e) => {
                   </button>
                 </div>
                 <div className="d-flex align-items-center">
-                  <button id="show-date-btn" className="btn p-0">
+                <button onClick={() => setShowCalendar(!showCalendar)} className="calendar-btn">
                     <img
                       aria-hidden="true"
                       alt="calendar-icon"
                       src="https://openui.fly.dev/openui/24x24.svg?text=📅"
                     />
                   </button>
+
+                  {showCalendar && (
+                    <div className="calendar-modal">
+                      <DatePicker
+                        selected={selectedDate}
+                        onChange={handleDateChange}
+                        inline
+                      />
+                      <div className="calendar-footer">
+                        <button className="cancel-btn" onClick={() => setShowCalendar(false)}>Cancel</button>
+                        <button className="save-btn" onClick={() => setShowCalendar(false)}>Save</button>
+                      </div>
+                    </div>
+                  )}
                   <span className="ms-2">8 Aug, 2024</span>
                 </div>
               </div>
@@ -259,9 +284,6 @@ const Calendar = (e) => {
           </div>
         </div>
       </div>
-    
-  
-
 </main>
 
    </>

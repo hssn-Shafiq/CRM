@@ -152,19 +152,21 @@
 
   }
 
+
+
   .days_section {
     background-color: #1C1E22;
     color: #777F8D;
     font-size: 14px;
 
     button {
-      width: 16px;
+      /* width: 16px; */
       height: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
       border: 1px solid #777F8D;
-      color: #777F8D;
+      /* color: #777F8D; */
       margin: 2px;
 
       &:hover {
@@ -226,6 +228,72 @@
       }
     }
   }
+
+  .calendar-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .calendar-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .calendar-modal {
+    position: absolute;
+    top: 10rem;
+    /* left: 0; */
+    background-color: #2e2e2e;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+
+  .react-datepicker__month-container {
+    background-color: #1c1c1c;
+  }
+
+  .react-datepicker__header {
+    background-color: #1c1c1c;
+    border-bottom: none;
+  }
+
+  .react-datepicker__day-name,
+  .react-datepicker__day {
+    color: white;
+  }
+
+  .react-datepicker__current-month {
+    color: white;
+  }
+
+  .calendar-footer {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+  }
+
+  .cancel-btn,
+  .save-btn {
+    background-color: #3a3a3a;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .save-btn {
+    background-color: #00b894;
+  }
+
+  .cancel-btn:hover,
+  .save-btn:hover {
+    background-color: #555;
+  }
+
 
   .calendar-container_bottom {
 
