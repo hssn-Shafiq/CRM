@@ -31,6 +31,7 @@ import SocialAccounts from "./pages/SchedulePosts/SocialAccounts";
 import CustomLeadForm from "./pages/CustomLeadForm";
 import ScheduleAppointments from "./pages/ScheduleAppointments";
 import CheckBookedAppointments from "./pages/CheckBookedAppointments";
+import ClientAppointments from "./pages/ClientAppointments";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
           <Route path="CustomLead/Data" element={<CustomLeadForm />} />
           <Route path="Book-Appointments" element={<ScheduleAppointments />} />
           <Route path="Check-Book-Appointments" element={<CheckBookedAppointments />} />
+          <Route path="Client-Appointments" element={<ClientAppointments />} />
 
 
           <Route path="order/:id" element={<ViewOrder />} />

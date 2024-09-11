@@ -202,6 +202,11 @@ const MainLayout = () => {
                   icon: <FaHandsHelping className="fs-4" />,
                   label: "Book Appointments",
                 },
+                {
+                  key: "Client-Appointments",
+                  icon: <FaHandsHelping className="fs-4" />,
+                  label: "Client Appointments",
+                },
               ],
             },
             {
