@@ -28,6 +28,9 @@ import Configration from "./pages/Configration";
 import CreatePosts from "./pages/SchedulePosts/CreatePosts";
 import Calendar from "./pages/SchedulePosts/Calendar";
 import SocialAccounts from "./pages/SchedulePosts/SocialAccounts";
+import CustomLeadForm from "./pages/CustomLeadForm";
+import ScheduleAppointments from "./pages/ScheduleAppointments";
+import CheckBookedAppointments from "./pages/CheckBookedAppointments";
 
 function App() {
   return (
@@ -48,6 +51,12 @@ function App() {
           <Route path="SchedulePosts/Calendar" element={<Calendar />} />
           <Route path="SchedulePosts/SocialAccounts" element={<SocialAccounts />} />
           <Route path="SchedulePosts/Posts" element={<Posts />} />
+          
+          {/* Leads & Appointment Booking */}
+          <Route path="CustomLead/Data" element={<CustomLeadForm />} />
+          <Route path="Book-Appointments" element={<ScheduleAppointments />} />
+          <Route path="Check-Book-Appointments" element={<CheckBookedAppointments />} />
+
 
           <Route path="order/:id" element={<ViewOrder />} />
           <Route path="Settings" element={<Settings />} />
