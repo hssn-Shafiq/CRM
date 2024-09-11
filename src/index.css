@@ -135,10 +135,10 @@ main::-webkit-scrollbar {
 }
 
 
-.admin-login-container  svg {
+/* .admin-login-container  svg {
   width: 16px;
   height: auto;
-}
+} */
 .admin-login-container .content{
   width: 30%;
   background: white;
