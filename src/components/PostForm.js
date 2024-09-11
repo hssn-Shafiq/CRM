@@ -1,13 +1,30 @@
 import React, { useState } from 'react';
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import EmojiPicker from 'emoji-picker-react';
 
 function PostForm() {
-  // State to track the selected form type
   const [selectedForm, setSelectedForm] = useState('Post');
+  const [editorContent, setEditorContent] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   // Handle form type selection
   const handleFormSelection = (type) => {
     setSelectedForm(type);
+  };
+
+  // Handle emoji select
+  const addEmoji = (event, emojiObject) => {
+    setEditorContent((prevContent) => prevContent + emojiObject.emoji);
+    setShowEmojiPicker(false); // Close emoji picker after selection
+  };
+
+  // Toolbar configuration
+  const modules = {
+    toolbar: [
+      ['bold', 'italic'],
+      [{ 'emoji': 'emoji' }], // Custom button for emoji picker
+    ],
   };
 
   return (
@@ -27,7 +44,6 @@ function PostForm() {
 
       {/* Conditional Rendering of Forms */}
       {selectedForm === 'Story' ? (
-        // Simplified form for Story
         <form id="storyForm">
           <div className="input-group mb-3">
             <input
@@ -42,35 +58,28 @@ function PostForm() {
           </div>
         </form>
       ) : (
-        // Full form for Post and Reel
         <form id="postForm">
-          <div className="form-group mb-3">
-            <textarea
-              className="form-control"
-              id="postText"
-              placeholder="Write something or use shortcodes, spintax ..."
-              rows={5}
+          <div className="form-group mb-3 writing_post">
+          <button type='button' className="btn responsive-buttons me-1 btn-emoji me-3" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                <i className="fa-regular fa-face-smile"></i>
+              </button>
+              {showEmojiPicker && (
+                <EmojiPicker onEmojiClick={addEmoji} />
+              )}
+            {/* React Quill Editor */}
+            <ReactQuill
+              value={editorContent}
+              onChange={setEditorContent}
+              modules={modules}
+              placeholder="Write something..."
+              theme="snow"
             />
           </div>
-          <div className="button-section-text-area d-flex justify-content-between align-content-center">
-            <div className="ai-button">
-              <div className="btn fw-semibold responsive-buttons">
-                <i className="fa-solid fa-hashtag text-secondary me-2"></i>
-                Hashtag
-              </div>
-              <div className="btn responsive-buttons fw-semibold">
-                <i className="fa-solid fa-ear-listen text-secondary me-2"></i>
-                AI Assist
-              </div>
-            </div>
-            <div className="blod-itallic-imoji d-flex justify-content-center align-items-center">
-              <div className="btn responsive-buttons me-1 fw-bold btn-outline-secondary">B</div>
-              <div className="btn responsive-buttons me-1 fw-bold btn-outline-secondary">I</div>
-              <div className="btn responsive-buttons me-1 btn-emoji me-3">
-                <i className="fa-regular fa-face-smile"></i>
-              </div>
-            </div>
+
+          <div className="button-section-text-area">
+
           </div>
+
           <div className="input-group mb-3">
             <input
               className="form-control bg-dark text-light"
@@ -81,6 +90,7 @@ function PostForm() {
               Upload
             </label>
           </div>
+
           <div className="d-flex justify-content-end">
             <button
               className="btn btn-outline-secondary responsive-buttons fw-semibold me-3"

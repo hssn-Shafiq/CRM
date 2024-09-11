@@ -90,15 +90,14 @@
 .calender_main_class {
 
 
-  background-color: #333333 !important;
   height: auto;
 
   .calender {
 
-
     .calender_select {
       background-color: #2c2f35;
       color: #777F8D !important;
+  /* border: 1px solid rgb(62, 64, 70) !important; */
       width: 140px;
       font-size: 14px;
       border-radius: 10px;
@@ -155,6 +154,7 @@
 
 .days_section {
   background-color: #1C1E22;
+  border: 1px solid rgb(62, 64, 70) !important;
   color: #777F8D;
   font-size: 14px;
 
@@ -178,6 +178,7 @@
 
 .date_table {
   background-color: #17181c;
+  border: 1px solid rgb(62, 64, 70) !important;
   overflow-y: auto;
   height: 410px;
   font-size: 14px;
@@ -202,6 +203,7 @@
 
 .bacground_clean_black {
   background-color: #17181c;
+  border: 1px solid rgb(62, 64, 70) !important;
   height: 500px;
 }
 
