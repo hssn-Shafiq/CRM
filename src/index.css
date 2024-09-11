@@ -84,6 +84,10 @@ main {
 main::-webkit-scrollbar {
   width: 0px;
 }
+.page-parent{
+  margin: 2rem 0rem;
+}
+
 .page-title{
   font-weight: 700;
   font-family: poppins;
@@ -92,6 +96,15 @@ main::-webkit-scrollbar {
   font-size: 30px;
   background-clip: text;
   color: white;
+  position: relative;
+}
+.page-title::before{
+  content: "";
+  width: 120px;
+  height: 4px;
+  background: var(--color-47ad24);
+  position: absolute;
+  bottom: 0;
 }
 .ant-menu-title-content {
   font-size: 16px;

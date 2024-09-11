@@ -113,7 +113,7 @@ const Dashboard = () => {
   return (
     <Container  className="container-fluid px-3 pt-4">
     <div>
-    <div className="text-center  ">
+    <div className="text-center  page-parent">
         <h2 className="text-uppercase p-2 page-title">Dashboard</h2>
         </div>
       <div className="d-flex justify-content-between align-items-center gap-3 stats-container">

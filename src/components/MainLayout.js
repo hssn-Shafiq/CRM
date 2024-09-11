@@ -3,7 +3,6 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import {
   AiOutlineDashboard,
   AiOutlineSetting,
-  AiOutlineShoppingCart,
   AiOutlineUserSwitch,
 } from "react-icons/ai";
 import {
@@ -14,10 +13,8 @@ import {
   FaInstagram,
   FaLinkedin,
   FaPinterest,
-  FaPlus,
   FaTiktok,
   FaTwitter,
-  FaUpload,
   FaUser,
   FaUserLock,
   FaUsers,
@@ -28,12 +25,11 @@ import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { FcDataConfiguration } from "react-icons/fc";
 import { IoIosNotifications } from "react-icons/io";
-import { FaDatabase, FaHandsHelping, FaPlusCircle, FaRegBookmark } from "react-icons/fa";
+import { FaDatabase, FaHandsHelping, FaPlusCircle } from "react-icons/fa";
 import { BiCalendarCheck, BiCategoryAlt, BiCustomize, BiUser } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
-import { BsCardList, BsDatabaseSlash, BsFileSpreadsheet } from "react-icons/bs";
-import { MdOutlineDeleteSweep } from "react-icons/md";
+import { BsCardList, BsDatabaseSlash } from "react-icons/bs";
 import { getUserFromLocalStorage } from "../utils/localstorage";
 import { getAuth } from "firebase/auth";
 const { Header, Sider, Content } = Layout;
@@ -165,7 +161,7 @@ const MainLayout = () => {
             //   label: "Orders",
             // },
             {
-              key: "Admin For Mobile",
+              key: "Schedule Posts",
               icon: <FaCopy className="fs-4" />,
               label: "Schedule Posts",
               children: [
