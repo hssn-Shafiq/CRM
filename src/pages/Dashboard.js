@@ -113,11 +113,11 @@ const Dashboard = () => {
   return (
     <Container  className="container-fluid px-3 pt-4">
     <div>
-    <div className="text-center  ">
+    <div className="text-center  page-parent">
         <h2 className="text-uppercase p-2 page-title">Dashboard</h2>
         </div>
-      <div className="d-flex justify-content-between align-items-center gap-3">
-        <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
+      <div className="d-flex justify-content-between align-items-center gap-3 stats-container">
+        <div className="d-flex justify-content-between align-items-end flex-grow-1 stats-box bg-main border-main p-3 rounded-3">
           <div>
             <p className="desc">Total</p>
             <h4 className="mb-0 sub-title">$1100</h4>
@@ -126,22 +126,22 @@ const Dashboard = () => {
             <h6>
               <BsArrowDownRight /> 32%
             </h6>
-            <p className="mb-0  desc">Compared To April 2022</p>
+            <p className="mb-0  desc">Compared To August 2024</p>
           </div>
         </div>
-        <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
+        <div className="d-flex justify-content-between align-items-end flex-grow-1 stats-box bg-main border-main p-3 rounded-3">
           <div>
             <p className="desc">Total</p>
             <h4 className="mb-0 sub-title">$1100</h4>
           </div>
           <div className="d-flex flex-column align-items-end">
-            <h6 className="red">
+            <h6 className="red text-danger">
               <BsArrowDownRight /> 32%
             </h6>
-            <p className="mb-0  desc">Compared To April 2022</p>
+            <p className="mb-0  desc">Compared To August 2024</p>
           </div>
         </div>
-        <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
+        <div className="d-flex justify-content-between align-items-end flex-grow-1 stats-box bg-main border-main p-3 rounded-3">
           <div>
             <p className="desc">Total</p>
             <h4 className="mb-0 sub-title">$1100</h4>
@@ -150,12 +150,12 @@ const Dashboard = () => {
             <h6 className="green">
               <BsArrowDownRight /> 32%
             </h6>
-            <p className="mb-0 desc">Compared To April 2022</p>
+            <p className="mb-0 desc">Compared To August 2022</p>
           </div>
         </div>
       </div>
       <div className="mt-4">
-        <h3 className="mb-5 title">Income Statics</h3>
+        <h3 className="mb-5 title text-light">Income Statics</h3>
         <div>
           <Column {...config} />
         </div>

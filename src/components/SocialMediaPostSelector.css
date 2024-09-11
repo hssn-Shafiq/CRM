@@ -1,0 +1,39 @@
+.social-create-post {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .position-relative {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .tick-icon {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #1dc38c;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 12px;
+  }
+  
+  .options {
+    margin-top: 20px;
+  }
+  
+  .options-list {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: white;
+  }
+  
+  .option-item {
+    padding: 5px 0;
+    margin-bottom: 5px; /* Add margin between the items */
+  }
+  

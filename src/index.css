@@ -84,6 +84,10 @@ main {
 main::-webkit-scrollbar {
   width: 0px;
 }
+.page-parent{
+  margin: 2rem 0rem;
+}
+
 .page-title{
   font-weight: 700;
   font-family: poppins;
@@ -92,6 +96,15 @@ main::-webkit-scrollbar {
   font-size: 30px;
   background-clip: text;
   color: white;
+  position: relative;
+}
+.page-title::before{
+  content: "";
+  width: 120px;
+  height: 4px;
+  background: var(--color-47ad24);
+  position: absolute;
+  bottom: 0;
 }
 .ant-menu-title-content {
   font-size: 16px;
@@ -135,10 +148,10 @@ main::-webkit-scrollbar {
 }
 
 
-.admin-login-container  svg {
+/* .admin-login-container  svg {
   width: 16px;
   height: auto;
-}
+} */
 .admin-login-container .content{
   width: 30%;
   background: white;
@@ -162,3 +175,14 @@ main::-webkit-scrollbar {
   }
 }
 /* login page end */
+
+/* dashboard designing */
+
+.stats-container .stats-box{
+  box-shadow: -1px 2px 4px black, inset 0px 0px 8px black;
+
+  .sub-title{
+    color: white;
+    font-family: "Poppins", sans-serif !important;
+  }
+}

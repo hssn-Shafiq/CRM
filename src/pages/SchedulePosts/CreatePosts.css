@@ -37,7 +37,6 @@
     }
     .btn-emoji:hover{
         background: rgb(29,195,140);
-
     }
     .btn-publish{
         color: gray;
@@ -50,6 +49,7 @@
     .button-section-text-area {
         position: relative;
         bottom: 65px;
+        width: fit-content;
     }
 
     .btn-schedule {
@@ -87,6 +87,14 @@
         top: 22px;
         left: 6px;
         z-index: 1;
+    }
+    .writing_post{
+        position: relative;
+    }
+    .writing_post .btn-emoji{
+        position: absolute;
+        top: 4px;
+        right: 0;
     }
 
 }
