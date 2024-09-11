@@ -14,6 +14,15 @@ body{
   --bg-main: #1d1e22;
 }
 
+.border-main {
+  border: 1px solid rgb(62, 64, 70) !important;
+}
+
+.bg-main {
+  /* background: #1d1e22 !important; */
+  background: var(--bg-main) !important;
+
+}
 .green {
   color: var(--color-47ad24);
   font-size: 14px;
