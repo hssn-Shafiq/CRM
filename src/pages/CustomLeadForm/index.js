@@ -6,12 +6,13 @@ const CustomLeadForm = () => {
   return (
     <>
      <main className="parent-lead-data-form">
-  
+     <div className="text-center">
+        <h2 className="text-uppercase p-2 page-title">Leads Management </h2>
+      </div>
     <div className="container-fluid lead-table-container my-5">
       <div className="d-flex justify-content-between align-items-center mb-3">
         {/* <div class="row lead-row-heading-btn d-flex justifly-content-space-between align-items-center"> */}
         <div className="col-lg-6">
-          <h2 className="fw-bold">Leads Management</h2>
           <div className="dropdown">
             <button
               className="btn btn bg-light text-dark border-dark dropdown-toggle"
@@ -53,9 +54,9 @@ const CustomLeadForm = () => {
       </div>
       {/* Responsive Table */}
       <div className="table-responsive">
-        <table className="table  table-hover align-middle">
-          <thead className="bg-dark">
-            <tr>
+        <table className="table  table-hover align-middle leads-table">
+          <thead >
+            <tr className="border-main">
               <th>First Name</th>
               <th>Last Name</th>
               <th>Address</th>
@@ -453,8 +454,8 @@ const CustomLeadForm = () => {
           </div>
           <div className="modal-body">
             {/* Order Form */}
-            <div className="container max-w-lg mx-auto p-5 bg-white rounded shadow">
-              <h2 className="text-center fw-bold mb-4 text-dark">Lead Form</h2>
+            <div className="container max-w-lg mx-auto px-5 bg-white rounded shadow">
+              <h2 className="text-center fw-bol text-dark">Lead Form</h2>
               <p className="text-center text-dark text-muted mb-4">
                 Complete Below Details for Custom Order.
               </p>
@@ -463,13 +464,13 @@ const CustomLeadForm = () => {
                   <div className="col-lg-6">
                     <div className="mb-3">
                       <label className="form-label text-dark">First Name: *</label>
-                      <input type="text" className="form-control" required="" />
+                      <input type="text" className="form-control" placeholder="..john" required="" />
                     </div>
                   </div>
                   <div className="col-lg-6">
                     <div className="mb-3">
                       <label className="form-label text-dark">Last Name: *</label>
-                      <input type="text" className="form-control" required="" />
+                      <input type="text" className="form-control" required="" placeholder="..deo" />
                     </div>
                   </div>
                 </div>
@@ -477,7 +478,7 @@ const CustomLeadForm = () => {
                   <div className="col-lg-12">
                     <div className="mb-3">
                       <label className="form-label text-dark">Address: *</label>
-                      <input type="text" className="form-control" required="" />
+                      <input type="text" className="form-control" placeholder="Street No ..." required="" />
                     </div>
                   </div>
                 </div>
@@ -489,13 +490,14 @@ const CustomLeadForm = () => {
                         type="email"
                         className="form-control"
                         required=""
+                        placeholder="name@domain.com"
                       />
                     </div>
                   </div>
                   <div className="col-lg-6">
                     <div className="mb-3">
                       <label className="form-label text-dark">Phone: *</label>
-                      <input type="tel" className="form-control" required="" />
+                      <input type="tel" className="form-control" required="" placeholder="123456.." />
                     </div>
                   </div>
                   <div className="row">
@@ -508,6 +510,7 @@ const CustomLeadForm = () => {
                           type="text"
                           className="form-control"
                           required=""
+                          placeholder="Athletic Force"
                         />
                       </div>
                     </div>
@@ -569,6 +572,7 @@ const CustomLeadForm = () => {
                           type="text"
                           className="form-control"
                           required=""
+                          placeholder="red, green, #292929"
                         />
                       </div>
                     </div>
@@ -595,6 +599,7 @@ const CustomLeadForm = () => {
                     rows={4}
                     required=""
                     defaultValue={""}
+                    placeholder="the product have a logo on the top right..."
                   />
                 </div>
                 <div className="mb-3">
@@ -619,6 +624,7 @@ const CustomLeadForm = () => {
                     className="form-control"
                     rows={3}
                     defaultValue={""}
+                    placeholder="please make it looks better..."
                   />
                 </div>
                 <button

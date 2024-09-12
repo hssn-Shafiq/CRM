@@ -9,98 +9,127 @@ and the use the
 to use the 1 px solid border of the mostly use color 
 
 */
-.parent-lead-data-form{
-  body{
-  font-family: "Poppins", sans-serif;
+.parent-lead-data-form {
+
+  th,
+  td {
+    text-align: center;
+    font-size: 14px;
+  }
+
+  table thead {
+    background: var(--bg-main) !important;
+    color: #343a40 !important;
+
+    tr th {
+      color: white;
+      font-family: "Poppins", sans-serif;
+      letter-spacing: 1px;
+
+    }
+  }
+
+  table tbody tr:hover {
+    background-color: black;
+  }
+
+  table td,
+  table th {
+    vertical-align: middle;
+    white-space: nowrap;
+    background: transparent;
+    border: var(--border-main)
+  }
+   table tbody td{
+    color: rgb(211, 204, 204);
+   }
+  .pagination {
+    margin-top: 20px;
+    justify-content: center;
+  }
+
+  .page-link {
+    color: #007bff;
+    border-radius: 50%;
+  }
+
+  .page-link:hover {
+    color: #0056b3;
+  }
+
+  .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .page-item {
+    margin: 0 2px;
+  }
+
+
+
+  .btn-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+
+  .lead-row-heading-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .add-lead-data-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  td i {
+    margin: 5px;
+    color: rgba(0, 0, 0, 0.792);
+  }
+
+  .table-responsive {
+    border: 1px solid black;
+  }
+
+  .quantity-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #dee2ef !important;
+    height: 37px;
+    padding: 5px;
+  }
+
+  .quantity-wrapper button {
+    flex: 0 0 auto;
+    padding: 0.375rem 0.75rem;
+    padding-top: 2px;
+    padding-bottom: 2px;
+
+
 
   }
-    th, td{
-                text-align: center;
-                font-size: 14px;
-              }
-          
-              table thead {
-                background-color: #e9ecef;
-                color: #343a40 !important;
-              }
-          
-              table tbody tr:hover {
-                background-color: #f1f1f1;
-              }
-          
-              table td, table th {
-                vertical-align: middle;
-                white-space: nowrap;
-              }
-          
-              .pagination {
-                margin-top: 20px;
-                justify-content: center;
-              }
-          
-              .page-link {
-                color: #007bff;
-                border-radius: 50%;
-              }
-          
-              .page-link:hover {
-                color: #0056b3;
-              }
-          
-              .page-item.active .page-link {
-                background-color: #007bff;
-                border-color: #007bff;
-              }
-          
-              .page-item {
-                margin: 0 2px;
-              }
-          
-             
-          
-              .btn-link:hover {
-                color: #0056b3;
-                text-decoration: underline;
-              }
-              .lead-row-heading-btn{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-              }
-              .add-lead-data-btn{
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-              }
-              td i{
-                margin: 5px;
-                color: rgba(0, 0, 0, 0.792);
-              }
-              .table-responsive{
-                border: 1px solid black;
-              }
-              .quantity-wrapper {
-                display: flex;
-                align-items: center;
-                border: 1px solid #dee2ef !important;
-                height: 37px;
-                padding: 5px;
-            }
-    
-            .quantity-wrapper button {
-                flex: 0 0 auto;
-                padding: 0.375rem 0.75rem;
-                padding-top: 2px;
-                padding-bottom: 2px;
-    
-                
-                
-            }
-    
-            .quantity-wrapper input {
-                text-align: center;
-                width: 60px;
-                padding: 0.375rem 0.75rem;
-                padding: 3px;
-            }
-           }
+
+  .quantity-wrapper input {
+    text-align: center;
+    width: 60px;
+    padding: 0.375rem 0.75rem;
+    padding: 3px;
+  }
+}
+
+.leads-table thead {
+  background: var(--bg-main) !important;
+}
+
+#orderFormModal input, #orderFormModal select, #orderFormModal textarea{
+
+  border: 2px solid rgba(0, 0, 0, 0.13);
+}
+
+#orderFormModal label{
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+}
