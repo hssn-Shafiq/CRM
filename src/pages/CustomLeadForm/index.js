@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import "./lead.css";
+import { Link } from "react-router-dom";
 
 const CustomLeadForm = () => {
   return (
@@ -136,9 +137,9 @@ const CustomLeadForm = () => {
                   </td>
                   <td>Fast delivery</td>
                   <td>
-                    <a href="#" className="btn btn-primary">
+                    <Link to="/admin/Book-Appointments" className="btn btn-primary">
                       Book Now
-                    </a>{" "}
+                    </Link>{" "}
                   </td>
                   <td>
                     <a href="#">
