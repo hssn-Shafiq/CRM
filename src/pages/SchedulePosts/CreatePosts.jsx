@@ -35,27 +35,41 @@ const CreatePosts = () => {
                   </div>
                 </div>
                 <div className="post-card">
-    <div className="post-header">
-        <img src="profile-pic.png" alt="Profile Picture" className="profile-pic" />
-        <div>
-            <h5 className="mb-0">Company</h5>
-            <small className="text-muted">Just now</small>
-        </div>
-        <div className="ml-auto">
-            <i className="fas fa-ellipsis-h"></i>
-        </div>
-    </div>
-    <div className="post-content mt-3">
-        <p>This is an awesome post made using Bootstrap and Font Awesome icons!</p>
-    </div>
-    <div className="post-actions">
-        <a href="#"><i className="far fa-thumbs-up"></i> Like</a>
-        <a href="#"><i className="far fa-comment"></i> Comment</a>
-        <a href="#"><i className="fas fa-share"></i> Share</a>
-    </div>
-</div>
-
-                
+                  <div className="post-header">
+                    <img
+                      src="/images/profile.jpg"
+                      alt="Profile Picture"
+                      className="profile-pic"
+                    />
+                    <div>
+                      <strong className="mb-0 text-dark">Hassan Shafiq</strong>
+                      <br />
+                      <small className="text-muted">Just now</small>
+                    </div>
+                  </div>
+                  <div
+                    className="post-content mt-3"
+                  >
+                    <p>This is an dummy post for scheduling!</p>
+                    <img
+                      src="/images/profile.jpg"
+                      className="w-100 object-fit-cover"
+                      style={{ objectPosition: "top" }}
+                      alt="profile image"
+                    />
+                  </div>
+                  <div className="post-actions">
+                    <a href="#">
+                      <i className="far fa-thumbs-up"></i> Like
+                    </a>
+                    <a href="#">
+                      <i className="far fa-comment"></i> Comment
+                    </a>
+                    <a href="#">
+                      <i className="fas fa-share"></i> Share
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
