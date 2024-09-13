@@ -97,6 +97,7 @@ const MainLayout = () => {
         <Menu
           theme="dark"
           mode="inline"
+          className="bg-main"
           defaultSelectedKeys={[""]}
           onClick={handleMenuClick}
           items={[

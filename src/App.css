@@ -3,6 +3,7 @@
 body{
   font-family: "Poppins", sans-serif;
 }
+
 :root {
   --color-212529: #151719;
   --color-ffd333: #f56308;
@@ -106,7 +107,7 @@ body{
   transition: all .3s ease;
 }
 
-:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark .ant-menu-item:hover, .ant-menu-submenu.ant-menu-submenu-inline:hover{
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark .ant-menu-item:hover, .ant-menu-submenu.ant-menu-submenu-inline:hover, .ant-layout-sider-children .ant-menu-item:hover, .ant-menu-item.ant-menu-item-selected{
   background: #2c2f36 !important;
   border-right: 4px solid #4cbf9d;
   border-radius: 0px;
