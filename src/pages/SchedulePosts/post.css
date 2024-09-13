@@ -37,9 +37,13 @@
   /* background-color: #444; */
   border-bottom: 1.2px solid rgb(62, 64, 70);
   position: relative;
+  
+  img{
+    cursor: pointer;
+  }
 }
 
-.account-item svg {
+.account-item .social-account-icon{
   position: absolute;
   /* font-size: 12px !important; */
   width: 14px;
@@ -47,12 +51,13 @@
   bottom: 7px;
 }
 
-.account-item img {
+
+/* .account-item img {
   width: 40px;
   height: 40px;
   object-fit: cover;
   object-position: top;
-}
+} */
 
 .posts_updates_main .posts_updates_header input[type="search"]::placeholder {
   color: rgba(243, 243, 246, 0.715);

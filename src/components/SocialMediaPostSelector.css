@@ -3,37 +3,21 @@
     gap: 10px;
   }
   
-  .position-relative {
-    position: relative;
-    cursor: pointer;
-  }
   
   .tick-icon {
     position: absolute;
-    top: -5px;
-    right: -5px;
+    top: 3px;
+    right: 8px;
     background: #1dc38c;
     color: white;
     border-radius: 50%;
-    padding: 2px 5px;
-    font-size: 12px;
-  }
-  
-  .options {
-    margin-top: 20px;
-  }
-  
-  .options-list {
-    list-style-type: none;
-    padding: 0;
+    padding: 3px;
+    width: 15px;
+    height: 15px;
+    font-size: 10px;
     display: flex;
-    justify-content: start;
     align-items: center;
-    color: white;
+    justify-content:  center;
   }
-  
-  .option-item {
-    padding: 5px 0;
-    margin-bottom: 5px; /* Add margin between the items */
-  }
+
   

@@ -14,6 +14,7 @@ body{
   --color-af1: #f84248;
   --bg-main: #1d1e22;
   --border-main: 1px solid rgb(62, 64, 70);
+  --font-family: "Poppins", sans-serif;
 }
 
 .border-main {
@@ -76,7 +77,21 @@ body{
   min-height: auto !important;
   padding: 20px !important;
 }
-
+.dropdown-menu{
+  box-shadow: 0px 0px 3px black;
+}
+.dropdown-menu .dropdown-item{
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font-family);
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.349);
+  transition: all .3s ease;
+}
+.dropdown-menu .dropdown-item:hover{
+  background-color: var(--bg-main);
+  color: white;
+}
 
 :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark, :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark>.ant-menu, .ant-layout-sider-children{
   background: #1d1e22 !important;

@@ -19,7 +19,7 @@ const Posts = () => {
                   alt="profile"
                   className="rounded-circle me-2"
                 />
-                <FaFacebook size={24} className="me-2" />
+                <FaFacebook size={24} className="me-2 social-account-icon" />
                 <span>Hassan Shafiq</span>
               </div>
               <div className="account-item">
@@ -28,7 +28,7 @@ const Posts = () => {
                   alt="profile"
                   className="rounded-circle me-2"
                 />
-                <FaLinkedin size={24} className="me-2" />
+                <FaLinkedin size={24} className="me-2 social-account-icon" />
                 <span>Hassan Shafiq</span>
               </div>
               <div className="add_account text-center account-list-footer w-100 m-0">
