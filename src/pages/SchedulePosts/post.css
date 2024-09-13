@@ -857,3 +857,11 @@
 
   }
 }
+
+#emoji-palette{
+  top: 0 !important;
+
+  #tab-panel{
+    gap: 0.5rem;
+  }
+}

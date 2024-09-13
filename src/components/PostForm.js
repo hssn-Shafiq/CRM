@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import EmojiPicker from 'emoji-picker-react';
-import DatePicker from 'react-datepicker';  // Import DatePicker component
-import 'react-datepicker/dist/react-datepicker.css'; // Import DatePicker styles
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+// Import quill-emoji
+import 'quill-emoji/dist/quill-emoji.css'; // Styles for emoji
+import { Quill } from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Snow theme
+
+// Import Emoji module from quill-emoji
+import 'quill-emoji/dist/quill-emoji';
+import 'quill-emoji/dist/quill-emoji.css';
+
+// Register the emoji module in Quill
+Quill.register('modules/emoji', require('quill-emoji'));
 
 function PostForm({ selectedPlatforms }) {
   const [selectedForm, setSelectedForm] = useState('Post');
   const [editorContent, setEditorContent] = useState('');
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [showSchedulePicker, setShowSchedulePicker] = useState(false); // State to toggle date picker
-  const [scheduleDate, setScheduleDate] = useState(null); // State to hold the selected date and time
+  const [showSchedulePicker, setShowSchedulePicker] = useState(false);
+  const [scheduleDate, setScheduleDate] = useState(null);
 
   // Define the available post types for each platform
   const platformPostLimits = {
@@ -36,27 +45,23 @@ function PostForm({ selectedPlatforms }) {
     setSelectedForm(type);
   };
 
-  // Handle emoji select
-  const addEmoji = (event, emojiObject) => {
-    setEditorContent((prevContent) => prevContent + emojiObject.emoji);
-    setShowEmojiPicker(false); // Close emoji picker after selection
-  };
-
-  // Toolbar configuration
+  // Toolbar configuration with emoji support
   const modules = {
     toolbar: [
       ['bold', 'italic'],
-      [{ emoji: 'emoji' }], // Custom button for emoji picker
+      ['emoji'], // Add emoji button
     ],
+    'emoji-toolbar': true, // Enable emoji toolbar
+    'emoji-textarea': false, // Disable emoji textarea
+    'emoji-shortname': true, // Allow shortname autocomplete
   };
 
   // Handle scheduling logic
   const handleSchedule = () => {
-    setShowSchedulePicker(true); // Show date and time picker when clicking on "Schedule"
+    setShowSchedulePicker(true);
   };
 
   const handleDateChange = (date) => {
-    // Only allow future dates
     const now = new Date();
     if (date > now) {
       setScheduleDate(date);
@@ -98,14 +103,6 @@ function PostForm({ selectedPlatforms }) {
       ) : (
         <form id="postForm">
           <div className="form-group mb-3 writing_post">
-            <button
-              type="button"
-              className="btn responsive-buttons me-1 btn-emoji me-3"
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            >
-              <i className="fa-regular fa-face-smile"></i>
-            </button>
-            {showEmojiPicker && <EmojiPicker onEmojiClick={addEmoji} />}
             {/* React Quill Editor */}
             <ReactQuill
               value={editorContent}
@@ -135,7 +132,7 @@ function PostForm({ selectedPlatforms }) {
             <button
               className="btn btn-schedule responsive-buttons fw-semibold me-3"
               type="button"
-              onClick={handleSchedule} // Show the calendar and time picker when clicked
+              onClick={handleSchedule}
             >
               Schedule
             </button>
@@ -152,13 +149,11 @@ function PostForm({ selectedPlatforms }) {
                 timeFormat="HH:mm"
                 timeIntervals={15}
                 dateFormat="MMMM d, yyyy h:mm aa"
-                minDate={new Date()} // Prevent selecting past dates
+                minDate={new Date()}
                 placeholderText="Select date and time"
                 className="form-control"
               />
-              <button className="btn btn-primary">
-                Save
-              </button>
+              <button className="btn btn-primary">Save</button>
             </div>
           )}
         </form>
