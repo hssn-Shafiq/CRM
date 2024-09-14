@@ -3,16 +3,11 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-// Import quill-emoji
-import 'quill-emoji/dist/quill-emoji.css'; // Styles for emoji
+import 'quill-emoji/dist/quill-emoji.css'; 
 import { Quill } from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Snow theme
-
-// Import Emoji module from quill-emoji
+import 'react-quill/dist/quill.snow.css'; 
 import 'quill-emoji/dist/quill-emoji';
 import 'quill-emoji/dist/quill-emoji.css';
-
-// Register the emoji module in Quill
 Quill.register('modules/emoji', require('quill-emoji'));
 
 function PostForm({ selectedPlatforms }) {
