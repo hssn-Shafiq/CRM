@@ -75,7 +75,6 @@ const CustomLeadForm = () => {
                   <th>Lead Mock-up Details</th>
                   <th>Upload Logo</th>
                   <th>Additional Requests</th>
-                  <th>Appointment</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -102,11 +101,6 @@ const CustomLeadForm = () => {
                   </td>
                   <td>No requests</td>
                   <td>
-                    <a href="#" className="btn btn-primary">
-                      Book Now
-                    </a>{" "}
-                  </td>
-                  <td>
                     <a href="#">
                       <i className="fa-regular fa-user text-light" />
                     </a>
@@ -115,147 +109,6 @@ const CustomLeadForm = () => {
                     </a>{" "}
                   </td>
                 </tr>
-                <tr>
-                  <td>Jane</td>
-                  <td>Smith</td>
-                  <td>456 Oak Ave</td>
-                  <td>jane.smith@example.com</td>
-                  <td>555-5678</td>
-                  <td>Team Beta</td>
-                  <td>Texas</td>
-                  <td>Lead Type B</td>
-                  <td>75</td>
-                  <td>Red</td>
-                  <td>2024-09-25</td>
-                  <td>Mockup B</td>
-                  <td>
-                    <img
-                      src="/images/Huawei-Logo.png"
-                      width={60}
-                      alt="Huawei Logo"
-                    />
-                  </td>
-                  <td>Fast delivery</td>
-                  <td>
-                    <Link to="/admin/Book-Appointments" className="btn btn-primary">
-                      Book Now
-                    </Link>{" "}
-                  </td>
-                  <td>
-                    <a href="#">
-                      <i className="fa-regular fa-user text-light" />
-                    </a>
-                    <a href="#">
-                      <i className="fa-solid fa-trash text-danger" />
-                    </a>{" "}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Alice</td>
-                  <td>Johnson</td>
-                  <td>789 Pine Rd</td>
-                  <td>alice.johnson@example.com</td>
-                  <td>555-8901</td>
-                  <td>Team Gamma</td>
-                  <td>New York</td>
-                  <td>Lead Type C</td>
-                  <td>100</td>
-                  <td>Green</td>
-                  <td>2024-09-30</td>
-                  <td>Mockup C</td>
-                  <td>
-                    <img
-                      src="/images/Huawei-Logo.png"
-                      width={60}
-                      alt="Huawei Logo"
-                    />
-                  </td>
-                  <td>Urgent delivery</td>
-                  <td>
-                    <a href="#" className="btn btn-primary">
-                      Book Now
-                    </a>{" "}
-                  </td>
-                  <td>
-                    <a href="#">
-                      <i className="fa-regular fa-user text-light" />
-                    </a>
-                    <a href="#">
-                      <i className="fa-solid fa-trash text-danger" />
-                    </a>{" "}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Alice</td>
-                  <td>Johnson</td>
-                  <td>789 Pine Rd</td>
-                  <td>alice.johnson@example.com</td>
-                  <td>555-8901</td>
-                  <td>Team Gamma</td>
-                  <td>New York</td>
-                  <td>Lead Type C</td>
-                  <td>100</td>
-                  <td>Green</td>
-                  <td>2024-09-30</td>
-                  <td>Mockup C</td>
-                  <td>
-                    <img
-                      src="/images/Huawei-Logo.png"
-                      width={60}
-                      alt="Huawei Logo"
-                    />
-                  </td>
-                  <td>Urgent delivery</td>
-                  <td>
-                    <a href="#" className="btn btn-primary">
-                      Book Now
-                    </a>{" "}
-                  </td>
-                  <td>
-                    <a href="#">
-                      <i className="fa-regular fa-user text-light" />
-                    </a>
-                    <a href="#">
-                      <i className="fa-solid fa-trash text-danger" />
-                    </a>{" "}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Alice</td>
-                  <td>Johnson</td>
-                  <td>789 Pine Rd</td>
-                  <td>alice.johnson@example.com</td>
-                  <td>555-8901</td>
-                  <td>Team Gamma</td>
-                  <td>New York</td>
-                  <td>Lead Type C</td>
-                  <td>100</td>
-                  <td>Green</td>
-                  <td>2024-09-30</td>
-                  <td>Mockup C</td>
-                  <td>
-                    <img
-                      src="/images/Huawei-Logo.png"
-                      width={60}
-                      alt="Huawei Logo"
-                    />
-                  </td>
-                  <td>Urgent delivery</td>
-                  <td>
-                    <a href="#" className="btn btn-primary">
-                      Book Now
-                    </a>{" "}
-                  </td>
-                  <td>
-                    <a href="#">
-                      <i className="fa-regular fa-user text-light" />
-                    </a>
-                    <a href="#">
-                      <i className="fa-solid fa-trash text-danger" />
-                    </a>{" "}
-                  </td>
-                </tr>
-                {/* Add more rows as needed */}
               </tbody>
             </table>
           </div>

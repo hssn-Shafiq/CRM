@@ -53,7 +53,7 @@ function SocialMediaPostSelector({ selectedPlatforms, setSelectedPlatforms }) {
     if (selectAll) {
       setSelectedPlatforms([]);
     } else {
-      setSelectedPlatforms(Object.keys(platforms));
+      setSelectedPlatforms(platforms);
     }
     setSelectAll(!selectAll);
   };

@@ -8,6 +8,9 @@ import ReviewPost from "../../components/ReviewPost";
 
 const CreatePosts = () => {
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
+  const [editorContent, setEditorContent] = useState(""); // State for post content
+  const [uploadedMedia, setUploadedMedia] = useState(null); // State for uploaded media
+
   return (
     <>
       <main>
@@ -23,12 +26,18 @@ const CreatePosts = () => {
                         setSelectedPlatforms={setSelectedPlatforms}
                       />
                     </div>
-                    <PostForm selectedPlatforms={selectedPlatforms} />
+                    <PostForm
+                      selectedPlatforms={selectedPlatforms}
+                      editorContent={editorContent}
+                      setEditorContent={setEditorContent}
+                      setUploadedMedia={setUploadedMedia} // Pass media handler
+                    />
                   </div>
                 </div>
               </div>
               <div className="col-md-4">
-                <ReviewPost />
+                <ReviewPost selectedPlatforms={selectedPlatforms}   editorContent={editorContent}
+                  uploadedMedia={uploadedMedia} />
               </div>
             </div>
           </div>
