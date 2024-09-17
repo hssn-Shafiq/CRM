@@ -3,11 +3,6 @@
 .w-30 {
   width: 30% !important;
 }
-
-
-
-
-
 .account-list {
   background: var(--bg-main);
 
@@ -43,10 +38,29 @@
   }
 }
 
+.account-item.selected {
+  opacity: 0.6;
+}
+
+.account-item .selected-tick {
+  position: absolute;
+  top: 22px;
+  right: 5px;
+  color: #13afff;
+  font-size: 16px;
+
+}
+
+.social-account-icon {
+  transition: transform 0.2s ease;
+}
+
 .account-item .social-account-icon{
   position: absolute;
   /* font-size: 12px !important; */
   width: 14px;
+  transition: transform 0.2s ease;
+
   height: 14px;
   bottom: 7px;
 }
