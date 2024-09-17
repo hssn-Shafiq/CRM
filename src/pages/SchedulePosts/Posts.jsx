@@ -1,6 +1,12 @@
 // File: Posts.js
 import React, { useState, useEffect } from "react";
-import { FaFacebook, FaLinkedin, FaCheckCircle, FaInstagram } from "react-icons/fa"; // Import FaCheckCircle for the tick mark
+import {
+  FaFacebook,
+  FaLinkedin,
+  FaCheckCircle,
+  FaInstagram,
+  FaCalendar,
+} from "react-icons/fa"; // Import FaCheckCircle for the tick mark
 import "./post.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -18,7 +24,8 @@ const Posts = () => {
     const fetchPosts = async () => {
       setLoading(true); // Show loader when fetching data
       try {
-        const token = "Bearer 1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc";
+        const token =
+          "Bearer 1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc";
 
         const response = await axios.get(
           "https://crmapi.alayaarts.com/api/posts",
@@ -258,14 +265,16 @@ const Posts = () => {
                         </div>
                       </div>
                       <p className="card-text">{post.caption}</p>
-                      <div className="media-preview-main">
+                      <div className="media-preview-main mb-3">
                         {post.media.length > 0 &&
                           post.media.map((mediaItem, index) => (
-                            <video
+                            <img
                               key={index}
-                              src={mediaItem}
-                              controls
+                              // src={mediaItem || "/images/profile.jpg"}
+                              width={120}
+                              src="/images/profile.jpg"
                               className="img-thumbnail"
+                              alt="thubnails"
                             />
                           ))}
                       </div>
@@ -275,7 +284,9 @@ const Posts = () => {
                       <div className="d-flex justify-content-between align-items-center">
                         <span className="text-secondary">
                           Scheduled for{" "}
-                          {new Date(post.scheduled_for).toLocaleString()}
+                          <span className="border-main p-1 px-2 rounded-3" style={{cursor: "pointer"}}>
+                           <FaCalendar   /> {new Date(post.scheduled_for).toLocaleString()}
+                          </span>
                         </span>
                         <div className="d-flex">
                           <button
