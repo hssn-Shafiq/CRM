@@ -1,0 +1,410 @@
+{
+	"info": {
+		"_postman_id": "ee061014-5cfc-4dc2-8f8a-b011f265b13d",
+		"name": "CRM_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30910745"
+	},
+	"item": [
+		{
+			"name": "POST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var template = `\r",
+							"<style type=\"text/css\">\r",
+							"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+							"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+							"    .tftable tr {background-color:#ffffff;}\r",
+							"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+							"    .tftable tr:hover {background-color:#e0ffff;}\r",
+							"</style>\r",
+							"\r",
+							"<table class=\"tftable\" border=\"1\">\r",
+							"    <tr>\r",
+							"        <th>Message</th>\r",
+							"        <th>Exception</th>\r",
+							"        <th>File</th>\r",
+							"        <th>Line</th>\r",
+							"    </tr>\r",
+							"    <tr>\r",
+							"        <td>{{response.message}}</td>\r",
+							"        <td>{{response.exception}}</td>\r",
+							"        <td>{{response.file}}</td>\r",
+							"        <td>{{response.line}}</td>\r",
+							"    </tr>\r",
+							"</table>\r",
+							"`;\r",
+							"\r",
+							"function constructVisualizerPayload() {\r",
+							"    return {response: pm.response.json()}\r",
+							"}\r",
+							"\r",
+							"pm.visualizer.set(template, constructVisualizerPayload());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "caption",
+							"value": "This is a test post now live",
+							"type": "text"
+						},
+						{
+							"key": "link_preview",
+							"value": "https://example.com texting by bilal",
+							"type": "text"
+						},
+						{
+							"key": "hashtags",
+							"value": "[\"#Laravel\", \"#API\"]",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "mentions",
+							"value": "[1, 2]",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "New York",
+							"type": "text"
+						},
+						{
+							"key": "scheduled_for",
+							"value": "2024-09-18 10:00:00",
+							"type": "text"
+						},
+						{
+							"key": "call_to_action",
+							"value": "Learn More About",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "bilal1222@gmail.com",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Admin123",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "bilal",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://crmapi.alayaarts.com/api/posts",
+					"protocol": "https",
+					"host": [
+						"crmapi",
+						"alayaarts",
+						"com"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var template = `\r",
+							"<style type=\"text/css\">\r",
+							"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+							"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+							"    .tftable tr {background-color:#ffffff;}\r",
+							"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+							"    .tftable tr:hover {background-color:#e0ffff;}\r",
+							"</style>\r",
+							"\r",
+							"<table class=\"tftable\" border=\"1\">\r",
+							"    <tr>\r",
+							"        <th>Message</th>\r",
+							"        <th>Exception</th>\r",
+							"        <th>File</th>\r",
+							"        <th>Line</th>\r",
+							"    </tr>\r",
+							"    <tr>\r",
+							"        <td>{{response.message}}</td>\r",
+							"        <td>{{response.exception}}</td>\r",
+							"        <td>{{response.file}}</td>\r",
+							"        <td>{{response.line}}</td>\r",
+							"    </tr>\r",
+							"</table>\r",
+							"`;\r",
+							"\r",
+							"function constructVisualizerPayload() {\r",
+							"    return {response: pm.response.json()}\r",
+							"}\r",
+							"\r",
+							"pm.visualizer.set(template, constructVisualizerPayload());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "caption",
+							"value": "This is a test post now live",
+							"type": "text"
+						},
+						{
+							"key": "link_preview",
+							"value": "https://example.com",
+							"type": "text"
+						},
+						{
+							"key": "hashtags",
+							"value": "[\"#Laravel\", \"#API\"]",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "mentions",
+							"value": "[1, 2]",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "New York",
+							"type": "text"
+						},
+						{
+							"key": "scheduled_for",
+							"value": "2024-09-18 10:00:00",
+							"type": "text"
+						},
+						{
+							"key": "call_to_action",
+							"value": "Learn More About",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "bilal1222@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Admin123",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "bilal",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://crmapi.alayaarts.com/api/posts",
+					"protocol": "https",
+					"host": [
+						"crmapi",
+						"alayaarts",
+						"com"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var template = `\r",
+							"<style type=\"text/css\">\r",
+							"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+							"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+							"    .tftable tr {background-color:#ffffff;}\r",
+							"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+							"    .tftable tr:hover {background-color:#e0ffff;}\r",
+							"</style>\r",
+							"\r",
+							"<table class=\"tftable\" border=\"1\">\r",
+							"    <tr>\r",
+							"        <th>Message</th>\r",
+							"        <th>Exception</th>\r",
+							"        <th>File</th>\r",
+							"        <th>Line</th>\r",
+							"    </tr>\r",
+							"    <tr>\r",
+							"        <td>{{response.message}}</td>\r",
+							"        <td>{{response.exception}}</td>\r",
+							"        <td>{{response.file}}</td>\r",
+							"        <td>{{response.line}}</td>\r",
+							"    </tr>\r",
+							"</table>\r",
+							"`;\r",
+							"\r",
+							"function constructVisualizerPayload() {\r",
+							"    return {response: pm.response.json()}\r",
+							"}\r",
+							"\r",
+							"pm.visualizer.set(template, constructVisualizerPayload());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "caption",
+							"value": "This is a test post now live",
+							"type": "text"
+						},
+						{
+							"key": "link_preview",
+							"value": "https://example.com texting by bilal",
+							"type": "text"
+						},
+						{
+							"key": "hashtags",
+							"value": "[\"#Laravel\", \"#API\"]",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "mentions",
+							"value": "[1, 2]",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "New York",
+							"type": "text"
+						},
+						{
+							"key": "scheduled_for",
+							"value": "2024-09-18 10:00:00",
+							"type": "text"
+						},
+						{
+							"key": "call_to_action",
+							"value": "Learn More About",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "bilal1222@gmail.com",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Admin123",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "bilal",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://crmapi.alayaarts.com/api/posts/2",
+					"protocol": "https",
+					"host": [
+						"crmapi",
+						"alayaarts",
+						"com"
+					],
+					"path": [
+						"api",
+						"posts",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

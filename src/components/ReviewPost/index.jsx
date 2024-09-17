@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
+// Platform icons for each social media
 const platformIcons = {
   facebook: <FaFacebook size={24} className="me-2 social-account-icon" />,
   instagram: <FaInstagram size={24} className="me-2 social-account-icon" />,
@@ -23,6 +24,52 @@ const platformIcons = {
 
 const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
   const [selectedFilter, setSelectedFilter] = useState("All Accounts");
+
+  // Function to render images and videos from uploaded media
+  const renderMedia = (media) => {
+    if (!media) return null;
+    const { images = [], videos = [] } = media;
+
+    return (
+      <div className="media-gallery mt-3">
+        {/* Render images */}
+        {images.length > 0 && (
+          <div className="media-section mb-3">
+            <h6>Images</h6>
+            <div className="d-flex flex-wrap gap-2">
+              {images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  className="img-thumbnail"
+                  alt={`Uploaded media ${index + 1}`}
+                  style={{ objectPosition: "top" }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Render videos */}
+        {videos.length > 0 && (
+          <div className="media-section">
+            <h6>Videos</h6>
+            <div className="d-flex flex-wrap gap-2">
+              {videos.map((video, index) => (
+                <video
+                  key={index}
+                  src={video}
+                  controls
+                  className="img-thumbnail"
+                  alt={`Uploaded video ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   // Function to render the post content based on platform
   const renderPostContent = () => {
@@ -45,25 +92,28 @@ const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
       );
 
       return (
-        <>
-         <div className="select-acc d-flex align-items-center justify-content-between  ">
-          <strong>Select Account</strong>
-          <select
-            className="form-select w-auto"
-            value={selectedFilter}
-            onChange={(e) => setSelectedFilter(e.target.value)}
-          >
-            <option value="All Accounts">All Accounts</option>
-            {selectedPlatforms.map((platform, index) => (
-              <option key={index} value={platform}>
-                {platform.charAt(0).toUpperCase() + platform.slice(1)}
-              </option>
-            ))}
-          </select>
-         </div>
-          <div className="post-card" key={index}>
-            <div className="post-header bg-main">
-              <div className="account-item border-0">
+        <div key={index}>
+          {/* Account and filter selection */}
+          <div className="select-acc d-flex align-items-center justify-content-between  mb-3">
+            <strong>Select Account</strong>
+            <select
+              className="form-select w-auto"
+              value={selectedFilter}
+              onChange={(e) => setSelectedFilter(e.target.value)}
+            >
+              <option value="All Accounts">All Accounts</option>
+              {selectedPlatforms.map((platform, index) => (
+                <option key={index} value={platform}>
+                  {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Post card with platform-specific styling */}
+          <div className="post-card">
+            <div className="post-header bg-main d-flex align-items-center justify-content-start">
+              <div className="account-item border-0 me-3">
                 <img
                   src="/images/profile.jpg"
                   alt="profile"
@@ -77,8 +127,9 @@ const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
                 <small className="text-secondary">Just now</small>
               </div>
             </div>
+
+            {/* Post content from editor */}
             <div className="post-content mt-3">
-              {/* Render the editor content as HTML */}
               <div
                 dangerouslySetInnerHTML={{
                   __html:
@@ -86,16 +137,11 @@ const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
                 }}
               />
 
-              {/* Display uploaded media */}
-              {uploadedMedia && (
-                <img
-                  src={uploadedMedia}
-                  className="w-100"
-                  style={{ objectPosition: "top" }}
-                  alt="Uploaded media"
-                />
-              )}
+              {/* Render uploaded media (images and videos separately) */}
+              {renderMedia(uploadedMedia)}
             </div>
+
+            {/* Post actions */}
             <div className="post-actions">
               <Link to="#">
                 <i className="far fa-thumbs-up"></i> Like
@@ -108,7 +154,7 @@ const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
               </Link>
             </div>
           </div>
-        </>
+        </div>
       );
     });
   };
