@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   FaCheck,
   FaFacebook,
@@ -10,7 +10,7 @@ import {
   FaTwitter,
   FaUserCircle,
   FaWhatsapp,
-} from "react-icons/fa"; 
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "../components/SocialMediaPostSelector.css";
 
@@ -27,16 +27,16 @@ function SocialMediaPostSelector({ selectedPlatforms, setSelectedPlatforms }) {
     linkedin: {
       icon: <FaLinkedinIn className="text-light social-account-icon" />,
     },
-    Twitter: {
+    twitter: {
       icon: <FaTwitter className="text-light social-account-icon" />,
     },
-    TikTok: {
+    tiktok: {
       icon: <FaTiktok className="text-light social-account-icon" />,
     },
-    Pinterest: {
+    pinterest: {
       icon: <FaPinterest className="text-light social-account-icon" />,
     },
-    Whatsapp: {
+    whatsapp: {
       icon: <FaWhatsapp className="text-light social-account-icon" />,
     },
   };
@@ -51,11 +51,11 @@ function SocialMediaPostSelector({ selectedPlatforms, setSelectedPlatforms }) {
 
   const handleSelectAll = () => {
     if (selectAll) {
-      setSelectedPlatforms([]);
+      setSelectedPlatforms([]); // Deselect all platforms
     } else {
-      setSelectedPlatforms(platforms);
+      setSelectedPlatforms(Object.keys(platforms)); // Select all platforms
     }
-    setSelectAll(!selectAll);
+    setSelectAll(!selectAll); // Toggle selectAll state
   };
 
   return (

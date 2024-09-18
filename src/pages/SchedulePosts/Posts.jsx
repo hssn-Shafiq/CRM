@@ -265,7 +265,7 @@ const Posts = () => {
                         </div>
                       </div>
                       <p className="card-text">{post.caption}</p>
-                      <div className="media-preview-main mb-3">
+                      <div className="media-preview-main d-flex gap-2 mb-3">
                         {post.media.length > 0 &&
                           post.media.map((mediaItem, index) => (
                             <img
