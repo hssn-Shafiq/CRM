@@ -183,7 +183,7 @@ function PostForm({
       );
     } finally {
       setLoading(false);
-      window.location.reload();
+      // window.location.reload();
     }
   };
 

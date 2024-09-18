@@ -270,9 +270,9 @@ const Posts = () => {
                           post.media.map((mediaItem, index) => (
                             <img
                               key={index}
-                              // src={mediaItem || "/images/profile.jpg"}
+                              src={mediaItem || "/images/profile.jpg"}
                               width={120}
-                              src="/images/profile.jpg"
+                              // src="/images/profile.jpg"
                               className="img-thumbnail"
                               alt="thubnails"
                             />
