@@ -201,7 +201,7 @@ const SocialAccounts = () => {
                   </div>
                 ) : (
                   <FacebookLogin
-                    appId="1039165090869146"
+                    appId="446027444501615"
                     autoLoad={false}
                     fields="name,email,picture"
                     callback={responseFacebook}
