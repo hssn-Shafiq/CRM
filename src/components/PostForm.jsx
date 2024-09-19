@@ -174,6 +174,7 @@ function PostForm({
             onClick={() => document.getElementById("inputGroupFile02").click()}
           >
             Click to select media
+            
           </button>
         </div>
 
