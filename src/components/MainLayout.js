@@ -11,6 +11,7 @@ import {
   FaFacebook,
   FaGoogle,
   FaInstagram,
+  FaLayerGroup,
   FaLinkedin,
   FaPinterest,
   FaTiktok,
@@ -25,7 +26,7 @@ import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { FcDataConfiguration } from "react-icons/fc";
 import { IoIosNotifications } from "react-icons/io";
-import { FaDatabase, FaHandsHelping, FaPlusCircle } from "react-icons/fa";
+import { FaDatabase, FaHandsHelping, FaMailBulk, FaPlusCircle } from "react-icons/fa";
 import { BiCalendarCheck, BiCategoryAlt, BiCustomize, BiUser } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -190,23 +191,23 @@ const MainLayout = () => {
             },
             {
               key: "Track Leads",
-              icon: <FaDatabase className="fs-4" />,
-              label: "Track Leads",
+              icon: <FaUsers className="fs-4" />,
+              label: "Marketing",
               children: [
                 {
                   key: "CustomLead/Data",
                   icon: <BsDatabaseSlash className="fs-4" />,
-                  label: "Custom Leads",
+                  label: "Contacts",
                 },
                 {
                   key: "Book-Appointments",
-                  icon: <FaHandsHelping className="fs-4" />,
-                  label: "Book Appointments",
+                  icon: <FaMailBulk className="fs-4" />,
+                  label: "Emails",
                 },
                 {
                   key: "Client-Appointments",
-                  icon: <FaHandsHelping className="fs-4" />,
-                  label: "Client Appointments",
+                  icon: <FaLayerGroup  className="fs-4" />,
+                  label: "Templates",
                 },
               ],
             },
@@ -221,9 +222,14 @@ const MainLayout = () => {
               label: "Customization",
             },
             {
-              key: "Configration",
+              key: "Privacy-Policy",
               icon: <FcDataConfiguration className="fs-4" />,
-              label: "Configration",
+              label: "Privacy Policy",
+            },
+            {
+              key: "Terms-and-Condition",
+              icon: <FcDataConfiguration className="fs-4" />,
+              label: "Terms & Condition",
             },
             {
               key: "settings",
@@ -242,8 +248,7 @@ const MainLayout = () => {
             },
           ]}
         />
-        <div className="mt-5 bg-dark p-3 text-light social_login">
-          {/* <h5 className="w-100 fs-5 bg-light text-dark rounded-4 p-2"><BiUser className="fs-4" /> Hassan</h5> */}
+        {/* <div className="mt-5 bg-dark p-3 text-light social_login">
           <h5 className="w-100 fs-5 mb-0">Linked Accounts</h5>
           <div className="linked-accounts my-2 d-flex gap-1">
             <span
@@ -295,7 +300,7 @@ const MainLayout = () => {
               <FaPlusCircle /> Add Social Account
             </button>
           </Link>
-        </div>
+        </div> */}
       </Sider>
       <Layout className="site-layout">
         <Header

@@ -1,5 +1,6 @@
 // PostForm.js
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -10,9 +11,21 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
 import DatePicker from "./DatePicker";
-import axios from "axios"; // Import axios for API requests
+import axios from "axios";
+import { ClipLoader } from "react-spinners";
 
 Quill.register("modules/emoji", require("quill-emoji"));
+
+// Define platform content type restrictions
+const platformContentTypes = {
+  facebook: ["Post", "Reel", "Story"],
+  instagram: ["Post", "Reel", "Story"],
+  linkedin: ["Post"],
+  twitter: ["Post"],
+  tiktok: ["Reel"],
+  pinterest: ["Post"],
+  whatsapp: ["Post"],
+};
 
 function PostForm({
   selectedPlatforms,
@@ -25,43 +38,85 @@ function PostForm({
   const [scheduleTime, setScheduleTime] = useState("");
   const [scheduleDate, setScheduleDate] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [images, setImages] = useState([]);
-  const [videos, setVideos] = useState([]);
+  const [images, setImages] = useState([]); // For storing images
+  const [videos, setVideos] = useState([]); // For storing videos
   const [showModal, setShowModal] = useState(false);
+  const [availablePostTypes, setAvailablePostTypes] = useState(["Post"]);
   const datePickerRef = useRef(null);
+
+  useEffect(() => {
+    if (selectedPlatforms.length === 0) {
+      setAvailablePostTypes(["Post"]); // Default to Post if no platforms selected
+    } else {
+      const commonTypes = selectedPlatforms.reduce((acc, platform) => {
+        const platformTypes = platformContentTypes[platform.toLowerCase()] || [];
+        return acc.length === 0 ? platformTypes : acc.filter((type) => platformTypes.includes(type));
+      }, []);
+      setAvailablePostTypes(commonTypes);
+
+      if (!commonTypes.includes(selectedForm)) {
+        setSelectedForm(commonTypes[0]);
+      }
+    }
+  }, [selectedPlatforms, selectedForm]);
 
   const handleFormSelection = (type) => {
     setSelectedForm(type);
+
+    // Clear images if switching to "Reel" or "Story"
+    if (type === "Reel" || type === "Story") {
+      setImages([]); // Remove selected images
+      setUploadedMedia((prevMedia) => ({
+        ...prevMedia,
+        images: [], // Clear images in uploadedMedia state
+      }));
+    }
   };
 
+  // Handle media upload based on selected form type
   const handleMediaUpload = (event) => {
     const files = Array.from(event.target.files);
-    const imageFiles = [];
-    const videoFiles = [];
+    const newImages = [];
+    const newVideos = [];
 
     files.forEach((file) => {
-      if (file.type.startsWith("image/")) {
-        imageFiles.push(URL.createObjectURL(file));
+      if (file.type.startsWith("image/") && selectedForm === "Post") {
+        newImages.push(URL.createObjectURL(file));
       } else if (file.type.startsWith("video/")) {
-        videoFiles.push(URL.createObjectURL(file));
+        newVideos.push(URL.createObjectURL(file));
       }
     });
 
-    setImages((prevImages) => [...prevImages, ...imageFiles]);
-    setVideos((prevVideos) => [...prevVideos, ...videoFiles]);
-    setUploadedMedia({ images: imageFiles, videos: videoFiles });
+    // Merge new media with existing media
+    setImages((prevImages) => [...prevImages, ...newImages]);
+    setVideos((prevVideos) => [...prevVideos, ...newVideos]);
+
+    setUploadedMedia((prevMedia) => ({
+      images: [...(prevMedia?.images || []), ...newImages],
+      videos: [...(prevMedia?.videos || []), ...newVideos],
+    }));
   };
 
   const handleRemoveImage = (index) => {
     const updatedImages = [...images];
     updatedImages.splice(index, 1);
     setImages(updatedImages);
+
+    setUploadedMedia((prevMedia) => ({
+      ...prevMedia,
+      images: updatedImages,
+    }));
   };
 
   const handleRemoveVideo = (index) => {
     const updatedVideos = [...videos];
     updatedVideos.splice(index, 1);
     setVideos(updatedVideos);
+
+    setUploadedMedia((prevMedia) => ({
+      ...prevMedia,
+      videos: updatedVideos,
+    }));
   };
 
   const handleSchedule = () => {
@@ -76,51 +131,59 @@ function PostForm({
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Check if Facebook is selected
-    if (!selectedPlatforms.includes("facebook")) {
-      alert("Please select Facebook to post.");
+    const plainTextCaption = editorContent.replace(/(<([^>]+)>)/gi, ""); // Remove HTML tags
+    if (!plainTextCaption.trim() && selectedForm !== "Story") {
+      alert("Caption is required.");
       return;
     }
 
-    // Prepare the payload for the API
-    const payload = {
-      fb_posts: {
-        caption:  "hello this is for testing the post by hassan ﻿😦﻿ ",
-        media: [...images, ...videos], // Assume media URLs are handled server-side
-        link_preview: "https://example.com", // Replace with your link preview
-        hashtags: [], // Add hashtags logic if needed
-        mentions: [], // Add mentions logic if needed
-        location: "New York", // Replace with location data if available
-        scheduled_for: `${scheduleDate.toISOString().split("T")[0]} ${scheduleTime}`, // Format date and time
-        call_to_action: "Learn More About",
-        user_id: 10, // Replace with actual user ID if needed
-      },
-    };
+    const formData = new FormData();
+    formData.append("caption", plainTextCaption);
+    formData.append(
+      "scheduled_for",
+      `${scheduleDate.toISOString().split("T")[0]} ${scheduleTime}`
+    );
+    for (const pltf of selectedPlatforms) {
+      formData.append("platform[]", pltf);
+    }
+    formData.append("user_id", 10);
 
-    try { 
+    // Append media files from the images and videos state
+    for (const img of images) {
+      const file = await fetch(img).then((r) => r.blob());
+      formData.append("media[]", file);
+    }
+
+    for (const video of videos) {
+      const file = await fetch(video).then((r) => r.blob());
+      formData.append("media[]", file);
+    }
+
+    try {
       setLoading(true);
-         console.log("the data that is pasing is", payload);
-
+      setShowModal(false);
       const token = "Bearer 1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc";
-      // Make the API request to the endpoint
       const response = await axios.post(
         "https://crmapi.alayaarts.com/api/posts",
-        payload,
+        formData,
         {
           headers: {
-            Authorization: `${token}`, // Include the token in the request headers
-            "Content-Type": "application/json", // Set the content type to JSON
+            Authorization: `${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-      alert("Post schedule successfully!");
+      toast.success("Post scheduled successfully!");
     } catch (error) {
       console.error("Error posting data:", error);
-      alert("Failed to create the post.");
+      toast.error("Error posting data:", error);
+      alert(
+        error.response?.data?.message ||
+          "Failed to create the post. Please check your input data."
+      );
     } finally {
       setLoading(false);
-      setShowModal(false);
+      window.location.reload();
     }
   };
 
@@ -132,10 +195,11 @@ function PostForm({
   };
 
   return (
-    <div>
-      <div className="d-flex mb-3">
-        {selectedPlatforms.includes("facebook") &&
-          ["Post", "Reel", "Story"].map((type) => (
+    <>
+      <ToastContainer />
+      <div>
+        <div className="d-flex mb-3">
+          {availablePostTypes.map((type) => (
             <button
               key={type}
               onClick={() => handleFormSelection(type)}
@@ -146,128 +210,160 @@ function PostForm({
               {type}
             </button>
           ))}
-      </div>
-
-      <form id="postForm" >
-        <div className="form-group mb-3 writing_post">
-          <ReactQuill
-            value={editorContent}
-            onChange={setEditorContent}
-            modules={modules}
-            placeholder="Write something..."
-            theme="snow"
-          />
-        </div>
-
-        <div className="input-group mb-3">
-          <input
-            className="form-control bg-dark text-light d-none"
-            id="inputGroupFile02"
-            type="file"
-            accept="image/*,video/*"
-            multiple
-            onChange={handleMediaUpload}
-          />
-          <button
-            type="button"
-            className="btn btn-primary w-100 bg-dark border-main rounded-2"
-            onClick={() => document.getElementById("inputGroupFile02").click()}
-          >
-            Click to select media
-            
-          </button>
         </div>
 
         {loading ? (
-          <div className="loader">Loading...</div>
-        ) : (
-          <div>
-            {images.length > 0 && (
-              <div className="media-preview-main mb-3">
-                <h5 className="text-light">Images</h5>
-                <div className="d-flex flex-wrap gap-2">
-                  {images.map((img, index) => (
-                    <div key={index} className="media-preview position-relative">
-                      <img
-                        src={img}
-                        alt={`Selected Image ${index + 1}`}
-                        className="img-thumbnail"
-                      />
-                      <button
-                        className="btn btn-danger btn-sm position-absolute top-0 end-0"
-                        onClick={() => handleRemoveImage(index)}
-                      >
-                        <AiOutlineClose />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-
-            {videos.length > 0 && (
-              <div className="media-preview-main mb-3">
-                <h5 className="text-light">Videos</h5>
-                <div className="d-flex flex-wrap gap-2">
-                  {videos.map((video, index) => (
-                    <div key={index} className="media-preview position-relative">
-                      <video src={video} controls className="img-thumbnail" />
-                      <button
-                        className="btn btn-danger btn-sm position-absolute top-0 end-0"
-                        onClick={() => handleRemoveVideo(index)}
-                      >
-                        <AiOutlineClose />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+          <div className="text-center p-4">
+            <ClipLoader color="#fff" loading={loading} size={50} />
           </div>
+        ) : (
+          <form id="postForm">
+            {/* Hide Quill for Story */}
+            {selectedForm !== "Story" && (
+              <div className="form-group mb-3 writing_post">
+                <ReactQuill
+                  value={editorContent}
+                  onChange={setEditorContent}
+                  modules={modules}
+                  placeholder="Write something..."
+                  theme="snow"
+                />
+              </div>
+            )}
+
+            <div className="input-group mb-3">
+              <input
+                className="form-control bg-dark text-light d-none"
+                id="inputGroupFile02"
+                type="file"
+                accept={
+                  selectedForm === "Reel" || selectedForm === "Story"
+                    ? "video/*"
+                    : "image/*,video/*"
+                }
+                multiple
+                onChange={handleMediaUpload}
+              />
+              <button
+                type="button"
+                className="btn btn-primary w-100 bg-dark border-main rounded-2"
+                onClick={() =>
+                  document.getElementById("inputGroupFile02").click()
+                }
+              >
+                Click to select{" "}
+                {selectedForm === "Reel" || selectedForm === "Story"
+                  ? "videos"
+                  : "images/videos"}
+              </button>
+            </div>
+
+            {loading ? (
+              <div className="loader">{ClipLoader} </div>
+            ) : (
+              <div>
+                {images.length > 0 && selectedForm !== "Story" && (
+                  <div className="media-preview-main mb-3 d-flex gap-2">
+                    <div className="d-flex flex-wrap gap-2">
+                      {images.map((img, index) => (
+                        <div
+                          key={index}
+                          className="media-preview position-relative"
+                        >
+                          <img
+                            src={img}
+                            alt={`selected `}
+                            className="img-thumbnail"
+                          />
+                          <button
+                            className="btn btn-danger btn-sm position-absolute top-0 end-0"
+                            onClick={() => handleRemoveImage(index)}
+                          >
+                            <AiOutlineClose />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="media-preview position-relative">
+                      <div className="add-new d-flex align-items-center justify-content-center ">
+                        <FaPlus
+                          className="fs-4 text-light "
+                          onClick={() =>
+                            document.getElementById("inputGroupFile02").click()
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {videos.length > 0 && (
+                  <div className="media-preview-main mb-3">
+                    <h5 className="text-light">Videos</h5>
+                    <div className="d-flex flex-wrap gap-2">
+                      {videos.map((video, index) => (
+                        <div
+                          key={index}
+                          className="media-preview position-relative"
+                        >
+                          <video src={video} controls className="img-thumbnail" />
+                          <button
+                            className="btn btn-danger btn-sm position-absolute top-0 end-0"
+                            onClick={() => handleRemoveVideo(index)}
+                          >
+                            <AiOutlineClose />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="d-flex justify-content-end">
+              <button
+                className="btn btn-outline-secondary responsive-buttons fw-semibold me-3"
+                type="button"
+              >
+                Draft
+              </button>
+              <button
+                className="btn btn-publish responsive-buttons fw-semibold me-3"
+                type="button"
+                disabled={loading}
+              >
+                {loading ? "Publishing..." : "Publish"}
+              </button>
+              <button
+                className="btn btn-schedule responsive-buttons fw-semibold me-3"
+                type="button"
+                onClick={handleSchedule}
+              >
+                Schedule
+              </button>
+            </div>
+          </form>
         )}
 
-        <div className="d-flex justify-content-end">
-          <button
-            className="btn btn-outline-secondary responsive-buttons fw-semibold me-3"
-            type="button"
-          >
-            Draft
-          </button>
-          <button
-            className="btn btn-publish responsive-buttons fw-semibold me-3"
-            type="button"
-            disabled={loading}
-          >
-            {loading ? "Publishing..." : "Publish"}
-          </button>
-          <button
-            className="btn btn-schedule responsive-buttons fw-semibold me-3"
-            type="button"
-            onClick={handleSchedule}
-          >
-            Schedule
-          </button>
-        </div>
-      </form>
-
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Select Date and Time</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <DatePicker onDateTimeSelect={handleDateTimeSelect} />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Save
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+        <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Select Date and Time</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <DatePicker onDateTimeSelect={handleDateTimeSelect} />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleSubmit}>
+              Save
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    </>
   );
 }
 

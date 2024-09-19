@@ -1,11 +1,32 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import FacebookLogin from "react-facebook-login";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./post.css"
 // import img01 from '../../../public/images/facebook-circle.svg'
 
 const SocialAccounts = () => {
+  const [fbData, setFbData] = useState({
+    isLoggedIn: false,
+    name: "",
+    picture: "",
+  });
+
+  const responseFacebook = (response) => {
+    console.log(response);
+    if (response.status !== "unknown") {
+      setFbData({
+        isLoggedIn: true,
+        name: response.name,
+        picture: response.picture.data.url,
+      });
+      toast.success("Logged in successfully!");
+    } else {
+      toast.error("Failed to log in with Facebook!");
+    }
+  };
+
   return (
     <>
       <main className="SocialAccount_main_section">
@@ -166,106 +187,31 @@ const SocialAccounts = () => {
             <div className="row">
               {/* Facebook Section */}
               <div className="col-12">
-                <div className="account-connect-custom d-flex  align-items-center">
-                  <div className="d-flex align-items-center text-light">
-                    <img width={25} src="/images/facebook-circle.svg" alt="" />
-                    <h5>Facebook</h5>
-                  </div>
-                  <div className="pulse-circle" />{" "}
-                  <span className="bar-span-custom" />
-                  {/* facebook model */}
-                  <button
-                    type="button"
-                    className="btn btn-primary btn btn-connect-custom"
-                    data-bs-toggle="modal"
-                    data-bs-target="#fbFacebookModal"
-                  >
-                    Connect
-                  </button>
-                  {/* Modal Structure */}
-                  <div
-                    className="modal fade"
-                    id="fbFacebookModal"
-                    tabIndex={-1}
-                    aria-labelledby="fbFacebookModalLabel"
-                    aria-hidden="true"
-                  >
-                    <div className="modal-dialog modal-lg">
-                      <div className="modal-content fb-modal-content">
-                        <div className="fb-modal-header modal-header">
-                          <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
-                            width={30}
-                            alt="Facebook logo"
-                          />
-                          <h5
-                            className="modal-title d-flex flex-column"
-                            id="fbFacebookModalLabel"
-                          >
-                            Facebook <br />
-                            <a href="#" className="btn btn-primary icon-fb-like">
-                              <i className="fa-solid fa-thumbs-up" /> Like 30k
-                            </a>
-                          </h5>
-                          <button
-                            type="button"
-                            className="btn-close fb-btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                          />
-                        </div>
-                        <div className="fb-modal-body modal-body">
-                          <div className="row text-center">
-                            <div className="col-md-3 col-6 fb-model-se-col fb-model-se-col">
-                              <div className="fb-icon-box">
-                                <div className="fb-icon">
-                                  <i className="bi bi-person-circle" />
-                                </div>
-                                <img
-                                  width={30}
-                                  src="/images/on-board-fb_profile.svg"
-                                  alt=""
-                                />
-                                <div className="fb-title">Profile</div>
-                                <div className="fb-subtitle">(via reminders)</div>
-                              </div>
-                            </div>
-                            <div className="col-md-3 col-6 fb-model-se-col">
-                              <div className="fb-icon-box">
-                                <div className="fb-icon">
-                                  <img width={30} src="/images/page.svg" alt="" />
-                                </div>
-                                <div className="fb-title">Page</div>
-                              </div>
-                            </div>
-                            <div className="col-md-3 col-6 fb-model-se-col">
-                              <div className="fb-icon-box">
-                                <div className="fb-icon">
-                                  <img width={30} src="/images/location.svg" alt="" />
-                                </div>
-                                <div className="fb-title">Location</div>
-                              </div>
-                            </div>
-                            <div className="col-md-3 col-6 fb-model-se-col">
-                              <div className="fb-icon-box">
-                                <div className="fb-icon">
-                                  <img
-                                    width={30}
-                                    src="/images/on-board-fb_profile.svg"
-                                    alt=""
-                                  />
-                                </div>
-                                <div className="fb-title">Group</div>
-                                <div className="fb-subtitle">(via reminders)</div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              <div className="account-connect-custom d-flex  align-items-center">
+                <div className="d-flex align-items-center text-light">
+                  <img width={25} src="/images/facebook-circle.svg" alt="Facebook" />
+                  <h5>Facebook</h5>
                 </div>
+                <span className="bar-span-custom" />
+                {/* Facebook Login Button */}
+                {fbData.isLoggedIn ? (
+                  <div className="d-flex align-items-center">
+                    <img src={fbData.picture} alt={fbData.name} width="40" height="40" />
+                    <h6 className="ms-3">Welcome, {fbData.name}!</h6>
+                  </div>
+                ) : (
+                  <FacebookLogin
+                    appId="446027444501615"
+                    autoLoad={false}
+                    fields="name,email,picture"
+                    callback={responseFacebook}
+                    icon="fa-facebook"
+                    textButton="Connect"
+                    cssClass="btn btn-primary btn-connect-custom"
+                  />
+                )}
               </div>
+            </div>
               {/* Instgram */}
               <div className="col-12">
                 <div className="account-connect-custom d-flex  align-items-center">

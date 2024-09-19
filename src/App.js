@@ -24,7 +24,7 @@ import UserDetails from "./pages/UserDetails";
 import UserPermission from "./pages/AccessPermissions/UserPermission";
 import UserRole from "./pages/AccessPermissions/UserRole";
 import Customization from "./pages/Customization";
-import Configration from "./pages/Configration";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import CreatePosts from "./pages/SchedulePosts/CreatePosts";
 import Calendar from "./pages/SchedulePosts/Calendar";
 import SocialAccounts from "./pages/SchedulePosts/SocialAccounts";
@@ -32,6 +32,7 @@ import CustomLeadForm from "./pages/CustomLeadForm";
 import ScheduleAppointments from "./pages/ScheduleAppointments";
 import CheckBookedAppointments from "./pages/CheckBookedAppointments";
 import ClientAppointments from "./pages/ClientAppointments";
+import TermCondition from "./pages/TermConditions";
 
 function App() {
   return (
@@ -45,7 +46,8 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="RegisteredUser" element={<RegisteredUser />} />
           <Route path="enquiries/:id" element={<ViewEnq />} />
-          <Route path="Configration" element={<Configration />} />
+          <Route path="Privacy-Policy" element={<PrivacyPolicy />} />
+          <Route path="Terms-and-Condition" element={<TermCondition />} />
           {/* <Route path="coupon/:id" element={<AddCoupon />} /> */}
           
           <Route path="SchedulePosts/Create-Post" element={<CreatePosts />} />
