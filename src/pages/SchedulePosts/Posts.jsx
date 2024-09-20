@@ -11,13 +11,16 @@ import "./post.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { ClipLoader } from "react-spinners"; // Import a spinner loader from react-spinners
-
+import PostCreation from "../../components/PostCreation"; // Import PostCreation for editing post
+import { Modal } from "react-bootstrap";
 const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
   const [filterStatus, setFilterStatus] = useState(""); // Start with no status selected
   const [loading, setLoading] = useState(false); // State to manage the loading indicator
+  const [selectedPost, setSelectedPost] = useState(null); // Track post to be edited
+  const [showEditModal, setShowEditModal] = useState(false); // Manage modal visibility
 
   // Fetch data from API
   useEffect(() => {
@@ -82,6 +85,12 @@ const Posts = () => {
         ? prev.filter((p) => p !== platform)
         : [...prev, platform]
     );
+  };
+
+  // Handle Edit Post (open modal)
+  const handleEdit = (post) => {
+    setSelectedPost(post); // Set the selected post for editing
+    setShowEditModal(true); // Show the edit modal
   };
 
   // Handle Delete Post
@@ -284,8 +293,12 @@ const Posts = () => {
                       <div className="d-flex justify-content-between align-items-center">
                         <span className="text-secondary">
                           Scheduled for{" "}
-                          <span className="border-main p-1 px-2 rounded-3" style={{cursor: "pointer"}}>
-                           <FaCalendar   /> {new Date(post.scheduled_for).toLocaleString()}
+                          <span
+                            className="border-main p-1 px-2 rounded-3"
+                            style={{ cursor: "pointer" }}
+                          >
+                            <FaCalendar />{" "}
+                            {new Date(post.scheduled_for).toLocaleString()}
                           </span>
                         </span>
                         <div className="d-flex">
@@ -295,7 +308,10 @@ const Posts = () => {
                           >
                             Delete
                           </button>
-                          <button className="btn btn-outline-light me-2">
+                          <button
+                            className="btn btn-outline-light me-2"
+                            onClick={() => handleEdit(post)}
+                          >
                             Edit
                           </button>
                           <button className="btn btn-primary">Publish</button>
@@ -312,6 +328,30 @@ const Posts = () => {
           </div>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      <Modal
+        show={showEditModal}
+        onHide={() => setShowEditModal(false)}
+        size="xl"
+        backdrop='static'
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Post</Modal.Title>
+        </Modal.Header>
+        <Modal.Body 
+        className="bg-main"
+        
+        >
+          {selectedPost && (
+            <PostCreation
+              post={selectedPost} // Pass selected post data
+              setShowModal={setShowEditModal}
+            />
+          )}
+        </Modal.Body>
+      </Modal>
     </main>
   );
 };
