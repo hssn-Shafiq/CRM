@@ -40,9 +40,11 @@ to use the 1 px solid border of the mostly use color
     background: transparent;
     border: var(--border-main)
   }
-   table tbody td{
+
+  table tbody td {
     color: rgb(211, 204, 204);
-   }
+  }
+
   .pagination {
     margin-top: 20px;
     justify-content: center;
@@ -124,12 +126,37 @@ to use the 1 px solid border of the mostly use color
   background: var(--bg-main) !important;
 }
 
-#orderFormModal input, #orderFormModal select, #orderFormModal textarea{
+#orderFormModal input,
+#orderFormModal select,
+#orderFormModal textarea {
 
   border: 2px solid rgba(0, 0, 0, 0.13);
 }
 
-#orderFormModal label{
+#orderFormModal label {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
+}
+
+#custom_lead_top_bar {
+  color: black;
+
+  input:focus,
+  select:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #ced4da !important;
+  }
+
+  .custom-file-input {
+    display: none;
+  }
+
+  .custom-file-label {
+    cursor: pointer;
+  }
+
+  label {
+    width: 100%;
+  }
 }
