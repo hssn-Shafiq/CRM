@@ -42,10 +42,11 @@ function SocialMediaPostSelector({ selectedPlatforms, setSelectedPlatforms }) {
   };
 
   const handleSelect = (platform) => {
-    setSelectedPlatforms((prev) =>
-      prev.includes(platform)
-        ? prev.filter((item) => item !== platform) // Deselect if already selected
-        : [...prev, platform] // Add to selected platforms
+    setSelectedPlatforms(
+      (prev) =>
+        prev.includes(platform)
+          ? prev.filter((item) => item !== platform) // Deselect if already selected
+          : [...prev, platform] // Add to selected platforms
     );
   };
 
@@ -53,7 +54,7 @@ function SocialMediaPostSelector({ selectedPlatforms, setSelectedPlatforms }) {
     if (selectAll) {
       setSelectedPlatforms([]); // Deselect all platforms
     } else {
-      setSelectedPlatforms(Object.keys(platforms)); // Select all platforms
+      setSelectedPlatforms(Object.keys(platforms));
     }
     setSelectAll(!selectAll); // Toggle selectAll state
   };
@@ -93,7 +94,6 @@ function SocialMediaPostSelector({ selectedPlatforms, setSelectedPlatforms }) {
             <img
               src="/images/profile.jpg"
               alt="profile"
-              social-account-icon
               className="rounded-circle me-2 account-item-profile"
             />
             {icon}

@@ -186,7 +186,7 @@
   color: #777F8D;
   font-size: 14px;
 
-  button {
+  #show-date-btn {
     width: 16px;
     height: 20px;
     display: flex;

@@ -49,18 +49,23 @@ function App() {
           <Route path="Privacy-Policy" element={<PrivacyPolicy />} />
           <Route path="Terms-and-Condition" element={<TermCondition />} />
           {/* <Route path="coupon/:id" element={<AddCoupon />} /> */}
-          
+
           <Route path="SchedulePosts/Create-Post" element={<CreatePosts />} />
           <Route path="SchedulePosts/Calendar" element={<Calendar />} />
-          <Route path="SchedulePosts/SocialAccounts" element={<SocialAccounts />} />
+          <Route
+            path="SchedulePosts/SocialAccounts"
+            element={<SocialAccounts />}
+          />
           <Route path="SchedulePosts/Posts" element={<Posts />} />
-          
+
           {/* Leads & Appointment Booking */}
           <Route path="CustomLead/Data" element={<CustomLeadForm />} />
           <Route path="Book-Appointments" element={<ScheduleAppointments />} />
-          <Route path="Check-Book-Appointments" element={<CheckBookedAppointments />} />
+          <Route
+            path="Check-Book-Appointments"
+            element={<CheckBookedAppointments />}
+          />
           <Route path="Client-Appointments" element={<ClientAppointments />} />
-
 
           <Route path="order/:id" element={<ViewOrder />} />
           <Route path="Settings" element={<Settings />} />
@@ -71,11 +76,20 @@ function App() {
           <Route path="category" element={<Addcat />} />
           <Route path="User-Details" element={<UserDetails />} />
           <Route path="Customization" element={<Customization />} />
-          <Route path="list-product" element={<Productlist />} />
-          <Route path="AccessPermissions/UserPermission" element={<UserPermission />} />
+          {/* <Route path="list-product" element={<Productlist />} /> */}
+          <Route
+            path="AccessPermissions/UserPermission"
+            element={<UserPermission />}
+          />
           <Route path="AccessPermissions/UserRole" element={<UserRole />} />
-          <Route path="AccessPermissions/UploadVisitorCheels" element={<UploadVisitorCheels />} />
-          <Route path="AccessPermissions/UploadVisitorCheels" element={<UploadVisitorGallery />} />
+          <Route
+            path="AccessPermissions/UploadVisitorCheels"
+            element={<UploadVisitorCheels />}
+          />
+          <Route
+            path="AccessPermissions/UploadVisitorCheels"
+            element={<UploadVisitorGallery />}
+          />
         </Route>
       </Routes>
     </Router>
