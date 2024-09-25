@@ -9,17 +9,25 @@ import ReviewPost from "../ReviewPost";
 const PostCreation = ({ post, setShowModal }) => {
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
   const [editorContent, setEditorContent] = useState(""); // State for post content
-  const [uploadedMedia, setUploadedMedia] = useState({ images: [], videos: [] }); // State for uploaded media
+  const [uploadedMedia, setUploadedMedia] = useState({
+    images: [],
+    videos: [],
+  }); // State for uploaded media
+  const [initialMedia, setInitialMedia] = useState([]); // Track initial media for comparison
 
-  // Pre-populate the post data when editing
+
   useEffect(() => {
     if (post) {
       setEditorContent(post.caption || "");
       setSelectedPlatforms(post.platform || []);
-      setUploadedMedia({
-        images: post.media.filter((url) => url.endsWith(".jpg") || url.endsWith(".png")),
+      const media = {
+        images: post.media.filter(
+          (url) => url.endsWith(".jpg") || url.endsWith(".png")
+        ),
         videos: post.media.filter((url) => url.endsWith(".mp4")),
-      });
+      };
+      setUploadedMedia(media);
+      setInitialMedia(media); // Track original media
     }
   }, [post]);
 
@@ -28,19 +36,44 @@ const PostCreation = ({ post, setShowModal }) => {
     const token = "Bearer 1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc";
     const formData = new FormData();
 
-    formData.append("caption", editorContent);
-    formData.append("platform", selectedPlatforms.join(","));
-    uploadedMedia.images.forEach((image, idx) => {
-      formData.append(`media[${idx}]`, image);
-    });
-    uploadedMedia.videos.forEach((video, idx) => {
-      formData.append(`media[${idx + uploadedMedia.images.length}]`, video);
-    });
+    // Append caption and platforms
+    const plainTextCaption = editorContent.replace(/(<([^>]+)>)/gi, "");
+    console.log("the caption is", plainTextCaption);
+    formData.append("caption", plainTextCaption);
+
+    for (const pltf of selectedPlatforms) {
+      formData.append("platform[]", pltf);
+    }
+
+    // selectedPlatforms.forEach((platform) => formData.append("platform[]", platform));
+
+    // Append new or existing media
+    // if (uploadedMedia.images.length > 0 || uploadedMedia.videos.length > 0) {
+    //   uploadedMedia.images.forEach((image, idx) => {
+    //     if (!initialMedia.images.includes(image)) {
+    //       formData.append(`media[]`, image);
+    //     }
+    //   });
+    //   uploadedMedia.videos.forEach((video, idx) => {
+    //     if (!initialMedia.videos.includes(video)) {
+    //       formData.append(`media[]`, video);
+    //     }
+    //   });
+    // } else { 
+    //   initialMedia.images.forEach((image) => formData.append(`media[]`, image));
+    //   initialMedia.videos.forEach((video) => formData.append(`media[]`, video));
+    // }
+    for (let pair of formData.entries()) {
+      console.log("date which is submitting is ", pair[0] + ": " + pair[1]);
+    }
 
     try {
+      // console.log("date which is submitting is ", formData);
       const response = await axios.put(
         `https://crmapi.alayaarts.com/api/posts/${post.id}`, // Update post API
-        formData,
+        {
+          caption: plainTextCaption,
+        },
         {
           headers: {
             Authorization: token,
@@ -49,7 +82,7 @@ const PostCreation = ({ post, setShowModal }) => {
         }
       );
       toast.success("Post updated successfully!");
-      setShowModal(false); // Close the modal after updating
+      setShowModal(false);
     } catch (error) {
       console.error("Error updating post:", error);
       toast.error("Failed to update post");

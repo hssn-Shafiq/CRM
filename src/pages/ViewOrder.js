@@ -1,85 +1,48 @@
-import React, { useEffect } from "react";
-import { Table } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { BiEdit } from "react-icons/bi";
-import { AiFillDelete } from "react-icons/ai";
-import { Link, useLocation } from "react-router-dom";
-import { getOrderByUser, getOrders } from "../features/auth/authSlice";
-const columns = [
-  {
-    title: "SNo",
-    dataIndex: "key",
-  },
-  {
-    title: "Product Name",
-    dataIndex: "name",
-  },
-  {
-    title: "Brand",
-    dataIndex: "brand",
-  },
-  {
-    title: "Count",
-    dataIndex: "count",
-  },
-  {
-    title: "Color",
-    dataIndex: "color",
-  },
-  {
-    title: "Amount",
-    dataIndex: "amount",
-  },
-  {
-    title: "Date",
-    dataIndex: "date",
-  },
+import React, { useEffect, useState } from "react";
+// import { fetchOrders } from '../shopifyService';
+import { fetchOrders } from "../Services/shopifyService";
 
-  {
-    title: "Action",
-    dataIndex: "action",
-  },
-];
+const OrderList = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true); // For loading state
+  const [error, setError] = useState(null); // For error state
 
-const ViewOrder = () => {
-  const location = useLocation();
-  const userId = location.pathname.split("/")[3];
-  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getOrderByUser(userId));
-  }, []);
-  const orderState = useSelector((state) => state.auth.orderbyuser[0].products);
-  console.log(orderState);
-  const data1 = [];
-  for (let i = 0; i < orderState.length; i++) {
-    data1.push({
-      key: i + 1,
-      name: orderState[i].product.title,
-      brand: orderState[i].product.brand,
-      count: orderState[i].count,
-      amount: orderState[i].product.price,
-      color: orderState[i].product.color,
-      date: orderState[i].product.createdAt,
-      action: (
-        <>
-          <Link to="/" className=" fs-3 text-danger">
-            <BiEdit />
-          </Link>
-          <Link className="ms-3 fs-3 text-danger" to="/">
-            <AiFillDelete />
-          </Link>
-        </>
-      ),
-    });
-  }
+    const getOrders = async () => {
+      try {
+        const fetchedOrders = await fetchOrders();
+        setOrders(fetchedOrders);
+      } catch (err) {
+        setError("Failed to fetch orders");
+      } finally {
+        setLoading(false); // Set loading to false after the fetch
+      }
+    };
+
+    getOrders();
+  }, []); // Empty dependency array ensures this runs only on mount
+
+  console.log("orders in view orders are ",orders);
+  if (loading) return <p>Loading orders...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
     <div>
-      <h3 className="mb-4 title">View Order</h3>
-      <div>
-        <Table columns={columns} dataSource={data1} />
-      </div>
+      <h2>Customer Orders</h2>
+      {orders && orders.length > 0 ? (
+        <ul>
+          {orders.map((order, index) => (
+            <li key={index}>
+              Order ID: {order.id}, Customer: {order.customer_name}, Total:{" "}
+              {order.total_price}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No orders found.</p>
+      )}
     </div>
   );
 };
 
-export default ViewOrder;
+export default OrderList;

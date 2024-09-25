@@ -26,7 +26,7 @@ import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { FcDataConfiguration } from "react-icons/fc";
 import { IoIosNotifications } from "react-icons/io";
-import { FaDatabase, FaHandsHelping, FaMailBulk, FaPlusCircle } from "react-icons/fa";
+import { FaDatabase, FaFirstOrder, FaHandsHelping, FaMailBulk, FaPlusCircle } from "react-icons/fa";
 import { BiCalendarCheck, BiCategoryAlt, BiCustomize, BiUser } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -222,9 +222,9 @@ const MainLayout = () => {
               label: "Customization",
             },
             {
-              key: "Privacy-Policy",
-              icon: <FcDataConfiguration className="fs-4" />,
-              label: "Privacy Policy",
+              key: "OrderList",
+              icon: <FaFirstOrder className="fs-4" />,
+              label: "Orders",
             },
             {
               key: "Terms-and-Condition",

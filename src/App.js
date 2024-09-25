@@ -67,7 +67,7 @@ function App() {
           />
           <Route path="Client-Appointments" element={<ClientAppointments />} />
 
-          <Route path="order/:id" element={<ViewOrder />} />
+          <Route path="OrderList" element={<ViewOrder />} />
           <Route path="Settings" element={<Settings />} />
           <Route path="Add-Edits" element={<AddEdits />} />
           <Route path="User-List" element={<UserList />} />
