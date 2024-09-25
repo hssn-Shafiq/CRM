@@ -10,7 +10,8 @@ const CheckBookedAppointments = () => {
           </h2>
         </div>
       </main>
-    </>
+    </>                                               
   );
 };
 export default CheckBookedAppointments;
+                                        

@@ -1,14 +1,16 @@
-const API_URL = `https://90bc89-e7.myshopify.com/admin/api/2023-04/orders.json`;
-const ACCESS_TOKEN = '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';
+const API_URL = process.env.REACT_APP_API_URL; // Getting the API base URL from the .env file
+const ACCESS_TOKEN = process.env.REACT_APP_SHOPIFY_ACCESS_TOKEN; // Shopify Access Token from .env
+const BEARER_TOKEN = process.env.REACT_APP_BEARER_TOKEN; // Bearer Token from .env
 
 export const fetchOrders = async () => {
+
     try {
-      const response = await fetch('https://crmapi.alayaarts.com/api/shopify/customers', {
+      const response = await fetch(`${API_URL}/orders`, {
         method: 'GET',
         headers: {
-          'Authorization': 'Bearer 1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc', // Your Bearer token
-          'X-Shopify-Access-Token': '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', // Your Shopify access token
-          'Content-Type': 'application/json', // Ensure it's JSON format
+          'Authorization': `Bearer ${BEARER_TOKEN}`, // Bearer token from .env
+          'X-Shopify-Access-Token': ACCESS_TOKEN, // Shopify Access Token from .env
+          'Content-Type': 'application/json', 
         },
       });
   
@@ -23,31 +25,28 @@ export const fetchOrders = async () => {
       console.error('Error fetching orders:', error);
       return [];
     }
-  };
-  
+};
 
 export const fetchCustomers = async () => {
-    const API_URL = `https://crmapi.alayaarts.com/api/shopify/customer-checkout`;
-  
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}/customers`, {
         method: 'GET',
         headers: {
-          'X-Shopify-Access-Token': ACCESS_TOKEN,
+          'Authorization': `Bearer ${BEARER_TOKEN}`, // Bearer token from .env
+          'X-Shopify-Access-Token': ACCESS_TOKEN, // Shopify Access Token from .env
           'Content-Type': 'application/json',
         },
       });
       const data = await response.json();
-      return data.customers;
+      return data.data;
     } catch (error) {
       console.error('Error fetching customers:', error);
       return [];
     }
-  };
-  
-  export const fetchSalesData = async () => {
+};
+  console.log("apis are", BEARER_TOKEN, ACCESS_TOKEN, API_URL)
+export const fetchSalesData = async () => {
     const orders = await fetchOrders();
     const totalSales = orders.reduce((total, order) => total + parseFloat(order.total_price), 0);
     return totalSales;
-  };
-  
+};
