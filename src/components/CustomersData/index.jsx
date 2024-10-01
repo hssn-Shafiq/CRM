@@ -77,11 +77,11 @@ const CustomerData = () => {
       const updatedCustomers = customers.map((customer) =>
         customer.id === editCustomer.id ? editCustomer : customer
       );
-    //   setCustomers(updatedCustomers);
+      //   setCustomers(updatedCustomers);
     } else {
       // Add new customer logic
       const newCustomer = { ...editCustomer, id: Date.now() }; // Assigning a temporary ID for demonstration
-    //   setCustomers([newCustomer, ...customers]);
+      //   setCustomers([newCustomer, ...customers]);
     }
     // setEditCustomer(null); 
   };
@@ -92,12 +92,46 @@ const CustomerData = () => {
         {/* Header */}
         <div className="d-flex justify-content-between align-items-center mb-3">
           <div className="col-lg-6">
-            <button className="btn btn bg-light text-dark border-dark" type="button">
-              All Leads
-            </button>
+            <div className="dropdown">
+              <button
+                className="btn bg-light text-dark border-dark dropdown-toggle"
+                type="button"
+                id="leadsDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                All Leads
+              </button>
+              <ul className="dropdown-menu" aria-labelledby="leadsDropdown">
+                <li>
+                  <a className="dropdown-item" href="#">
+                    New Lead
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item" href="#">
+                    Account Lead
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item" href="#">
+                    Request from Lead
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item" href="#">
+                    Order Deliver Leads
+                  </a>
+                </li>
+              </ul>
+            </div>
+
           </div>
           <div className="col-lg-6 add-lead-data-btn">
-            <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#leadFormModal" onClick={() => handleEdit()}>
+            <button className="btn bg-light text-dark border-dark" type="button">
+              <i className="fas fa-folder"></i> Create Folder
+            </button>
+            <button className="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#leadFormModal" onClick={() => handleEdit()}>
               Add Lead +
             </button>
           </div>

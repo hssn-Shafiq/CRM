@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
 
 import "./lead.css";
 import { Link } from "react-router-dom";
 import CustomerData from "../../components/CustomersData";
 
 const CustomLeadForm = () => {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   return (
     <>
-     
+
       <main className=" mb-5  parent-lead-data-form" id="custom_lead_top_bar">
-      <div className="text-center">
-        <h2 className="text-uppercase p-2 page-title">Leads Management </h2>
-      </div>
+        <div className="text-center">
+          <h2 className="text-uppercase p-2 page-title">Leads Management </h2>
+        </div>
         <div className="container mt-5">
           {/* Button group with Font Awesome icons */}
           <div className="d-flex justify-content-start">
@@ -133,21 +138,57 @@ const CustomLeadForm = () => {
                     <ul className="dropdown-menu" aria-labelledby="columnsDropdown">
                       <li>
                         <a className="dropdown-item" href="#">
-                          Column 1
+                          Name
                         </a>
                       </li>
                       <li>
                         <a className="dropdown-item" href="#">
-                          Column 2
+                          Company
                         </a>
                       </li>
                       <li>
                         <a className="dropdown-item" href="#">
-                          Column 3
+                          Address
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Country
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          State
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          City
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Email
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Phone
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Social Media
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Lead Source
                         </a>
                       </li>
                     </ul>
                   </div>
+
                 </div>
                 {/* Search Bar */}
                 <div className="col">
@@ -164,7 +205,7 @@ const CustomLeadForm = () => {
                 </div>
                 {/* More Filters Button */}
                 <div className="col-auto">
-                  <button className="btn btn-outline-light">
+                  <button className="btn btn-outline-light" onClick={handleShow}>
                     <i className="fas fa-filter" /> More Filters
                   </button>
                 </div>
@@ -771,10 +812,52 @@ const CustomLeadForm = () => {
             </div>
           </div>
         </div>
-      {/* </main> */}
+        {/* </main> */}
 
-      {/* <main className="parent-lead-data-form mt-5"> */}
-      <CustomerData />
+
+        {/* <main className="parent-lead-data-form mt-5"> */}
+        <CustomerData />
+
+
+
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Filter Leads</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group controlId="filterName">
+                <Form.Label>Name</Form.Label>
+                <Form.Control type="text" placeholder="Enter name" />
+              </Form.Group>
+
+              <Form.Group controlId="filterCompany" className="mt-3">
+                <Form.Label>Company</Form.Label>
+                <Form.Control type="text" placeholder="Enter company" />
+              </Form.Group>
+
+              <Form.Group controlId="filterCountry" className="mt-3">
+                <Form.Label>Country</Form.Label>
+                <Form.Control type="text" placeholder="Enter country" />
+              </Form.Group>
+
+              <Form.Group controlId="filterCity" className="mt-3">
+                <Form.Label>City</Form.Label>
+                <Form.Control type="text" placeholder="Enter city" />
+              </Form.Group>
+
+              {/* You can add more fields for filtering if needed */}
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleClose}>
+              Apply Filters
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </main>
     </>
   );
