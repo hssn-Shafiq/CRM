@@ -1,18 +1,12 @@
-.modal-content {
-    color: black;
-}
-
 .Compagnie {
-
     .header {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 20px;
-        /* background-color: white; */
+        background-color: white;
         border-bottom: 1px solid #dee2e6;
         background-color: var(--bg-main);
-
     }
 
     .header h1 {
@@ -24,6 +18,11 @@
         background-color: #007bff;
         color: white;
         font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-new-post:hover {
+        background-color: #0056b3;
     }
 
     .planner-content {
@@ -50,10 +49,7 @@
     table th,
     table td {
         vertical-align: middle;
-    }
-
-    .table .fa-ellipsis-v {
-        cursor: pointer;
+        text-align: center;
     }
 
     .table thead th {
@@ -61,19 +57,10 @@
         font-weight: bold;
     }
 
-    .table tbody td {
-        vertical-align: middle;
-    }
-
-    .table tbody img {
+    .table tbody td img {
         width: 60px;
         height: 60px;
         object-fit: cover;
-    }
-
-    .btn-filter {
-        background-color: #f8f9fa;
-        border: none;
     }
 
     .status-published {
@@ -81,6 +68,16 @@
         color: #155724;
         padding: 5px 10px;
         border-radius: 5px;
+    }
+
+    .action-icon {
+        margin-right: 10px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .action-icon:hover {
+        color: #007bff;
     }
 
     @media (max-width: 768px) {
@@ -96,11 +93,6 @@
         .table tbody img {
             width: 40px;
             height: 40px;
-        }
-
-        .icons-container img {
-            width: 30px;
-            height: 30px;
         }
     }
 }
