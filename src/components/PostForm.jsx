@@ -323,12 +323,6 @@ function PostForm({
 
             <div className="d-flex justify-content-end">
               <button
-                className="btn btn-outline-secondary responsive-buttons fw-semibold me-3"
-                type="button"
-              >
-                Draft
-              </button>
-              <button
                 className="btn btn-publish responsive-buttons fw-semibold me-3"
                 type="button"
                 disabled={loading}

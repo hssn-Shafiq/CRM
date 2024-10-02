@@ -27,6 +27,31 @@ export const fetchOrders = async () => {
     }
 };
 
+export const fetchSingleOrders = async ({orderId}) => {
+
+  try {
+    const response = await fetch(`${API_URL}/orders/${orderId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${BEARER_TOKEN}`, // Bearer token from .env
+        'X-Shopify-Access-Token': ACCESS_TOKEN, // Shopify Access Token from .env
+        'Content-Type': 'application/json', 
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Single order data is ", data);
+    return data.data; 
+  } catch (error) {
+    console.error('Error fetching single orders:', error);
+    return [];
+  }
+};
+
 export const fetchCustomers = async () => {
     try {
       const response = await fetch(`${API_URL}/customers`, {
@@ -44,7 +69,6 @@ export const fetchCustomers = async () => {
       return [];
     }
 };
-  console.log("apis are", BEARER_TOKEN, ACCESS_TOKEN, API_URL)
 export const fetchSalesData = async () => {
     const orders = await fetchOrders();
     const totalSales = orders.reduce((total, order) => total + parseFloat(order.total_price), 0);

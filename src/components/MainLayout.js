@@ -1,38 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { DeliveredProcedureOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import {
   AiOutlineDashboard,
   AiOutlineSetting,
   AiOutlineUserSwitch,
 } from "react-icons/ai";
+import { IoIosNotifications } from "react-icons/io";
+import { BsCardList, BsDatabaseSlash } from "react-icons/bs";
 import {
+  FaFirstOrder,
+  FaMailBulk,
+  FaPlusCircle,
   FaCalendar,
   FaCopy,
-  FaFacebook,
-  FaGoogle,
-  FaInstagram,
   FaLayerGroup,
-  FaLinkedin,
-  FaPinterest,
-  FaTiktok,
-  FaTwitter,
+  FaShopify,
   FaUser,
   FaUserLock,
   FaUsers,
-} from "react-icons/fa6";
+  FaTrash,
+} from "react-icons/fa";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { BiUser } from "react-icons/bi";
+import { Layout, Menu, theme } from "antd";
+import { getAuth } from "firebase/auth";
+import { getUserFromLocalStorage } from "../utils/localstorage";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
-import { Outlet } from "react-router-dom";
-import { FcDataConfiguration } from "react-icons/fc";
-import { IoIosNotifications } from "react-icons/io";
-import { FaDatabase, FaFirstOrder, FaHandsHelping, FaMailBulk, FaPlusCircle } from "react-icons/fa";
-import { BiCalendarCheck, BiCategoryAlt, BiCustomize, BiUser } from "react-icons/bi";
-import { Layout, Menu, theme } from "antd";
-import { useNavigate } from "react-router-dom";
-import { BsCardList, BsDatabaseSlash } from "react-icons/bs";
-import { getUserFromLocalStorage } from "../utils/localstorage";
-import { getAuth } from "firebase/auth";
+
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
   const [userData, setUserData] = useState(null);
@@ -87,11 +82,11 @@ const MainLayout = () => {
         <div className="logo d-flex align-items-center justify-content-center">
           <h2 className="text-white fs-5 text-center py-2 mb-0 ">
             <span className="sm-logo">
-              <img src="/images/logo-bg.png" width={80} />
+              <img src="/images/logo-bg.png" alt="crm-logo" width={80} />
             </span>
             <span className="lg-logo">
               {" "}
-              <img src="/images/logo-bg.png" width={150} />
+              <img src="/images/logo-bg.png" alt="crm-logo" width={150} />
             </span>
           </h2>
         </div>
@@ -114,54 +109,23 @@ const MainLayout = () => {
               label: "Manage Users",
               children: [
                 {
-                  key: "User-List",
+                  key: "Users/User-List",
                   icon: <BsCardList className="fs-4" />,
                   label: "All Users",
                 },
-                // {
-                //   key: "VisitorProfile/UploadVisitorCheels",
-                //   icon: <AiOutlineShoppingCart className="fs-4" />,
-                //   label: "Add Cheels",
-                // },
                 {
-                  key: "AccessPermissions/UserRole",
+                  key: "Users/User-Role",
                   icon: <AiOutlineUserSwitch className="fs-4" />,
                   label: "User Role",
                 },
                 {
-                  key: "AccessPermissions/UserPermission",
+                  key: "Users/User-Permission",
                   icon: <FaUserLock className="fs-4" />,
                   label: "User Permission",
                 },
-                // {
-                //   key: "Add-Designer",
-                //   icon: <FaPenSquare className="fs-4" />,
-                //   label: "Add Designer",
-                // },
-
-                {
-                  key: "User-Details",
-                  icon: <BiCategoryAlt className="fs-4" />,
-                  label: "User Details",
-                },
-
-                // {
-                //   key: "Product-Type",
-                //   icon: <BsCardList className="fs-4" />,
-                //   label: "Product Type",
-                // },
-                // {
-                //   key: "Add-Edits",
-                //   icon: <BiEdit className="fs-4" />,
-                //   label: "Add Edits",
-                // },
               ],
             },
-            // {
-            //   key: "orders",
-            //   icon: <FcDataConfiguration className="fs-4" />,
-            //   label: "Orders",
-            // },
+
             {
               key: "Schedule Posts",
               icon: <FaCopy className="fs-4" />,
@@ -206,41 +170,40 @@ const MainLayout = () => {
                 },
                 {
                   key: "Client-Appointments",
-                  icon: <FaLayerGroup  className="fs-4" />,
+                  icon: <FaLayerGroup className="fs-4" />,
                   label: "Templates",
                 },
               ],
             },
             {
-              key: "Check-Book-Appointments",
-              icon: <BiCalendarCheck className="fs-4" />,
-              label: "Check Appointments",
-            },
-            {
-              key: "customization",
-              icon: <BiCustomize className="fs-4" />,
-              label: "Customization",
-            },
-            {
-              key: "OrderList",
-              icon: <FaFirstOrder className="fs-4" />,
-              label: "Orders",
-            },
-            {
-              key: "Terms-and-Condition",
-              icon: <FcDataConfiguration className="fs-4" />,
-              label: "Terms & Condition",
+              key: "Shopify Store",
+              icon: <FaShopify className="fs-4" />,
+              label: "Shopify Store",
+              children: [
+                {
+                  key: "Shopify/OrderList",
+                  icon: <FaFirstOrder className="fs-4" />,
+                  label: "Orders",
+                },
+
+                {
+                  key: "Shopify/Delivered-Orders",
+                  icon: <DeliveredProcedureOutlined className="fs-4" />,
+                  label: "Delivered Orders",
+                },
+                {
+                  key: "Shopify/Cancelled-Orders",
+                  icon: <FaTrash className="fs-4" />,
+                  label: "Cancelled Orders",
+                },
+              ],
             },
             {
               key: "settings",
               icon: <AiOutlineSetting className="fs-4" />,
               label: "Settings",
             },
-            // {
-            //   key: "Product-Approval",
-            //   icon: <BiCheckSquare className="fs-4" />,
-            //   label: "Product Approval",
-            // },
+
             {
               key: "RegisteredUser",
               icon: <BiUser className="fs-4" />,
@@ -248,59 +211,6 @@ const MainLayout = () => {
             },
           ]}
         />
-        {/* <div className="mt-5 bg-dark p-3 text-light social_login">
-          <h5 className="w-100 fs-5 mb-0">Linked Accounts</h5>
-          <div className="linked-accounts my-2 d-flex gap-1">
-            <span
-              className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark"
-              style={{ width: "20px", height: "20px" }}
-            >
-              <FaFacebook />{" "}
-            </span>
-            <span
-              className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark"
-              style={{ width: "20px", height: "20px" }}
-            >
-              <FaInstagram />{" "}
-            </span>
-            <span
-              className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark"
-              style={{ width: "20px", height: "20px" }}
-            >
-              <FaLinkedin />{" "}
-            </span>
-            <span
-              className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark"
-              style={{ width: "20px", height: "20px" }}
-            >
-              <FaTwitter />{" "}
-            </span>
-            <span
-              className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark"
-              style={{ width: "20px", height: "20px" }}
-            >
-              <FaPinterest />{" "}
-            </span>{" "}
-            <span
-              className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark"
-              style={{ width: "20px", height: "20px" }}
-            >
-              <FaGoogle />{" "}
-            </span>
-            <span
-              className="account bg-light rounded-circle p-1 d-flex align-items-center justify-content-center text-dark"
-              style={{ width: "20px", height: "20px" }}
-            >
-              <FaTiktok />{" "}
-            </span>
-          </div>
-
-          <Link to="SchedulePosts/SocialAccounts">
-            <button className="btn btn-primary btn-sm fw-medium w-100 d-flex align-items-center justify-content-center gap-2">
-              <FaPlusCircle /> Add Social Account
-            </button>
-          </Link>
-        </div> */}
       </Sider>
       <Layout className="site-layout">
         <Header

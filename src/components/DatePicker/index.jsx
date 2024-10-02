@@ -1,4 +1,3 @@
-// DatePicker.js
 import React, { useState, useEffect } from "react";
 import "./date.css";
 
@@ -23,6 +22,7 @@ const DatePicker = ({ onDateTimeSelect }) => {
       const row = document.createElement("tr");
       for (let j = 0; j < 7; j++) {
         const cell = document.createElement("td");
+
         if (i === 0 && j < firstDay) {
           cell.classList.add("inactive");
         } else if (date > daysInMonth) {
@@ -41,7 +41,9 @@ const DatePicker = ({ onDateTimeSelect }) => {
             cell.classList.add("selected");
           }
 
-          cell.onclick = () => handleDateSelect(date);
+          // Use a closure to capture the correct date value for the event handler
+          const currentDate = date;
+          cell.onclick = () => handleDateSelect(currentDate);
           date++;
         }
         row.appendChild(cell);
@@ -55,17 +57,20 @@ const DatePicker = ({ onDateTimeSelect }) => {
     setSelectedDate(selected);
     onDateTimeSelect(selected, selectedTime);
 
-    // Update visual selection immediately
+    // Remove previously selected class
     const previouslySelected = document.querySelector(".selected");
     if (previouslySelected) {
       previouslySelected.classList.remove("selected");
     }
 
-    // Highlight the newly selected date
+    // Re-highlight the selected date in the calendar
     const calendarBody = document.getElementById("calendar-body");
     const cells = calendarBody.getElementsByTagName("td");
     for (let cell of cells) {
-      if (cell.textContent == day) {
+      if (
+        parseInt(cell.textContent, 10) === day && 
+        !cell.classList.contains('inactive')
+      ) {
         cell.classList.add("selected");
       }
     }
