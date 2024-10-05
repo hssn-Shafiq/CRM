@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchCustomers } from "../../Services/shopifyService"; // Adjust the path to the service
+import Loader from "../Loader";
 
 const CustomerData = () => {
   const [customers, setCustomers] = useState([]);
@@ -10,18 +11,36 @@ const CustomerData = () => {
   const [isEditing, setIsEditing] = useState(false); // For modal add/edit mode
   const customersPerPage = 10; // Show 10 rows per page
 
+  // Helper function to get customers from localStorage
+  const getStoredCustomers = () => {
+    const storedData = localStorage.getItem("customers");
+    return storedData ? JSON.parse(storedData) : null;
+  };
+
+  // Helper function to store customers in localStorage
+  const storeCustomersInLocalStorage = (data) => {
+    localStorage.setItem("customers", JSON.stringify(data));
+  };
+
   useEffect(() => {
-    const getCustomers = async () => {
-      try {
-        const customerData = await fetchCustomers();
-        setCustomers(customerData);
-      } catch (err) {
-        setError("Failed to fetch customers");
-      } finally {
-        setLoading(false);
-      }
-    };
-    getCustomers();
+    const storedCustomers = getStoredCustomers();
+    if (storedCustomers) {
+      setCustomers(storedCustomers);
+      setLoading(false); // Data is available from localStorage, no need to fetch
+    } else {
+      const getCustomers = async () => {
+        try {
+          const customerData = await fetchCustomers();
+          setCustomers(customerData);
+          storeCustomersInLocalStorage(customerData); // Store fetched data in localStorage
+        } catch (err) {
+          setError("Failed to fetch customers");
+        } finally {
+          setLoading(false);
+        }
+      };
+      getCustomers();
+    }
   }, []);
 
   const indexOfLastCustomer = currentPage * customersPerPage;
@@ -31,10 +50,11 @@ const CustomerData = () => {
 
   const handlePageChange = (page) => setCurrentPage(page);
 
-  // Function to handle delete
+  // Function to handle delete (Remove a customer)
   const handleDelete = (id) => {
-    // const updatedCustomers = customers.filter((customer) => customer.id !== id);
-    // setCustomers(updatedCustomers);
+    const updatedCustomers = customers.filter((customer) => customer.id !== id);
+    setCustomers(updatedCustomers);
+    storeCustomersInLocalStorage(updatedCustomers); // Update localStorage when a customer is deleted
   };
 
   // Function to handle add/edit (opens modal and fills the form with the selected row's data)
@@ -77,15 +97,23 @@ const CustomerData = () => {
       const updatedCustomers = customers.map((customer) =>
         customer.id === editCustomer.id ? editCustomer : customer
       );
-      //   setCustomers(updatedCustomers);
+      setCustomers(updatedCustomers);
+      storeCustomersInLocalStorage(updatedCustomers); // Update localStorage after editing
     } else {
       // Add new customer logic
       const newCustomer = { ...editCustomer, id: Date.now() }; // Assigning a temporary ID for demonstration
-      //   setCustomers([newCustomer, ...customers]);
+      const updatedCustomers = [newCustomer, ...customers];
+      setCustomers(updatedCustomers);
+      storeCustomersInLocalStorage(updatedCustomers); // Update localStorage after adding a new customer
     }
-    // setEditCustomer(null); 
+    setEditCustomer(null); // Close the modal
   };
 
+  if (loading) {
+    return (
+     <Loader />
+    );
+  }
   return (
     <>
       <div className="container-fluid lead-table-container mt-5">
@@ -125,7 +153,6 @@ const CustomerData = () => {
                 </li>
               </ul>
             </div>
-
           </div>
           <div className="col-lg-6 add-lead-data-btn">
             <button className="btn bg-light text-dark border-dark" type="button">
@@ -154,13 +181,7 @@ const CustomerData = () => {
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="9" className="text-center">
-                    Loading...
-                  </td>
-                </tr>
-              ) : error ? (
+              {error ? (
                 <tr>
                   <td colSpan="9" className="text-center text-danger">
                     {error}

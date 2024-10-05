@@ -69,8 +69,12 @@ export const fetchCustomers = async () => {
       return [];
     }
 };
+
 export const fetchSalesData = async () => {
     const orders = await fetchOrders();
     const totalSales = orders.reduce((total, order) => total + parseFloat(order.total_price), 0);
     return totalSales;
 };
+
+
+
