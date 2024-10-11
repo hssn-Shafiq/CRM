@@ -1,31 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { fetchCustomers } from "../../Services/shopifyService"; // Adjust the path to the service
-import Loader from "../Loader";
-
+// src/Components/CustomerData.jsx
+import React, { useState, useEffect } from 'react';
 import RequestFromLeads from '../Leads/RequestFromLeads';
 import OrderPaddingLeads from '../Leads/OrderPaddingLeads';
 import OrderDeliverLeads from '../Leads/OrderDeliverLeads';
 import SendEmailLeads from '../Leads/SendEmailLeads';
-
-
-const mockData = {
-  'Request From Leads': [
-    { id: 1, first_name: 'John', last_name: 'Doe', company: 'Company A', address1: '123 Street', country: 'USA', province: 'CA', city: 'Los Angeles', email: 'john.doe@example.com', phone: '123-456-7890' },
-    { id: 2, first_name: 'Jane', last_name: 'Smith', company: 'Company B', address1: '456 Avenue', country: 'Canada', province: 'ON', city: 'Toronto', email: 'jane.smith@example.com', phone: '987-654-3210' },
-  ],
-  'Order Padding Leads': [
-    { id: 3, first_name: 'Bob', last_name: 'Brown', company: 'Company C', address1: '789 Boulevard', country: 'UK', province: 'ENG', city: 'London', email: 'bob.brown@example.com', phone: '111-222-3333' },
-  ],
-  'Order Deliver Leads': [
-    { id: 4, first_name: 'Alice', last_name: 'Johnson', company: 'Company D', address1: '101 Main St', country: 'Australia', province: 'NSW', city: 'Sydney', email: 'alice.johnson@example.com', phone: '444-555-6666' },
-  ],
-  'Send Email Leads': [
-    { id: 5, first_name: 'Charlie', last_name: 'Davis', company: 'Company E', address1: '202 Second St', country: 'India', province: 'MH', city: 'Mumbai', email: 'charlie.davis@example.com', phone: '777-888-9999' },
-  ],
-};
+import { fetchCustomers } from '../../Services/shopifyService'; // Updated fetch function
+import Loader from '../Loader';
 
 const CustomerData = () => {
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState([]); // State to store fetched customer data
   const [loading, setLoading] = useState(true); // For loading state
   const [error, setError] = useState(null); // For error state
   const [currentPage, setCurrentPage] = useState(1); // For pagination
@@ -33,60 +16,27 @@ const CustomerData = () => {
   const [isEditing, setIsEditing] = useState(false); // For modal add/edit mode
   const customersPerPage = 10; // Show 10 rows per page
 
-  // Helper function to get customers from localStorage
-  const getStoredCustomers = () => {
-    const storedData = localStorage.getItem("customers");
-    return storedData ? JSON.parse(storedData) : null;
-  };
+  // Set default value for selectedLead state to "All Leads"
+  const [selectedLead, setSelectedLead] = useState('All Leads'); // State for currently selected lead type
 
-  // Helper function to store customers in localStorage
-  const storeCustomersInLocalStorage = (data) => {
-    localStorage.setItem("customers", JSON.stringify(data));
-  };
-
-
-  // Set default value for selectedLead state to "Request From Leads"
-  const [selectedLead, setSelectedLead] = useState('Request From Leads'); // State for currently selected lead type
-
-  // Function to render the selected component
-  const renderLeadComponent = () => {
-    const leadData = mockData[selectedLead] || [];
-    switch (selectedLead) {
-      case 'Request From Leads':
-        return <RequestFromLeads leads={leadData} />;
-      case 'Order Padding Leads':
-        return <OrderPaddingLeads leads={leadData} />;
-      case 'Order Deliver Leads':
-        return <OrderDeliverLeads leads={leadData} />;
-      case 'Send Email Leads':
-        return <SendEmailLeads leads={leadData} />;
-      default:
-        return <div>Please select a lead type from the dropdown.</div>;
-    }
-  };
-
-
+  // Fetch customer data from the API on component mount
   useEffect(() => {
-    const storedCustomers = getStoredCustomers();
-    if (storedCustomers) {
-      setCustomers(storedCustomers);
-      setLoading(false); // Data is available from localStorage, no need to fetch
-    } else {
-      const getCustomers = async () => {
-        try {
-          const customerData = await fetchCustomers();
-          setCustomers(customerData);
-          storeCustomersInLocalStorage(customerData); // Store fetched data in localStorage
-        } catch (err) {
-          setError("Failed to fetch customers");
-        } finally {
-          setLoading(false);
-        }
-      };
-      getCustomers();
-    }
+    const getCustomers = async () => {
+      setLoading(true);
+      try {
+        const customerData = await fetchCustomers();
+        setCustomers(customerData); // Set fetched customer data
+      } catch (err) {
+        setError(err.message || 'Failed to fetch customers');
+      } finally {
+        setLoading(false);
+      }
+    };
+    getCustomers();
   }, []);
 
+
+  // Pagination calculations
   const indexOfLastCustomer = currentPage * customersPerPage;
   const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
   const currentCustomers = customers.slice(indexOfFirstCustomer, indexOfLastCustomer);
@@ -98,66 +48,93 @@ const CustomerData = () => {
   const handleDelete = (id) => {
     const updatedCustomers = customers.filter((customer) => customer.id !== id);
     setCustomers(updatedCustomers);
-    storeCustomersInLocalStorage(updatedCustomers); // Update localStorage when a customer is deleted
   };
 
-  // Function to handle add/edit (opens modal and fills the form with the selected row's data)
-  const handleEdit = (customer = null) => {
-    if (customer) {
-      setEditCustomer({
-        id: customer.id,
-        first_name: customer.first_name,
-        last_name: customer.last_name,
-        company: customer.default_address?.company || "",
-        address1: customer.default_address?.address1 || "",
-        country: customer.default_address?.country || "",
-        province: customer.default_address?.province || "",
-        city: customer.default_address?.city || "",
-        email: customer.email,
-        phone: customer.phone || "",
-      });
-      setIsEditing(true); // Set to edit mode
-    } else {
-      setEditCustomer({
-        first_name: "",
-        last_name: "",
-        company: "",
-        address1: "",
-        country: "",
-        province: "",
-        city: "",
-        email: "",
-        phone: "",
-      });
-      setIsEditing(false); // Set to add mode
+  // Function to filter leads based on the selected type
+  const filterLeadsByType = () => {
+    if (selectedLead === 'All Leads') {
+      return currentCustomers; // Show all customers
     }
+    return currentCustomers.filter((customer) => customer.leadType === selectedLead);
   };
 
-  // Function to handle modal form submission (update or add customer data)
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (isEditing) {
-      // Update logic
-      const updatedCustomers = customers.map((customer) =>
-        customer.id === editCustomer.id ? editCustomer : customer
-      );
-      setCustomers(updatedCustomers);
-      storeCustomersInLocalStorage(updatedCustomers); // Update localStorage after editing
-    } else {
-      // Add new customer logic
-      const newCustomer = { ...editCustomer, id: Date.now() }; // Assigning a temporary ID for demonstration
-      const updatedCustomers = [newCustomer, ...customers];
-      setCustomers(updatedCustomers);
-      storeCustomersInLocalStorage(updatedCustomers); // Update localStorage after adding a new customer
+  // Function to render the selected component
+  const renderLeadComponent = () => {
+    const leadData = filterLeadsByType();
+    switch (selectedLead) {
+      case 'Request From Leads':
+        return <RequestFromLeads leads={leadData} />;
+      case 'Order Padding Leads':
+        return <OrderPaddingLeads leads={leadData} />;
+      case 'Order Deliver Leads':
+        return <OrderDeliverLeads leads={leadData} />;
+      case 'Send Email Leads':
+        return <SendEmailLeads leads={leadData} />;
+      case 'All Leads':
+        return (
+          <div className="table-responsive">
+            <table className="table table-hover align-middle leads-table">
+              <thead>
+                <tr className="border-main">
+                  <th>Name</th>
+                  <th>Company</th>
+                  <th>Address</th>
+                  <th>Country</th>
+                  <th>State</th>
+                  <th>City</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {leadData.length > 0 ? (
+                  leadData.map(({ id, first_name, last_name, company, address1, country, province, city, email, phone }) => (
+                    <tr key={id}>
+                      <td>{`${first_name} ${last_name}`}</td>
+                      <td>{company || 'No company'}</td>
+                      <td>{address1 || 'No address'}</td>
+                      <td>{country || 'No country'}</td>
+                      <td>{province || 'No state'}</td>
+                      <td>{city || 'No city'}</td>
+                      <td>{email}</td>
+                      <td>{phone || 'No phone'}</td>
+                      <td>
+                        <button className="btn btn-warning btn-sm me-2">
+                          <i className="fa fa-pencil" />
+                        </button>
+                        <button className="btn btn-danger btn-sm" onClick={() => handleDelete(id)}>
+                          <i className="fa fa-trash" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="9" className="text-center">
+                      No leads available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        );
+      default:
+        return <div>Please select a lead type from the dropdown.</div>;
     }
-    setEditCustomer(null); // Close the modal
   };
 
   if (loading) {
-    return (
-      <Loader />
-    );
+    return <Loader />;
   }
+
+  if (error) {
+    return <div className="text-danger">{error}</div>;
+  }
+
+
+
   return (
     <>
       <div className="container-fluid lead-table-container mt-5">
@@ -175,6 +152,15 @@ const CustomerData = () => {
                 {selectedLead || 'Select Lead Type'}
               </button>
               <ul className="dropdown-menu" aria-labelledby="leadsDropdown">
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="#"
+                    onClick={() => setSelectedLead('All Leads')}
+                  >
+                    All Leads
+                  </a>
+                </li>
                 <li>
                   <a
                     className="dropdown-item"
@@ -214,89 +200,29 @@ const CustomerData = () => {
               </ul>
             </div>
           </div>
-          <div className="col-lg-6 add-lead-data-btn">
-            <button className="btn bg-light text-dark border-dark" type="button">
-              <i className="fas fa-folder"></i> Create Folder
-            </button>
-            <button className="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#leadFormModal" onClick={() => handleEdit()}>
-              Add Lead +
-            </button>
-          </div>
         </div>
+
+        {/* Render the selected lead component */}
         <div className="lead-content">
           {renderLeadComponent()}
         </div>
-        {/* Table */}
-        {/* <div className="table-responsive">
-          <table className="table table-hover align-middle leads-table">
-            <thead>
-              <tr className="border-main">
-                <th>Name</th>
-                <th>Company</th>
-                <th>Address</th>
-                <th>Country</th>
-                <th>State</th>
-                <th>City</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {error ? (
-                <tr>
-                  <td colSpan="9" className="text-center text-danger">
-                    {error}
-                  </td>
-                </tr>
-              ) : currentCustomers.length > 0 ? (
-                currentCustomers.map(({ id, first_name, last_name, default_address, email, phone }) => (
-                  <tr key={id}>
-                    <td>{`${first_name} ${last_name}`}</td>
-                    <td>{default_address?.company || "No company"}</td>
-                    <td>{default_address?.address1 || "No address"}</td>
-                    <td>{default_address?.country || "No country"}</td>
-                    <td>{default_address?.province || "No state"}</td>
-                    <td>{default_address?.city || "No city"}</td>
-                    <td>{email}</td>
-                    <td>{phone || "No phone"}</td>
-                    <td>
-                      <button className="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#leadFormModal" onClick={() => handleEdit({ id, first_name, last_name, default_address, email, phone })}>
-                        <i className="fa fa-pencil" />
-                      </button>
-                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(id)}>
-                        <i className="fa fa-trash" />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="9" className="text-center">
-                    No customer data available
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div> */}
 
         {/* Pagination */}
         <nav aria-label="Page navigation">
           <ul className="pagination justify-content-center">
-            <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+            <li className={`page-item ${currentPage === 1 && 'disabled'}`}>
               <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                 Previous
               </button>
             </li>
             {[...Array(totalPages)].map((_, index) => (
-              <li key={index + 1} className={`page-item ${currentPage === index + 1 && "active"}`}>
+              <li key={index + 1} className={`page-item ${currentPage === index + 1 && 'active'}`}>
                 <button className="page-link" onClick={() => handlePageChange(index + 1)}>
                   {index + 1}
                 </button>
               </li>
             ))}
-            <li className={`page-item ${currentPage === totalPages && "disabled"}`}>
+            <li className={`page-item ${currentPage === totalPages && 'disabled'}`}>
               <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
                 Next
               </button>
@@ -304,7 +230,6 @@ const CustomerData = () => {
           </ul>
         </nav>
       </div>
-
       {/* Modal for Adding/Editing Lead */}
       <div
         className="modal fade"
@@ -323,7 +248,7 @@ const CustomerData = () => {
             </div>
             <div className="modal-body">
               {editCustomer && (
-                <form onSubmit={handleSubmit}>
+                <form >
                   <div className="row">
                     <div className="col-lg-6 mb-3">
                       <label className="form-label text-dark">First Name</label>
