@@ -6,7 +6,7 @@ import "../firebase/Config";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { Navigate } from "react-router-dom";
-import { storeUserToLocalStorage} from "../utils/localstorage"
+import { storeUserToLocalStorage } from "../utils/localstorage";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,15 +25,19 @@ const Register = () => {
       .then((userCredential) => {
         // Signed up
         const user = userCredential.user;
-        storeUserToLocalStorage({email});
-        toast.success("signup successfully", user.email);
+        storeUserToLocalStorage({ email });
         console.log("registered is", user);
         try {
           const docRef = addDoc(collection(db, "Users"), {
+            uid: user.uid,
             userName: name,
             userEmail: email,
+            // isAdmin: false,
+            // isSubAdmin: false,
+            // isCoAdmin: false,
+            Role: "User",
           });
-          toast.success("Document written with ID: ", docRef.id);
+          toast.success("signup successfully", user.email);
         } catch (e) {
           toast.error("Error adding document: ", e);
           console.log("Error adding document: ", e);

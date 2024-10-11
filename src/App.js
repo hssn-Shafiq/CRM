@@ -7,7 +7,6 @@ import Resetpassword from "./pages/Resetpassword";
 import Forgotpassword from "./pages/Forgotpassword";
 import MainLayout from "./components/MainLayout";
 
-
 import UserList from "./pages/UserManagement/UserList";
 import RegisteredUser from "./pages/RegisteredUser";
 import UserPermission from "./pages/UserManagement/UserPermission";
@@ -28,10 +27,16 @@ import OrderList from "./pages/ShopifyManagement/OrderList";
 import DeliveredOrders from "./pages/ShopifyManagement/DeliveredOrders";
 import RejectedOrders from "./pages/ShopifyManagement/RejectedOrders";
 import OrderDetail from "./pages/ShopifyManagement/OrderDetail";
-
-
+import { getUserFromLocalStorage } from "./utils/localstorage";
 
 function App() {
+  const user = getUserFromLocalStorage();
+  const role = user?.role || "Guest";
+
+  // Retrieve permissions from localStorage
+  const permissions =
+    JSON.parse(localStorage.getItem("routePermissions")) || {};
+
   return (
     <Router>
       <Routes>
@@ -40,6 +45,7 @@ function App() {
         <Route path="/reset-password" element={<Resetpassword />} />
         <Route path="/forgot-password" element={<Forgotpassword />} />
         <Route path="/admin" element={<MainLayout />}>
+
           <Route index element={<Dashboard />} />
 
           <Route path="RegisteredUser" element={<RegisteredUser />} />
@@ -48,7 +54,7 @@ function App() {
           <Route path="Users/User-Role" element={<UserRole />} />
           {/* <Route path="coupon/:id" element={<AddCoupon />} /> */}
 
-            {/* social media routes */}
+          {/* social media routes */}
           <Route path="SchedulePosts/Create-Post" element={<CreatePosts />} />
           <Route path="SchedulePosts/Calendar" element={<Calendar />} />
           <Route
@@ -68,16 +74,17 @@ function App() {
 
           {/* Shopify Management Routes */}
           <Route path="Shopify/OrderList" element={<OrderList />} />
-          <Route path="Shopify/Order/:orderId" element={<OrderDetail/>} />
-          <Route path="Shopify/Delivered-Orders" element={<DeliveredOrders />} />
+          <Route path="Shopify/Order/:orderId" element={<OrderDetail />} />
+          <Route
+            path="Shopify/Delivered-Orders"
+            element={<DeliveredOrders />}
+          />
           <Route path="Shopify/Cancelled-Orders" element={<RejectedOrders />} />
 
           <Route path="Settings" element={<Settings />} />
-       
 
           <Route path="Product-Approval" element={<DeliveredOrders />} />
           {/* <Route path="list-product" element={<Productlist />} /> */}
-
         </Route>
       </Routes>
     </Router>
