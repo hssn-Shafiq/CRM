@@ -1,21 +1,81 @@
-import React from "react";
-import "./ClientAppointments.css";
+import React, { useState } from "react";
+import "./Templates.css";
 
-const ClientAppointments = () => {
+const Templates = () => {
+    const [showModal, setShowModal] = useState(false);
+    const [selectedTemplate, setSelectedTemplate] = useState(null);
+    const [templateName, setTemplateName] = useState("");
+    const [templateSubject, setTemplateSubject] = useState("");
+    const [emailContent, setEmailContent] = useState("");
+
+    const handleEditClick = (template) => {
+        setSelectedTemplate(template);
+        setTemplateName(template.templateName);
+        setTemplateSubject(template.subject);
+        setEmailContent(template.content);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedTemplate(null);
+        setTemplateName("");
+        setTemplateSubject("");
+        setEmailContent("");
+    };
+
+    const handleSaveChanges = () => {
+        console.log("Saving changes:", {
+            templateName,
+            templateSubject,
+            emailContent,
+        });
+        handleCloseModal();
+    };
+
+    const emailTemplates = [
+        {
+            id: 1,
+            companionName: "Email Companion 1",
+            templateName: "Newsletter",
+            templateType: "Newsletter",
+            subject: "Special Offer: Eid Mubarak",
+            recipients: 500,
+            status: "Published",
+            dateTime: "Sep 17, 2024 12:03 PM",
+            content: "This is a special offer email content for Eid Mubarak.",
+        },
+        {
+            id: 2,
+            companionName: "Email Companion 2",
+            templateName: "Promotional",
+            templateType: "Promotional",
+            subject: "New Product Launch",
+            recipients: 1200,
+            status: "Published",
+            dateTime: "Sep 18, 2024 10:30 AM",
+            content: "We are excited to launch our new product.",
+        },
+    ];
 
     return (
         <>
             <>
                 <div className="Compagnie">
+                    <div className="text-center">
+                        <h2 className="text-uppercase p-2 page-title">Template  Automation</h2>
+                    </div>
                     <div className="header">
                         <div>
                             <h1>Email Companion</h1>
                         </div>
                         <div>
+                            <button className="btn bg-light text-dark border-dark" type="button">
+                                <i className="fas fa-folder"></i> Create Folder
+                            </button>
                             <button
                                 className="btn btn-new-post ms-2"
-                                data-bs-toggle="modal"
-                                data-bs-target="#emailTemplateModal"
+                                onClick={() => setShowModal(true)}
                             >
                                 <i className="fa fa-envelope" /> Create Template
                             </button>
@@ -56,40 +116,31 @@ const ClientAppointments = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Email Companion 1</td>
-                                        <td>
-                                            <img src="https://via.placeholder.com/60" alt="media" />
-                                        </td>
-                                        <td>Newsletter</td>
-                                        <td>Special Offer: Eid Mubarak</td>
-                                        <td>500 Recipients</td>
-                                        <td>
-                                            <span className="status-published">Published</span>
-                                        </td>
-                                        <td>Sep 17, 2024 12:03 PM</td>
-                                        <td>
-                                            <i className="fa fa-edit fa-lg action-icon" title="Edit" />
-                                            <i className="fa fa-trash fa-lg action-icon" title="Delete" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Email Companion 2</td>
-                                        <td>
-                                            <img src="https://via.placeholder.com/60" alt="media" />
-                                        </td>
-                                        <td>Promotional</td>
-                                        <td>New Product Launch</td>
-                                        <td>1,200 Recipients</td>
-                                        <td>
-                                            <span className="status-published">Published</span>
-                                        </td>
-                                        <td>Sep 18, 2024 10:30 AM</td>
-                                        <td>
-                                            <i className="fa fa-edit fa-lg action-icon" title="Edit" />
-                                            <i className="fa fa-trash fa-lg action-icon" title="Delete" />
-                                        </td>
-                                    </tr>
+                                    {emailTemplates.map((template) => (
+                                        <tr key={template.id}>
+                                            <td>{template.companionName}</td>
+                                            <td>
+                                                <img src="https://via.placeholder.com/60" alt="media" />
+                                            </td>
+                                            <td>{template.templateType}</td>
+                                            <td>{template.subject}</td>
+                                            <td>{template.recipients} Recipients</td>
+                                            <td>
+                                                <span className="status-published">
+                                                    {template.status}
+                                                </span>
+                                            </td>
+                                            <td>{template.dateTime}</td>
+                                            <td>
+                                                <i
+                                                    className="fa fa-edit fa-lg action-icon"
+                                                    title="Edit"
+                                                    onClick={() => handleEditClick(template)}
+                                                />
+                                                <i className="fa fa-trash fa-lg action-icon" title="Delete" />
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>
@@ -240,12 +291,88 @@ const ClientAppointments = () => {
                         </div>
                     </div>
                 </div>
+
+
+                {showModal && (
+                    <div
+                        className="modal fade show"
+                        style={{ display: "block" }}
+                        id="emailTemplateModal"
+                        tabIndex={-1}
+                        aria-labelledby="emailTemplateModalLabel"
+                        aria-hidden="true"
+                    >
+                        <div className="modal-dialog modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title text-dark" id="emailTemplateModalLabel">
+                                        {selectedTemplate ? "Edit Email Template" : "Create Email Template"}
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        onClick={handleCloseModal}
+                                        aria-label="Close"
+                                    />
+                                </div>
+                                <div className="modal-body">
+                                    <form>
+                                        <div className="mb-3">
+                                            <label htmlFor="templateName" className="form-label">
+                                                Template Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="templateName"
+                                                value={templateName}
+                                                onChange={(e) => setTemplateName(e.target.value)}
+                                                placeholder="Enter template name"
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="templateSubject" className="form-label">
+                                                Subject
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="templateSubject"
+                                                value={templateSubject}
+                                                onChange={(e) => setTemplateSubject(e.target.value)}
+                                                placeholder="Enter email subject"
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="emailContent" className="form-label">
+                                                Email Content
+                                            </label>
+                                            <textarea
+                                                className="form-control"
+                                                id="emailContent"
+                                                rows={6}
+                                                value={emailContent}
+                                                onChange={(e) => setEmailContent(e.target.value)}
+                                                placeholder="Write your email content here..."
+                                            />
+                                        </div>
+                                        <div className="text-end">
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary"
+                                                onClick={handleSaveChanges}
+                                            >
+                                                {selectedTemplate ? "Save Changes" : "Create Template"}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </>
-
-
         </>
     );
-
-
 }
-export default ClientAppointments;
+export default Templates;

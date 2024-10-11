@@ -12,16 +12,15 @@ import RegisteredUser from "./pages/RegisteredUser";
 import UserPermission from "./pages/UserManagement/UserPermission";
 import UserRole from "./pages/UserManagement/UserRole";
 
+import Contacts from "./pages/Contacts";     
 import Posts from "./pages/SchedulePosts/Posts";
 import CreatePosts from "./pages/SchedulePosts/CreatePosts";
 import Calendar from "./pages/SchedulePosts/Calendar";
 import SocialAccounts from "./pages/SchedulePosts/SocialAccounts";
 
-import CustomLeadForm from "./pages/CustomLeadForm";
-import ScheduleAppointments from "./pages/ScheduleAppointments";
+import Emails from "./pages/Emails";
 import CheckBookedAppointments from "./pages/CheckBookedAppointments";
-import ClientAppointments from "./pages/ClientAppointments";
-
+import Templates from "./pages/Templates";
 import Settings from "./pages/Settings";
 
 import OrderList from "./pages/ShopifyManagement/OrderList";
@@ -65,13 +64,13 @@ function App() {
           <Route path="SchedulePosts/Posts" element={<Posts />} />
 
           {/* Leads Management Routes */}
-          <Route path="CustomLead/Data" element={<CustomLeadForm />} />
-          <Route path="Book-Appointments" element={<ScheduleAppointments />} />
+          <Route path="Contacts" element={<Contacts />} />
+          <Route path="Emails" element={<Emails />} />
           <Route
             path="Check-Book-Appointments"
             element={<CheckBookedAppointments />}
           />
-          <Route path="Client-Appointments" element={<ClientAppointments />} />
+          <Route path="Templates" element={<Templates />} />
 
           {/* Shopify Management Routes */}
           <Route path="Shopify/OrderList" element={<OrderList />} />

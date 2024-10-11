@@ -1,8 +1,8 @@
 import { useState } from "react";
-import "./appointment.css";
+import "./Emails.css";
 import { Modal, Button } from "react-bootstrap";
 
-const ScheduleAppointments = () => {
+const Emails = () => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -135,4 +135,4 @@ const ScheduleAppointments = () => {
   );
 };
 
-export default ScheduleAppointments;
+export default Emails;
