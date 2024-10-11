@@ -13,7 +13,7 @@ export const defaultRoutePermissions = {
     "Delivered-Orders",
     "Cancelled-Orders",
     "BookedAppointments",
-    "ScheduleAppointments",
+    // "ScheduleAppointments",
     "Marketing",
     "Settings",
     "RegisteredUser",
@@ -26,7 +26,7 @@ export const defaultRoutePermissions = {
     "Shopify",
     "OrderList",
     "BookedAppointments",
-    "ScheduleAppointments",
+    // "ScheduleAppointments",
     "Settings",
   ],
   CoAdmin: [
@@ -34,7 +34,7 @@ export const defaultRoutePermissions = {
     "SchedulePosts",
     "Create-Post",
     "Calendar",
-    "BookedAppointments",
+    // "BookedAppointments",
     "Settings",
   ],
 };
