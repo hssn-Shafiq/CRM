@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import {getFirestore} from "firebase/firestore"
+import {addDoc, collection, getFirestore} from "firebase/firestore"
 import {getStorage} from 'firebase/storage';
+import { getAuth } from 'firebase/auth';
 const firebaseConfig = {
   apiKey: "AIzaSyCzFX1hnJ381ApNQH2u2FTg80FHKRH5ZHM",
   authDomain: "crm-project-a8b51.firebaseapp.com",
@@ -13,7 +14,19 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 const storage = getStorage(app);
 const imageDb = getStorage(app);
 
-export {storage, imageDb, db};
+export {storage, imageDb, db, auth};
+
+
+export const addUserRole = (collectionName, data) => {
+ try {
+  const docRef = addDoc(collection(db, collectionName), data);
+    console.log("User role added successfully");
+ } catch (error) {
+    console.log("error while adding userRole", error.message);
+ }
+
+}

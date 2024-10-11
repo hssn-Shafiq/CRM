@@ -8,7 +8,7 @@ import "quill-emoji/dist/quill-emoji.css";
 import { Quill } from "react-quill";
 import "quill-emoji/dist/quill-emoji";
 import { AiOutlineClose } from "react-icons/ai";
-import { FaPlus } from "react-icons/fa";
+import { FaCalendar, FaPlus } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
 import DatePicker from "./DatePicker";
 import axios from "axios";
@@ -42,6 +42,7 @@ function PostForm({
   const [videos, setVideos] = useState([]); // For storing videos
   const [showModal, setShowModal] = useState(false);
   const [availablePostTypes, setAvailablePostTypes] = useState(["Post"]);
+  const [error, setError] = useState("");
   const datePickerRef = useRef(null);
 
   useEffect(() => {
@@ -49,8 +50,11 @@ function PostForm({
       setAvailablePostTypes(["Post"]); // Default to Post if no platforms selected
     } else {
       const commonTypes = selectedPlatforms.reduce((acc, platform) => {
-        const platformTypes = platformContentTypes[platform.toLowerCase()] || [];
-        return acc.length === 0 ? platformTypes : acc.filter((type) => platformTypes.includes(type));
+        const platformTypes =
+          platformContentTypes[platform.toLowerCase()] || [];
+        return acc.length === 0
+          ? platformTypes
+          : acc.filter((type) => platformTypes.includes(type));
       }, []);
       setAvailablePostTypes(commonTypes);
 
@@ -128,12 +132,30 @@ function PostForm({
     setScheduleTime(time);
   };
 
+  const handleSave = () => {
+    setShowModal(false);
+  };
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    // Validation checks
+    if (!selectedPlatforms.length) {
+      setError("Please select at least one platform.");
+      return;
+    }
+    if (!scheduleDate || !scheduleTime) {
+      setError("Please select a date and time for scheduling.");
+      return;
+    }
+    if (!images.length && !videos.length) {
+      setError("Please upload at least one media file.");
+      return;
+    }
+
     const plainTextCaption = editorContent.replace(/(<([^>]+)>)/gi, ""); // Remove HTML tags
     if (!plainTextCaption.trim() && selectedForm !== "Story") {
-      alert("Caption is required.");
+      setError("Caption is required.");
       return;
     }
 
@@ -177,13 +199,13 @@ function PostForm({
     } catch (error) {
       console.error("Error posting data:", error);
       toast.error("Error posting data:", error);
-      alert(
+      setError(
         error.response?.data?.message ||
           "Failed to create the post. Please check your input data."
       );
     } finally {
       setLoading(false);
-      window.location.reload();
+      // window.location.reload();
     }
   };
 
@@ -230,7 +252,6 @@ function PostForm({
                 />
               </div>
             )}
-
             <div className="input-group mb-3">
               <input
                 className="form-control bg-dark text-light d-none"
@@ -257,7 +278,6 @@ function PostForm({
                   : "images/videos"}
               </button>
             </div>
-
             {loading ? (
               <div className="loader">{ClipLoader} </div>
             ) : (
@@ -306,7 +326,11 @@ function PostForm({
                           key={index}
                           className="media-preview position-relative"
                         >
-                          <video src={video} controls className="img-thumbnail" />
+                          <video
+                            src={video}
+                            controls
+                            className="img-thumbnail"
+                          />
                           <button
                             className="btn btn-danger btn-sm position-absolute top-0 end-0"
                             onClick={() => handleRemoveVideo(index)}
@@ -320,7 +344,32 @@ function PostForm({
                 )}
               </div>
             )}
-
+            {error && <p className="text-danger">{error}</p>}{" "}
+            {/* Display error messages */}
+            <div className="date_show">
+              <div className="show text-light">
+                {scheduleDate ? (
+                  <>
+                   <div className="date_sel d-flex gap-2 align-items-center">
+                    <FaCalendar />
+                    {`${
+                      scheduleDate.toISOString().split("T")[0]
+                    },  ${scheduleTime}`}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="date_sel d-flex gap-2 align-items-center">
+                      <FaCalendar />
+                      <p className="mb-0">
+                        No date selected{" "}
+                        <button type="button" onClick={handleSchedule}>Select Now</button>
+                      </p>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
             <div className="d-flex justify-content-end">
               <button
                 className="btn btn-publish responsive-buttons fw-semibold me-3"
@@ -332,7 +381,7 @@ function PostForm({
               <button
                 className="btn btn-schedule responsive-buttons fw-semibold me-3"
                 type="button"
-                onClick={handleSchedule}
+                onClick={handleSubmit}
               >
                 Schedule
               </button>
@@ -351,7 +400,7 @@ function PostForm({
             <Button variant="secondary" onClick={() => setShowModal(false)}>
               Close
             </Button>
-            <Button variant="primary" onClick={handleSubmit}>
+            <Button variant="primary" onClick={handleSave}>
               Save
             </Button>
           </Modal.Footer>

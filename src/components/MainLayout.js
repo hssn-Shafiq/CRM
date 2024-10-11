@@ -25,6 +25,7 @@ import { BiUser } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { getAuth } from "firebase/auth";
 import { getUserFromLocalStorage } from "../utils/localstorage";
+import { getRoutePermissions } from "../utils/permissions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -57,10 +58,9 @@ const MainLayout = () => {
     }
 
     if (key !== "") {
-      // Check if user is authenticated
+
       const user = auth.currentUser;
       if (!user) {
-        // User is not logged in, redirect to login page
         toast.error("Please login to continue");
 
         setTimeout(() => {
@@ -69,13 +69,18 @@ const MainLayout = () => {
         return;
       }
     }
-
-    // Navigate to the selected page
     navigate(key);
   };
+
+  
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+// Filter the menu items based on the user's role
+
+
+
   return (
     <Layout /* onContextMenu={(e) => e.preventDefault()} */>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -110,14 +115,14 @@ const MainLayout = () => {
               children: [
                 {
                   key: "Users/User-List",
-                  icon: <BsCardList className="fs-4" />,
-                  label: "All Users",
-                },
-                {
-                  key: "Users/User-Role",
                   icon: <AiOutlineUserSwitch className="fs-4" />,
-                  label: "User Role",
+                  label: "Users Role Management",
                 },
+                // {
+                //   key: "Users/User-Role",
+                //   icon: <AiOutlineUserSwitch className="fs-4" />,
+                //   label: "User Role",
+                // },
                 {
                   key: "Users/User-Permission",
                   icon: <FaUserLock className="fs-4" />,
@@ -211,6 +216,8 @@ const MainLayout = () => {
             },
           ]}
         />
+
+        
       </Sider>
       <Layout className="site-layout">
         <Header
