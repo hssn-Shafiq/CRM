@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-import "./lead.css";
+import "./Contacts.css";
 import { Link } from "react-router-dom";
 import CustomerData from "../../components/CustomersData";
 
-const CustomLeadForm = () => {
+const Contacts = () => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -18,17 +18,15 @@ const CustomLeadForm = () => {
           <h2 className="text-uppercase p-2 page-title">Leads Management </h2>
         </div>
         <div className="container mt-5">
-          {/* Button group with Font Awesome icons */}
+          
           <div className="d-flex justify-content-start">
-            {/* Plus Icon */}
+            
             <button
               className="btn btn-light mx-1"
-              data-bs-toggle="modal"
-              data-bs-target="#modalPlus"
             >
               <i className="fas fa-plus" />
             </button>
-            {/* Filter Icon */}
+            
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -36,7 +34,7 @@ const CustomLeadForm = () => {
             >
               <i className="fas fa-filter" />
             </button>
-            {/* Robot Icon */}
+            
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -44,7 +42,7 @@ const CustomLeadForm = () => {
             >
               <i className="fas fa-robot" />
             </button>
-            {/* Comment Icon */}
+            
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -52,7 +50,7 @@ const CustomLeadForm = () => {
             >
               <i className="fas fa-comment" />
             </button>
-            {/* Mail Icon */}
+            
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -60,7 +58,7 @@ const CustomLeadForm = () => {
             >
               <i className="fas fa-envelope" />
             </button>
-            {/* Tags Icons */}
+            
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -77,7 +75,7 @@ const CustomLeadForm = () => {
               <i className="fas fa-tag" />
               <i className="fas fa-minus" />
             </button>
-            {/* Delete Icon */}
+            
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -85,7 +83,7 @@ const CustomLeadForm = () => {
             >
               <i className="fas fa-trash" />
             </button>
-            {/* Star Icon */}
+            
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -93,7 +91,7 @@ const CustomLeadForm = () => {
             >
               <i className="fas fa-star" />
             </button>
-            {/* Upload Icon */}
+            
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -101,7 +99,7 @@ const CustomLeadForm = () => {
             >
               <i className="fas fa-upload" />
             </button>
-            {/* Download Icon */}
+            
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -109,7 +107,7 @@ const CustomLeadForm = () => {
             >
               <i className="fas fa-download" />
             </button>
-            {/* Building Icon */}
+            
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -123,7 +121,7 @@ const CustomLeadForm = () => {
           <div className="row">
             <div className="col-lg-7">
               <div className="row align-items-center">
-                {/* Columns Dropdown */}
+                
                 <div className="col-auto">
                   <div className="dropdown">
                     <button
@@ -190,7 +188,7 @@ const CustomLeadForm = () => {
                   </div>
 
                 </div>
-                {/* Search Bar */}
+                
                 <div className="col">
                   <div className="input-group">
                     <span className="input-group-text">
@@ -203,7 +201,7 @@ const CustomLeadForm = () => {
                     />
                   </div>
                 </div>
-                {/* More Filters Button */}
+                
                 <div className="col-auto">
                   <button className="btn btn-outline-light" onClick={handleShow}>
                     <i className="fas fa-filter" /> More Filters
@@ -213,9 +211,9 @@ const CustomLeadForm = () => {
             </div>
           </div>
         </div>
-        {/* Modals */}
-        {/* Plus Modal */}
-        <div
+        
+        
+        {/* <div
           className="modal fade"
           id="modalPlus"
           tabIndex={-1}
@@ -240,10 +238,10 @@ const CustomLeadForm = () => {
                   <h2 className="text-lg font-semibold mb-4">
                     <i className="fas fa-address-book" /> Contact
                   </h2>
-                  {/* Image and buttons */}
+                  
                   <div className="row align-items-center mb-4">
                     <div className="col-4 col-md-3">
-                      {/* File input with custom label */}
+                      
                       <input
                         type="file"
                         className="custom-file-input"
@@ -268,7 +266,7 @@ const CustomLeadForm = () => {
                       </p>
                     </div>
                   </div>
-                  {/* First Name and Last Name */}
+                  
                   <div className="row g-3 mb-4">
                     <div className="col-12 col-md-6">
                       <div className="input-group">
@@ -295,7 +293,7 @@ const CustomLeadForm = () => {
                       </div>
                     </div>
                   </div>
-                  {/* Email Section */}
+                  
                   <div className="mb-4">
                     <label className="form-label">
                       <i className="fas fa-envelope" /> Email
@@ -321,7 +319,7 @@ const CustomLeadForm = () => {
                       </label>
                     </div>
                   </div>
-                  {/* Phone Section */}
+                  
                   <div className="mb-4">
                     <label className="form-label">
                       <i className="fas fa-phone" /> Phone
@@ -341,7 +339,7 @@ const CustomLeadForm = () => {
                       </label>
                     </div>
                   </div>
-                  {/* Contact Type */}
+                  
                   <div className="mb-4">
                     <label className="form-label">
                       <i className="fas fa-id-badge" /> Contact Type
@@ -350,7 +348,7 @@ const CustomLeadForm = () => {
                       <option>Lead</option>
                     </select>
                   </div>
-                  {/* Time Zone */}
+                  
                   <div className="mb-4">
                     <label className="form-label">
                       <i className="fas fa-globe" /> Time Zone
@@ -359,7 +357,7 @@ const CustomLeadForm = () => {
                       <option>Choose one...</option>
                     </select>
                   </div>
-                  {/* DND Section */}
+                  
                   <div className="mb-4">
                     <p className="font-weight-bold">
                       <i className="fas fa-ban" /> DND all channels
@@ -416,13 +414,13 @@ const CustomLeadForm = () => {
                     </div>
                   </div>
                   <div className="d-flex flex-row justify-content-between">
-                    {/* Save Button */}
+                    
                     <div className="d-flex ">
                       <button className="btn btn-outline-info ">
                         <i className="fas fa-save" /> Save
                       </button>
                     </div>
-                    {/* Close Button */}
+                    
                     <div className="d-flex  ">
                       <button className="btn btn-outline-danger">
                         <i className="fas fa-times" /> Close
@@ -433,8 +431,8 @@ const CustomLeadForm = () => {
               </div>
             </div>
           </div>
-        </div>
-        {/* Filter Modal */}
+        </div> */}
+        
         <div
           className="modal fade"
           id="modalFilter"
@@ -465,7 +463,7 @@ const CustomLeadForm = () => {
                       <i className="fas fa-info-circle" /> Apply opportunity to
                       following contacts
                     </p>
-                    {/* Select Pipeline */}
+                    
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-sitemap" /> Select pipeline
@@ -475,7 +473,7 @@ const CustomLeadForm = () => {
                         <small className="text-danger">* Pipeline required</small>
                       </label>
                     </div>
-                    {/* Select Stage */}
+                    
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-layer-group" /> Select stage
@@ -485,7 +483,7 @@ const CustomLeadForm = () => {
                         <small className="text-danger">* Stage required</small>
                       </label>
                     </div>
-                    {/* Opportunity Name */}
+                    
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-briefcase" /> Opportunity Name
@@ -496,7 +494,7 @@ const CustomLeadForm = () => {
                         />
                       </label>
                     </div>
-                    {/* Opportunity Source */}
+                    
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-share-alt" /> Opportunity Source
@@ -507,7 +505,7 @@ const CustomLeadForm = () => {
                         />
                       </label>
                     </div>
-                    {/* Lead Value */}
+                    
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-dollar-sign" /> Lead Value
@@ -518,7 +516,7 @@ const CustomLeadForm = () => {
                         />
                       </label>
                     </div>
-                    {/* Opportunity Status */}
+                    
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-flag" /> Opportunity Status
@@ -527,7 +525,7 @@ const CustomLeadForm = () => {
                         </select>
                       </label>
                     </div>
-                    {/* Action Description */}
+                    
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-tasks" /> Action
@@ -538,7 +536,7 @@ const CustomLeadForm = () => {
                         />
                       </label>
                     </div>
-                    {/* Buttons */}
+                    
                     <div className="d-flex justify-content-between mt-4">
                       <button className="btn btn-outline-danger">
                         <i className="fas fa-times" /> Cancel
@@ -553,7 +551,7 @@ const CustomLeadForm = () => {
             </div>
           </div>
         </div>
-        {/* Robot Modal */}
+        
         <div
           className="modal fade"
           id="modalRobot"
@@ -812,10 +810,10 @@ const CustomLeadForm = () => {
             </div>
           </div>
         </div>
-        {/* </main> */}
+        
 
 
-        {/* <main className="parent-lead-data-form mt-5"> */}
+        
         <CustomerData />
 
 
@@ -846,7 +844,7 @@ const CustomLeadForm = () => {
                 <Form.Control type="text" placeholder="Enter city" />
               </Form.Group>
 
-              {/* You can add more fields for filtering if needed */}
+              
             </Form>
           </Modal.Body>
           <Modal.Footer>
@@ -863,4 +861,4 @@ const CustomLeadForm = () => {
   );
 };
 
-export default CustomLeadForm;
+export default Contacts;

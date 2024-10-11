@@ -2,6 +2,28 @@ import React, { useEffect, useState } from "react";
 import { fetchCustomers } from "../../Services/shopifyService"; // Adjust the path to the service
 import Loader from "../Loader";
 
+import RequestFromLeads from '../Leads/RequestFromLeads';
+import OrderPaddingLeads from '../Leads/OrderPaddingLeads';
+import OrderDeliverLeads from '../Leads/OrderDeliverLeads';
+import SendEmailLeads from '../Leads/SendEmailLeads';
+
+
+const mockData = {
+  'Request From Leads': [
+    { id: 1, first_name: 'John', last_name: 'Doe', company: 'Company A', address1: '123 Street', country: 'USA', province: 'CA', city: 'Los Angeles', email: 'john.doe@example.com', phone: '123-456-7890' },
+    { id: 2, first_name: 'Jane', last_name: 'Smith', company: 'Company B', address1: '456 Avenue', country: 'Canada', province: 'ON', city: 'Toronto', email: 'jane.smith@example.com', phone: '987-654-3210' },
+  ],
+  'Order Padding Leads': [
+    { id: 3, first_name: 'Bob', last_name: 'Brown', company: 'Company C', address1: '789 Boulevard', country: 'UK', province: 'ENG', city: 'London', email: 'bob.brown@example.com', phone: '111-222-3333' },
+  ],
+  'Order Deliver Leads': [
+    { id: 4, first_name: 'Alice', last_name: 'Johnson', company: 'Company D', address1: '101 Main St', country: 'Australia', province: 'NSW', city: 'Sydney', email: 'alice.johnson@example.com', phone: '444-555-6666' },
+  ],
+  'Send Email Leads': [
+    { id: 5, first_name: 'Charlie', last_name: 'Davis', company: 'Company E', address1: '202 Second St', country: 'India', province: 'MH', city: 'Mumbai', email: 'charlie.davis@example.com', phone: '777-888-9999' },
+  ],
+};
+
 const CustomerData = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true); // For loading state
@@ -21,6 +43,28 @@ const CustomerData = () => {
   const storeCustomersInLocalStorage = (data) => {
     localStorage.setItem("customers", JSON.stringify(data));
   };
+
+
+  // Set default value for selectedLead state to "Request From Leads"
+  const [selectedLead, setSelectedLead] = useState('Request From Leads'); // State for currently selected lead type
+
+  // Function to render the selected component
+  const renderLeadComponent = () => {
+    const leadData = mockData[selectedLead] || [];
+    switch (selectedLead) {
+      case 'Request From Leads':
+        return <RequestFromLeads leads={leadData} />;
+      case 'Order Padding Leads':
+        return <OrderPaddingLeads leads={leadData} />;
+      case 'Order Deliver Leads':
+        return <OrderDeliverLeads leads={leadData} />;
+      case 'Send Email Leads':
+        return <SendEmailLeads leads={leadData} />;
+      default:
+        return <div>Please select a lead type from the dropdown.</div>;
+    }
+  };
+
 
   useEffect(() => {
     const storedCustomers = getStoredCustomers();
@@ -111,7 +155,7 @@ const CustomerData = () => {
 
   if (loading) {
     return (
-     <Loader />
+      <Loader />
     );
   }
   return (
@@ -128,27 +172,43 @@ const CustomerData = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                All Leads
+                {selectedLead || 'Select Lead Type'}
               </button>
               <ul className="dropdown-menu" aria-labelledby="leadsDropdown">
                 <li>
-                  <a className="dropdown-item" href="#">
-                    New Lead
+                  <a
+                    className="dropdown-item"
+                    href="#"
+                    onClick={() => setSelectedLead('Request From Leads')}
+                  >
+                    Request From Leads
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
-                    Account Lead
+                  <a
+                    className="dropdown-item"
+                    href="#"
+                    onClick={() => setSelectedLead('Order Padding Leads')}
+                  >
+                    Order Padding Leads
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
-                    Request from Lead
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
+                  <a
+                    className="dropdown-item"
+                    href="#"
+                    onClick={() => setSelectedLead('Order Deliver Leads')}
+                  >
                     Order Deliver Leads
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="#"
+                    onClick={() => setSelectedLead('Send Email Leads')}
+                  >
+                    Send Email Leads
                   </a>
                 </li>
               </ul>
@@ -163,9 +223,11 @@ const CustomerData = () => {
             </button>
           </div>
         </div>
-
+        <div className="lead-content">
+          {renderLeadComponent()}
+        </div>
         {/* Table */}
-        <div className="table-responsive">
+        {/* <div className="table-responsive">
           <table className="table table-hover align-middle leads-table">
             <thead>
               <tr className="border-main">
@@ -199,7 +261,6 @@ const CustomerData = () => {
                     <td>{email}</td>
                     <td>{phone || "No phone"}</td>
                     <td>
-                      {/* Edit and Delete Icons */}
                       <button className="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#leadFormModal" onClick={() => handleEdit({ id, first_name, last_name, default_address, email, phone })}>
                         <i className="fa fa-pencil" />
                       </button>
@@ -218,7 +279,7 @@ const CustomerData = () => {
               )}
             </tbody>
           </table>
-        </div>
+        </div> */}
 
         {/* Pagination */}
         <nav aria-label="Page navigation">

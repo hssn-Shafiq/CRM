@@ -159,17 +159,17 @@ const MainLayout = () => {
               label: "Marketing",
               children: [
                 {
-                  key: "CustomLead/Data",
+                  key: "Contacts",
                   icon: <BsDatabaseSlash className="fs-4" />,
                   label: "Contacts",
                 },
                 {
-                  key: "Book-Appointments",
+                  key: "Emails",
                   icon: <FaMailBulk className="fs-4" />,
                   label: "Emails",
                 },
                 {
-                  key: "Client-Appointments",
+                  key: "Templates",
                   icon: <FaLayerGroup className="fs-4" />,
                   label: "Templates",
                 },
