@@ -249,7 +249,7 @@ const MainLayout = () => {
                   width={45}
                   height={45}
                   src={userData ? userData.profileImageUrl : "/images/af1-short.png" }
-                  className="object-fit-cover"
+                  className="object-fit-cover rounded-circle border-main border-2 border-secondary"
                   alt=""
                 />
               </div>
