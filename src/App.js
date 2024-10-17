@@ -28,6 +28,7 @@ import DeliveredOrders from "./pages/ShopifyManagement/DeliveredOrders";
 import RejectedOrders from "./pages/ShopifyManagement/RejectedOrders";
 import OrderDetail from "./pages/ShopifyManagement/OrderDetail";
 import { getUserFromLocalStorage } from "./utils/localstorage";
+import CustomerSegments from "./pages/CustomerSegments";
 import Profile from "./pages/Profile";
 
 function App() {
@@ -86,7 +87,7 @@ function App() {
           <Route path="Settings" element={<Settings />} />
 
           <Route path="Product-Approval" element={<DeliveredOrders />} />
-          {/* <Route path="list-product" element={<Productlist />} /> */}
+          <Route path="CustomerSegments" element={<CustomerSegments />} />
         </Route>
       </Routes>
     </Router>

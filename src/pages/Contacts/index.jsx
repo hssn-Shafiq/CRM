@@ -5,11 +5,15 @@ import "./Contacts.css";
 import { Link } from "react-router-dom";
 import CustomerData from "../../components/CustomersData";
 
+
+
 const Contacts = () => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+
   return (
     <>
 
@@ -18,15 +22,15 @@ const Contacts = () => {
           <h2 className="text-uppercase p-2 page-title">Leads Management </h2>
         </div>
         <div className="container mt-5">
-          
+
           <div className="d-flex justify-content-start">
-            
+
             <button
               className="btn btn-light mx-1"
             >
               <i className="fas fa-plus" />
             </button>
-            
+
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -34,7 +38,7 @@ const Contacts = () => {
             >
               <i className="fas fa-filter" />
             </button>
-            
+
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -42,7 +46,7 @@ const Contacts = () => {
             >
               <i className="fas fa-robot" />
             </button>
-            
+
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -50,7 +54,7 @@ const Contacts = () => {
             >
               <i className="fas fa-comment" />
             </button>
-            
+
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -58,7 +62,7 @@ const Contacts = () => {
             >
               <i className="fas fa-envelope" />
             </button>
-            
+
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -75,7 +79,7 @@ const Contacts = () => {
               <i className="fas fa-tag" />
               <i className="fas fa-minus" />
             </button>
-            
+
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -83,7 +87,7 @@ const Contacts = () => {
             >
               <i className="fas fa-trash" />
             </button>
-            
+
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -91,7 +95,7 @@ const Contacts = () => {
             >
               <i className="fas fa-star" />
             </button>
-            
+
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -99,7 +103,7 @@ const Contacts = () => {
             >
               <i className="fas fa-upload" />
             </button>
-            
+
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -107,7 +111,7 @@ const Contacts = () => {
             >
               <i className="fas fa-download" />
             </button>
-            
+
             <button
               className="btn btn-light mx-1"
               data-bs-toggle="modal"
@@ -121,7 +125,7 @@ const Contacts = () => {
           <div className="row">
             <div className="col-lg-7">
               <div className="row align-items-center">
-                
+
                 <div className="col-auto">
                   <div className="dropdown">
                     <button
@@ -188,7 +192,7 @@ const Contacts = () => {
                   </div>
 
                 </div>
-                
+
                 <div className="col">
                   <div className="input-group">
                     <span className="input-group-text">
@@ -201,7 +205,7 @@ const Contacts = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="col-auto">
                   <button className="btn btn-outline-light" onClick={handleShow}>
                     <i className="fas fa-filter" /> More Filters
@@ -211,8 +215,8 @@ const Contacts = () => {
             </div>
           </div>
         </div>
-        
-        
+
+
         {/* <div
           className="modal fade"
           id="modalPlus"
@@ -432,7 +436,7 @@ const Contacts = () => {
             </div>
           </div>
         </div> */}
-        
+
         <div
           className="modal fade"
           id="modalFilter"
@@ -463,7 +467,7 @@ const Contacts = () => {
                       <i className="fas fa-info-circle" /> Apply opportunity to
                       following contacts
                     </p>
-                    
+
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-sitemap" /> Select pipeline
@@ -473,7 +477,7 @@ const Contacts = () => {
                         <small className="text-danger">* Pipeline required</small>
                       </label>
                     </div>
-                    
+
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-layer-group" /> Select stage
@@ -483,7 +487,7 @@ const Contacts = () => {
                         <small className="text-danger">* Stage required</small>
                       </label>
                     </div>
-                    
+
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-briefcase" /> Opportunity Name
@@ -494,7 +498,7 @@ const Contacts = () => {
                         />
                       </label>
                     </div>
-                    
+
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-share-alt" /> Opportunity Source
@@ -505,7 +509,7 @@ const Contacts = () => {
                         />
                       </label>
                     </div>
-                    
+
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-dollar-sign" /> Lead Value
@@ -516,7 +520,7 @@ const Contacts = () => {
                         />
                       </label>
                     </div>
-                    
+
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-flag" /> Opportunity Status
@@ -525,7 +529,7 @@ const Contacts = () => {
                         </select>
                       </label>
                     </div>
-                    
+
                     <div className="col-sm-12">
                       <label className="form-label mb-2">
                         <i className="fas fa-tasks" /> Action
@@ -536,7 +540,7 @@ const Contacts = () => {
                         />
                       </label>
                     </div>
-                    
+
                     <div className="d-flex justify-content-between mt-4">
                       <button className="btn btn-outline-danger">
                         <i className="fas fa-times" /> Cancel
@@ -551,7 +555,7 @@ const Contacts = () => {
             </div>
           </div>
         </div>
-        
+
         <div
           className="modal fade"
           id="modalRobot"
@@ -810,10 +814,10 @@ const Contacts = () => {
             </div>
           </div>
         </div>
-        
 
 
-        
+
+
         <CustomerData />
 
 
@@ -844,7 +848,7 @@ const Contacts = () => {
                 <Form.Control type="text" placeholder="Enter city" />
               </Form.Group>
 
-              
+
             </Form>
           </Modal.Body>
           <Modal.Footer>
