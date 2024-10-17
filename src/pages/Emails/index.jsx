@@ -17,7 +17,7 @@ const Emails = () => {
         <div className="Compagnie">
           <div className="header">
             <div>
-              <h1>All Compagnie</h1>
+              <h1>All Compaigns</h1>
             </div>
             <div>
               <button className="btn bg-light text-dark border-dark" type="button">
@@ -31,7 +31,7 @@ const Emails = () => {
           <div className="planner-content">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <div className="icons-container d-flex">
-                <h4 className="fw-bold">Home</h4>
+                {/* <h4 className="fw-bold">Home</h4> */}
               </div>
               <div className="date-picker">
                 <i className="fa fa-calendar-days" />

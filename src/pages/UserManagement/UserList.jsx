@@ -11,10 +11,9 @@ import {
 } from "firebase/firestore"; // Firestore functions
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
-import { FaTrash, FaPlus } from "react-icons/fa";
+import { FaTrash, FaPlus, FaEdit } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
 import { Checkbox } from "antd";
-import { getUserFromLocalStorage } from "../../utils/localstorage";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -25,9 +24,9 @@ const UserList = () => {
   const [name, setName] = useState("");
   const [selectedRoutes, setSelectedRoutes] = useState([]);
   const [roles, setRoles] = useState([]); // State to store fetched roles
-
-  const loginUser = auth.currentUser;
-
+  const [showRolesModal, setShowRolesModal] = useState(false); // Show roles management modal
+  const [isEditMode, setIsEditMode] = useState(false); // To check if it's edit mode
+  const [editRoleId, setEditRoleId] = useState(null); // Store role id for editing
   const allRoutes = [
     "Dashboard",
     "Users",
@@ -45,19 +44,23 @@ const UserList = () => {
     "RegisteredUser",
   ];
 
+  // Fetch users from Firestore with real-time updates
   useEffect(() => {
-    // Fetch users from Firestore with real-time updates
-    const unsubscribe = onSnapshot(collection(db, "Users"), (snapshot) => {
-      const userList = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setUsers(userList);
-      setLoading(false);
-    }, (error) => {
-      toast.error("Failed to fetch users: " + error.message);
-      setLoading(false);
-    });
+    const unsubscribe = onSnapshot(
+      collection(db, "Users"),
+      (snapshot) => {
+        const userList = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setUsers(userList);
+        setLoading(false);
+      },
+      (error) => {
+        toast.error("Failed to fetch users: " + error.message);
+        setLoading(false);
+      }
+    );
 
     // Cleanup the listener on component unmount
     return () => unsubscribe();
@@ -71,8 +74,12 @@ const UserList = () => {
     try {
       const rolesCollection = collection(db, "userRole");
       const rolesSnapshot = await getDocs(rolesCollection);
-      const rolesList = rolesSnapshot.docs.map((doc) => doc.data().roleName);
+      const rolesList = rolesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
       setRoles(rolesList);
+      setLoading(false);
     } catch (error) {
       toast.error("Failed to fetch roles: " + error.message);
     }
@@ -125,6 +132,9 @@ const UserList = () => {
 
   const handleShow = () => {
     setShowModal(true);
+    setIsEditMode(false); // Set to add mode
+    setName("");
+    setSelectedRoutes([]);
   };
 
   const handleClose = () => {
@@ -137,26 +147,49 @@ const UserList = () => {
     );
   };
 
-  const handleAddRole = async (e) => {
+  const handleAddOrUpdateRole = async (e) => {
     e.preventDefault();
-    try {
-      setLoading(true);
-      const data = {
-        roleName: name,
-        routes: selectedRoutes,
-      };
-      await addUserRole("userRole", data);
-      toast.success("Role added successfully.");
-      setShowModal(false);
-      setName("");
-      setSelectedRoutes([]);
-         // Fetch the updated list of roles after adding a new role
-         await fetchRoles();
-    } catch (error) {
-      toast.error("Error adding new role: " + error.message);
-    } finally {
-      setLoading(false);
+    if (isEditMode) {
+      // Update role in Firestore
+      try {
+        const roleRef = doc(db, "userRole", editRoleId);
+        await updateDoc(roleRef, { roleName: name, routes: selectedRoutes });
+        toast.success("Role updated successfully.");
+      } catch (error) {
+        toast.error("Error updating role: " + error.message);
+      }
+    } else {
+      // Add new role
+      try {
+        const data = { roleName: name, routes: selectedRoutes };
+        await addUserRole("userRole", data);
+        toast.success("Role added successfully.");
+      } catch (error) {
+        toast.error("Error adding role: " + error.message);
+      }
+    }
 
+    setShowModal(false);
+    setName("");
+    setSelectedRoutes([]);
+    fetchRoles(); // Refresh roles after addition or update
+  };
+
+  const handleEditRole = (role) => {
+    setEditRoleId(role.id); // Set the id of the role to edit
+    setName(role.roleName);
+    setSelectedRoutes(role.routes || []);
+    setIsEditMode(true); // Set to edit mode
+    setShowModal(true);
+  };
+
+  const handleDeleteRole = async (roleId) => {
+    try {
+      await deleteDoc(doc(db, "userRole", roleId));
+      toast.success("Role deleted successfully.");
+      fetchRoles(); // Refresh roles after deletion
+    } catch (error) {
+      toast.error("Error deleting role: " + error.message);
     }
   };
 
@@ -175,11 +208,17 @@ const UserList = () => {
         <div className="container table-responsive border-0 mt-3">
           <div className="new_role mb-3 text-end">
             <button
-              className="btn btn-primary bg-main border-main mb-0"
+              className="btn btn-primary mb-0 bg-main border-main mb-0"
               type="button"
               onClick={handleShow}
             >
               <FaPlus className="me-1 mt-0" /> Add New Role
+            </button>
+            <button
+              className="btn btn-primary bg-main border-main mb-0 mx-3"
+              onClick={() => setShowRolesModal(true)}
+            >
+             <FaEdit className="me-1 mt-0" />  Manage Roles
             </button>
           </div>
           <table className="table table-hover leads-table">
@@ -196,9 +235,7 @@ const UserList = () => {
             <tbody>
               {users.map((user, index) => (
                 <tr key={user.id}>
-                  <th scope="row" className="text-light">
-                    {index + 1}
-                  </th>
+                  <th scope="row" className="text-light">{index + 1}</th>
                   <td>{user.userName}</td>
                   <td>{user.userEmail}</td>
                   <td>{user.Role || "User"}</td>
@@ -208,12 +245,12 @@ const UserList = () => {
                       onChange={(e) =>
                         handleRoleSelect(user.id, e.target.value)
                       }
-                      className="form-select bg-main border-main text-secondary"
+                       className="form-select bg-main border-main text-secondary"
                     >
                       <option value="">Select a role</option>
-                      {roles.map((role, idx) => (
-                        <option key={idx} value={role}>
-                          {role}
+                      {roles.map((role) => (
+                        <option key={role.id} value={role.roleName}>
+                          {role.roleName}
                         </option>
                       ))}
                     </select>
@@ -240,59 +277,88 @@ const UserList = () => {
         </div>
       </div>
 
-      <Modal
-        show={showModal}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-        centered="true"
-      >
+      {/* Modal for Adding/Editing Role */}
+      <Modal show={showModal} onHide={handleClose} backdrop="static" size="md" keyboard={false} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Add New Role</Modal.Title>
+          <Modal.Title>{isEditMode ? "Edit Role" : "Add New Role"}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-main border-main text-light">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="form-group">
-                <label className="form-label">Role Name:</label>
-                <input
-                  type="text"
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Role Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter role name"
                   className="input-group  bg-main border-main text-secondary rounded-3 p-2 px-2"
-                  placeholder="Manager, Co-admin,..."
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div className="row">
-                <div className="form-group mt-3">
-                  <label className="form-label">Select Routes:</label>
-                </div>
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Select Routes</Form.Label>
+              <div className="d-flex flex-wrap">
                 {allRoutes.map((route) => (
-                  <div
-                    key={route}
-                    className="col-md-6 d-flex align-items-center py-2 "
-                  >
+                  <div key={route} className="col-md-6 d-flex align-items-center py-2">
                     <Checkbox
                       className="text-secondary"
                       checked={selectedRoutes.includes(route)}
-                      onChange={(e) =>
-                        handleRouteChange(route, e.target.checked)
-                      }
+                      onChange={(e) => handleRouteChange(route, e.target.checked)}
                     >
                       {route}
                     </Checkbox>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
+            </Form.Group>
+          </Form>
         </Modal.Body>
         <Modal.Footer className="bg-main border-main text-light">
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleAddRole}>
-            Add Role
+          <Button variant="primary" onClick={handleAddOrUpdateRole}>
+            {isEditMode ? "Update Role" : "Add Role"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Roles Modal */}
+      <Modal show={showRolesModal} onHide={() => setShowRolesModal(false)}  keyboard={false} centered size="xl"  >
+        <Modal.Header closeButton>
+          <Modal.Title>Manage Roles</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-dark-bl table_style">
+          <table className="table table-hover  table_style">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Role_Name</th>
+                <th>Routes</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {roles.map((role, index) => (
+                <tr key={role.id}>
+                  <td>{index + 1}</td>
+                  <td>{role.roleName}</td>
+                  <td>{role.routes.join(", ")}</td>
+                  <td className="d-flex ">
+                    <button className="btn btn-sm bg-main  btn-primary me-2" onClick={() => handleEditRole(role)}>
+                      <FaEdit />
+                    </button>
+                    <button className="btn btn-sm bg-main btn-danger" onClick={() => handleDeleteRole(role.id)}>
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Modal.Body>
+        <Modal.Footer className="bg-dark ">
+          <Button variant="secondary" className="bg-main border-main" onClick={() => setShowRolesModal(false)}>
+            Close
           </Button>
         </Modal.Footer>
       </Modal>

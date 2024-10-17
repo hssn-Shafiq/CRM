@@ -30,7 +30,9 @@ body{
 input:focus-visible {
   outline-offset: 0px;
   outline: none;
+  box-shadow: none;
 }
+
 .filters .input-group{
   margin-top: 10px;
 }

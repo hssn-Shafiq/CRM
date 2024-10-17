@@ -1,0 +1,56 @@
+/* Profile Component Custom Styles */
+
+
+
+.profile-card {
+    border-radius: 10px;
+    color: #fff;
+}
+
+.profile-title {
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 2px;
+    color: white;
+}
+
+.profile-image {
+    border: 4px solid white;
+    object-fit: cover;
+    object-position: top;
+}
+
+.profile-input {
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.461);
+    border: 1px solid rgba(255, 255, 255, 0.461);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.profile-input:focus {
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.461);
+    border: 1px solid rgba(255, 255, 255, 0.461);
+    box-shadow: none;
+}
+
+.profile-input::placeholder {
+    color: rgba(255, 255, 255, 0.461);
+}
+
+.profile-input:disabled {
+    background-color: transparent;
+}
+
+.profile-btn {
+    background-color: var(--color-212529);
+    border: none;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+}
+
+.profile-btn:hover {
+    background-color: white;
+    color: black;
+}

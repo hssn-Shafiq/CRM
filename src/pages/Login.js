@@ -45,8 +45,8 @@ const Login = () => {
         const userData = querySnapshot.docs[0].data(); // Get the first matching document
 
         // Store user details in localStorage
-        storeUserToLocalStorage({ email: user.email });
-
+        storeUserToLocalStorage({ email: user.email, userName: userData.userName, uid: userData.uid });
+        
         // Check if the user is an admin
         if (userData.Role !== "User") {
           toast.success("Welcome admin");
