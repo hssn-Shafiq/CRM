@@ -7,7 +7,10 @@ import SendEmailLeads from '../Leads/SendEmailLeads';
 import { fetchCustomers } from '../../Services/shopifyService'; // Updated fetch function
 import Loader from '../Loader';
 
+
 const CustomerData = () => {
+
+
   const [customers, setCustomers] = useState([]); // State to store fetched customer data
   const [loading, setLoading] = useState(true); // For loading state
   const [error, setError] = useState(null); // For error state
@@ -73,7 +76,7 @@ const CustomerData = () => {
       case 'All Leads':
         return (
           <div className="table-responsive">
-            <table className="table table-hover align-middle leads-table">
+            <table className="table table-hover align-middle leads-table" id='customerTable'>
               <thead>
                 <tr className="border-main">
                   <th>Name</th>

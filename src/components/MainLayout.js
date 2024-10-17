@@ -178,6 +178,11 @@ const MainLayout = () => {
                   icon: <FaLayerGroup className="fs-4" />,
                   label: "Templates",
                 },
+                {
+                  key: "CustomerSegments",
+                  icon: <FaLayerGroup className="fs-4" />,
+                  label: "Segments",
+                },
               ],
             },
             {
