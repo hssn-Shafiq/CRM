@@ -87,11 +87,11 @@ const MainLayout = () => {
         <div className="logo d-flex align-items-center justify-content-center">
           <h2 className="text-white fs-5 text-center py-2 mb-0 ">
             <span className="sm-logo">
-              <img src="/images/logo-bg.png" alt="crm-logo" width={80} />
+              <img src="/images/af1-short.png" alt="crm-logo" width={80} />
             </span>
             <span className="lg-logo">
               {" "}
-              <img src="/images/logo-bg.png" alt="crm-logo" width={150} />
+              <img src="/images/af1-white.png" alt="crm-logo" width={140} />
             </span>
           </h2>
         </div>
@@ -123,11 +123,11 @@ const MainLayout = () => {
                 //   icon: <AiOutlineUserSwitch className="fs-4" />,
                 //   label: "User Role",
                 // },
-                {
-                  key: "Users/User-Permission",
-                  icon: <FaUserLock className="fs-4" />,
-                  label: "User Permission",
-                },
+                // {
+                //   key: "Users/User-Permission",
+                //   icon: <FaUserLock className="fs-4" />,
+                //   label: "User Permission",
+                // },
               ],
             },
 
@@ -243,14 +243,13 @@ const MainLayout = () => {
                 3
               </span>
             </div>
-
             <div className="d-flex gap-3 align-items-center dropdown">
               <div>
                 <img
                   width={45}
                   height={45}
-                  src="/images/logo-bg.png"
-                  className="object-fit-contain"
+                  src={userData ? userData.profileImageUrl : "/images/af1-short.png" }
+                  className="object-fit-cover"
                   alt=""
                 />
               </div>
@@ -262,10 +261,10 @@ const MainLayout = () => {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <h5 className="mb-0">Admin</h5>
+                    <h5 className="mb-0">{userData.userName || "Admin"}</h5>
                     <p className="mb-0">{userData.email}</p>
                   </div>
-                  <div
+                  <divF
                     className="dropdown-menu"
                     aria-labelledby="dropdownMenuLink"
                   >
@@ -273,6 +272,7 @@ const MainLayout = () => {
                       <Link
                         className="dropdown-item py-1 mb-1"
                         style={{ height: "auto", lineHeight: "20px" }}
+                        to="/admin/Profile"
                       >
                         View Profile
                       </Link>
@@ -286,7 +286,7 @@ const MainLayout = () => {
                         Signout
                       </Link>
                     </li>
-                  </div>
+                  </divF>
                 </>
               ) : (
                 <div className="">

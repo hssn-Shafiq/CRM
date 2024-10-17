@@ -9,7 +9,43 @@ and the use the
 to use the 1 px solid border of the mostly use color 
 
 */
-.parent-lead-data-form {
+.table_style{
+  th,
+  td {
+    text-align: center;
+    font-size: 14px;
+  }
+
+  table thead {
+    background: var(--bg-main) !important;
+    color: #343a40 !important;
+
+    tr th {
+      color: white;
+      font-family: "Poppins", sans-serif;
+      letter-spacing: 1px;
+
+    }
+  }
+
+  table tbody tr:hover {
+    background-color: black;
+  }
+
+  table td,
+  table th {
+    vertical-align: middle;
+    /* white-space: nowrap; */
+    background: transparent;
+    border: var(--border-main)
+  }
+
+  table tbody td {
+    color: rgb(211, 204, 204);
+  }
+}
+
+.parent-lead-data-form{
 
   th,
   td {

@@ -28,6 +28,7 @@ import DeliveredOrders from "./pages/ShopifyManagement/DeliveredOrders";
 import RejectedOrders from "./pages/ShopifyManagement/RejectedOrders";
 import OrderDetail from "./pages/ShopifyManagement/OrderDetail";
 import { getUserFromLocalStorage } from "./utils/localstorage";
+import Profile from "./pages/Profile";
 
 function App() {
   const user = getUserFromLocalStorage();
@@ -47,6 +48,7 @@ function App() {
         <Route path="/admin" element={<MainLayout />}>
 
           <Route index element={<Dashboard />} />
+          <Route path="Profile" element={<Profile />} />
 
           <Route path="RegisteredUser" element={<RegisteredUser />} />
           <Route path="Users/User-List" element={<UserList />} />

@@ -3,7 +3,9 @@
 * {
   font-family: poppins, sans-serif;
 }
-
+.bg-dark-bl{
+  background: #292929;
+}
 .bg-warning{
   background: red !important;
   transition: all .5s ease-in-out;

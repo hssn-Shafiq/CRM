@@ -4,9 +4,9 @@
         align-items: center;
         justify-content: space-between;
         padding: 20px;
-        background-color: white;
-        border-bottom: 1px solid #dee2e6;
-        background-color: var(--bg-main);
+        /* background-color: white; */
+        /* border-bottom: 1px solid #dee2e6; */
+        /* background-color: var(--bg-main); */
     }
 
     .header h1 {

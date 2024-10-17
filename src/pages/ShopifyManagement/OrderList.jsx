@@ -7,6 +7,7 @@ import {
   FaSearch,
   FaCalendarAlt,
   FaPlus,
+  FaSync, // Add refresh icon
 } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -17,16 +18,15 @@ import { Dropdown } from "react-bootstrap";
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const [loading, setLoading] = useState(true); // For loading state
-  const [error, setError] = useState(null); // For error state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("All");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
   const entriesPerPage = 10;
 
-  // Columns management
   const allColumns = [
     { name: "Order ID", key: "id" },
     { name: "Date", key: "created_at" },
@@ -44,46 +44,48 @@ const OrderList = () => {
     "Date",
     "Customer",
     "Total",
-  ]); // Initial visible columns
+  ]);
 
   const hiddenColumns = allColumns.filter(
     (col) => !visibleColumns.includes(col.name)
   );
 
-  // Fetch orders on component mount, only if not already cached
+  // Fetch orders from API and update localStorage
+  const refreshOrders = async () => {
+    setLoading(true); // Start loading
+    try {
+      const fetchedOrders = await fetchOrders();
+      if (fetchedOrders && fetchedOrders.length > 0) {
+        setOrders(fetchedOrders);
+        setFilteredOrders(fetchedOrders);
+        localStorage.setItem("cachedOrders", JSON.stringify(fetchedOrders));
+      }
+    } catch (err) {
+      setError("Failed to refresh orders");
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
+
+  // UseEffect to fetch orders on component mount
   useEffect(() => {
     const cachedOrders = localStorage.getItem("cachedOrders");
-
     if (cachedOrders) {
       const parsedOrders = JSON.parse(cachedOrders);
       setOrders(parsedOrders);
       setFilteredOrders(parsedOrders);
       setLoading(false);
     } else {
-      const getOrders = async () => {
-        try {
-          const fetchedOrders = await fetchOrders();
-          if (fetchedOrders && fetchedOrders.length > 0) {
-            setOrders(fetchedOrders);
-            setFilteredOrders(fetchedOrders);
-            localStorage.setItem("cachedOrders", JSON.stringify(fetchedOrders));
-          }
-        } catch (err) {
-          setError("Failed to fetch orders");
-        } finally {
-          setLoading(false);
-        }
-      };
-      getOrders();
+      refreshOrders(); // Fetch if no cache
     }
-  }, []); // Empty dependency array ensures this runs only on mount
+  }, []);
 
-  // Handle filter changes and search
+  // Optimized useEffect for applying filters
   useEffect(() => {
     applyFilters();
   }, [orders, filter, searchTerm, startDate, endDate, currentPage]);
 
-  // Function to apply filters
+  // Apply filters based on user input
   const applyFilters = () => {
     let filtered = orders;
 
@@ -126,7 +128,7 @@ const OrderList = () => {
     setFilteredOrders(filtered);
   };
 
-  // Get current orders to display (pagination logic)
+  // Get paginated orders
   const indexOfLastOrder = currentPage * entriesPerPage;
   const indexOfFirstOrder = indexOfLastOrder - entriesPerPage;
   const currentOrders = filteredOrders.slice(
@@ -134,12 +136,10 @@ const OrderList = () => {
     indexOfLastOrder
   );
 
-  // Handle pagination change
+  // Handle pagination
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
   const totalPages = Math.ceil(filteredOrders.length / entriesPerPage);
 
-  // Function to handle adding a new column
   const handleAddColumn = (column) => {
     if (!visibleColumns.includes(column)) {
       setVisibleColumns((prevColumns) => [...prevColumns, column]);
@@ -181,6 +181,13 @@ const OrderList = () => {
     <div className="container-fluid px-3 pt-4 parent-lead-data-form">
       <div className="text-center">
         <h2 className="text-uppercase p-2 page-title">All Orders</h2>
+      </div>
+
+      {/* Refresh Orders Button */}
+      <div className="text-end mb-3">
+        <button className="btn btn-outline-primary" onClick={refreshOrders}>
+          <FaSync /> Refresh Orders
+        </button>
       </div>
 
       {/* Filters Section */}
@@ -248,8 +255,6 @@ const OrderList = () => {
               {visibleColumns.map((col) => (
                 <th key={col}>{col}</th>
               ))}
-
-              {/* Dropdown for remaining columns */}
               <th>
                 <Dropdown>
                   <Dropdown.Toggle
@@ -274,7 +279,7 @@ const OrderList = () => {
               </th>
             </tr>
           </thead>
-          <tbody >
+          <tbody>
             {currentOrders && currentOrders.length > 0 ? (
               currentOrders.map((order, index) => (
                 <tr key={index}>
@@ -285,13 +290,9 @@ const OrderList = () => {
                   ))}
                   <td>
                     <Link to={`/admin/Shopify/Order/${order.id}`}>
-                      <FaEye
-                        style={{ marginRight: "10px", cursor: "pointer" }}
-                      />
+                      <FaEye style={{ marginRight: "10px", cursor: "pointer" }} />
                     </Link>
-                    <FaEdit
-                      style={{ marginRight: "10px", cursor: "pointer" }}
-                    />
+                    <FaEdit style={{ marginRight: "10px", cursor: "pointer" }} />
                     <FaTrash style={{ cursor: "pointer" }} />
                   </td>
                 </tr>
@@ -313,9 +314,7 @@ const OrderList = () => {
           {[...Array(totalPages)].map((_, index) => (
             <li
               key={index}
-              className={`page-item ${
-                index + 1 === currentPage ? "active" : ""
-              }`}
+              className={`page-item ${index + 1 === currentPage ? "active" : ""}`}
             >
               <button className="page-link" onClick={() => paginate(index + 1)}>
                 {index + 1}
