@@ -131,3 +131,7 @@ input:focus-visible {
 .ant-menu-title-content{
   font-size: 1rem;
 }
+.modal-content{
+  background-color: var(--color-212529) !important;
+  color: var(--color-c3d4da) !important;
+}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Emails.css";
+import "./Emails.css"; // Import the CSS file for styling
 import { Modal, Button } from "react-bootstrap";
 
 const Emails = () => {
@@ -30,9 +30,7 @@ const Emails = () => {
           </div>
           <div className="planner-content">
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <div className="icons-container d-flex">
-                {/* <h4 className="fw-bold">Home</h4> */}
-              </div>
+              <div className="icons-container d-flex"></div>
               <div className="date-picker">
                 <i className="fa fa-calendar-days" />
                 <input type="date" className="form-control" defaultValue="2024-04-22" />
@@ -41,7 +39,7 @@ const Emails = () => {
               </div>
             </div>
             <div className="table-responsive">
-              <table className="table table-bordered">
+              <table className="table">
                 <thead>
                   <tr>
                     <th>Compagnie name</th>
