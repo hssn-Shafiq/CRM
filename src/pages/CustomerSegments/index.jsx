@@ -88,11 +88,16 @@ const CustomerSegments = () => {
             <div className="text-center mb-4">
                 <h2 className="text-uppercase text-light bg-dark p-2 page-title">Customer Segments</h2>
             </div>
-           
+            <Form.Control
+                type="text"
+                placeholder="Search segments..."
+                className="mb-3 text-light bg-dark search-input"
+                onChange={(e) => setFilterText(e.target.value)}
+            />
             <DataTable
                 columns={[
                     {
-                        name: "Segment Name :",
+                        name: "Segment Name",
                         selector: (row) => row.name,
                         sortable: true,
                         style: { fontWeight: 'bold', fontSize: '16px' },

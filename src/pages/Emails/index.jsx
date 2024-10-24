@@ -3,10 +3,17 @@ import "./Emails.css"; // Import the CSS file for styling
 import { Modal, Button } from "react-bootstrap";
 
 const Emails = () => {
+  // State for "New Data" modal
   const [show, setShow] = useState(false);
+
+  // State for "Create Folder" modal
+  const [showCreateFolder, setShowCreateFolder] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handleCloseCreateFolder = () => setShowCreateFolder(false);
+  const handleShowCreateFolder = () => setShowCreateFolder(true);
 
   return (
     <>
@@ -20,7 +27,11 @@ const Emails = () => {
               <h1>All Compaigns</h1>
             </div>
             <div>
-              <button className="btn bg-light text-dark border-dark" type="button">
+              <button
+                className="btn bg-light text-dark border-dark"
+                type="button"
+                onClick={handleShowCreateFolder}
+              >
                 <i className="fas fa-folder"></i> Create Folder
               </button>
               <button className="btn btn-new-post ms-2" onClick={handleShow}>
@@ -33,49 +44,49 @@ const Emails = () => {
               <div className="icons-container d-flex"></div>
               <div className="date-picker">
                 <i className="fa fa-calendar-days" />
-                <input type="date" className="form-control" defaultValue="2024-04-22" />
+                <input
+                  type="date"
+                  className="form-control"
+                  defaultValue="2024-04-22"
+                />
                 <span className="mx-2">to</span>
-                <input type="date" className="form-control" defaultValue="2024-10-22" />
+                <input
+                  type="date"
+                  className="form-control"
+                  defaultValue="2024-10-22"
+                />
               </div>
             </div>
             <div className="table-responsive">
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Compagnie name</th>
-                    <th>Template name</th>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Last Updated</th>
+                    <th>Execution Date</th>
                     <th>Status</th>
-                    <th>Deliver to</th>
-                    <th>Date &amp; Time</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Eid Milad Ul Nabi Mubarak!</td>
-                    <td>
-                      <img src="https://via.placeholder.com/60" alt="media" />
-                    </td>
-                    <td>
-                      <span className="status-published">Published</span>
-                    </td>
-                    <td>Post composer</td>
+                    <td>Master Email</td>
+                    <td><span>Published</span></td>
+                    <td>Sep 20, 2024 12:03 PM</td>
                     <td>Sep 17, 2024 12:03 PM</td>
+                    <td>Draft</td>
                     <td>
                       <i className="fa fa-edit fa-lg" style={{ marginRight: '10px', cursor: 'pointer' }}></i>
                       <i className="fa fa-trash fa-lg" style={{ cursor: 'pointer' }}></i>
                     </td>
                   </tr>
                   <tr>
-                    <td>Eid Milad Ul Nabi Mubarak!</td>
-                    <td>
-                      <img src="https://via.placeholder.com/60" alt="media" />
-                    </td>
-                    <td>
-                      <span className="status-published">Published</span>
-                    </td>
-                    <td>Post composer</td>
+                    <td>Seans Greencard</td>
+                    <td><span>Published</span></td>
+                    <td>Dec 25, 2024 12:03 PM</td>
                     <td>Sep 17, 2024 12:03 PM</td>
+                    <td>Send</td>
                     <td>
                       <i className="fa fa-edit fa-lg" style={{ marginRight: '10px', cursor: 'pointer' }}></i>
                       <i className="fa fa-trash fa-lg" style={{ cursor: 'pointer' }}></i>
@@ -95,27 +106,50 @@ const Emails = () => {
           <Modal.Body>
             <form>
               <div className="mb-3">
-                <label htmlFor="compagnieName" className="form-label">Compagnie Name</label>
-                <input type="text" className="form-control" id="compagnieName" placeholder="Enter compagnie name" />
+                <label htmlFor="title" className="form-label">Title</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="title"
+                  placeholder="Enter title"
+                />
               </div>
               <div className="mb-3">
-                <label htmlFor="templateName" className="form-label">Template Name</label>
-                <input type="text" className="form-control" id="templateName" placeholder="Enter template name" />
+                <label htmlFor="type" className="form-label">Type</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="type"
+                  placeholder="Enter type"
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="lastUpdated" className="form-label">
+                  Last Updated
+                </label>
+                <input
+                  type="datetime-local"
+                  className="form-control"
+                  id="lastUpdated"
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="executionDate" className="form-label">
+                  Execution Date
+                </label>
+                <input
+                  type="datetime-local"
+                  className="form-control"
+                  id="executionDate"
+                />
               </div>
               <div className="mb-3">
                 <label htmlFor="status" className="form-label">Status</label>
                 <select className="form-select" id="status">
                   <option value="published">Published</option>
                   <option value="draft">Draft</option>
+                  <option value="send">Send</option>
                 </select>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="deliverTo" className="form-label">Deliver To</label>
-                <input type="text" className="form-control" id="deliverTo" placeholder="Enter delivery method" />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="dateTime" className="form-label">Date & Time</label>
-                <input type="datetime-local" className="form-control" id="dateTime" />
               </div>
             </form>
           </Modal.Body>
@@ -125,6 +159,45 @@ const Emails = () => {
             </Button>
             <Button variant="primary" onClick={handleClose}>
               Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Modal for creating a folder */}
+        <Modal show={showCreateFolder} onHide={handleCloseCreateFolder}>
+          <Modal.Header closeButton>
+            <Modal.Title>Create New Folder</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form>
+              <div className="mb-3">
+                <label htmlFor="folderName" className="form-label">Folder Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="folderName"
+                  placeholder="Enter folder name"
+                />
+              </div>
+              {/* <div className="mb-3">
+                <label htmlFor="folderDescription" className="form-label">
+                  Folder Description
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="folderDescription"
+                  placeholder="Enter folder description"
+                />
+              </div> */}
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseCreateFolder}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleCloseCreateFolder}>
+              Create Folder
             </Button>
           </Modal.Footer>
         </Modal>
