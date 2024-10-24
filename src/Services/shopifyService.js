@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const API_URL = process.env.REACT_APP_API_URL; // Getting the API base URL from the .env file
 const ACCESS_TOKEN = process.env.REACT_APP_SHOPIFY_ACCESS_TOKEN; // Shopify Access Token from .env
 const BEARER_TOKEN = process.env.REACT_APP_BEARER_TOKEN; // Bearer Token from .env
@@ -84,4 +86,46 @@ export const fetchSalesData = async () => {
   const orders = await fetchOrders();
   const totalSales = orders.reduce((total, order) => total + parseFloat(order.total_price), 0);
   return totalSales;
+};
+
+
+export const fetchShopifyCustomers = async (filterType) => {
+  let url = `${API_URL}/customers`;
+
+  // Modify URL for specific customer filters
+  switch (filterType) {
+    case "purchased_once":
+      url += "?orders_count=1"; // Customers who have purchased exactly once
+      break;
+    case "purchased_more_than_once":
+      url += "?orders_count[gt]=1"; // Customers who have purchased more than once
+      break;
+    case "not_purchased":
+      url += "?orders_count=0"; // Customers who have not purchased anything
+      break;
+    case "email_subscribers":
+      url += "?email_marketing_consent[state]=subscribed"; // Customers who are email subscribers
+      break;
+    case "not_subscribed":
+      url += "?email_marketing_consent[state]=not_subscribed"; // Customers who are not subscribed to emails
+      break;
+    case "abandoned_checkout":
+      url += "?state=abandoned"; // Customers with abandoned checkouts
+      break;
+    default:
+      break;
+  }
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+      },
+    });
+
+    return response.data.data; // Assuming the data is in the 'data' field
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+    throw error;
+  }
 };
