@@ -21,6 +21,17 @@ const platformIcons = {
   whatsapp: <FaWhatsapp size={24} className="me-2 social-account-icon" />,
 };
 
+// Platform-specific dimensions
+const platformSizes = {
+  facebook: { width: '100%', height: 'auto' },
+  instagram: { width: '400px', height: '400px' },
+  linkedin: { width: '600px', height: 'auto' },
+  twitter: { width: '500px', height: 'auto' },
+  tiktok: { width: '300px', height: '600px' },
+  pinterest: { width: '500px', height: 'auto' },
+  whatsapp: { width: '500px', height: 'auto' },
+};
+
 const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
   const [selectedFilter, setSelectedFilter] = useState("All Accounts");
 
@@ -90,10 +101,13 @@ const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
         <FaFacebook size={24} className="me-2 social-account-icon" />
       );
 
+      // Get platform-specific sizes
+      const platformSize = platformSizes[platform] || { width: '500px', height: 'auto' };
+
       return (
-        <div key={index}>
+        <div key={index} style={{ width: platformSize.width, height: platformSize.height }}>
           {/* Post card with platform-specific styling */}
-          <div className="post-card">
+          <div className="post-card" style={{ width: "100%", height: "100%" }}>
             <div className="post-header bg-main d-flex align-items-center justify-content-start">
               <div className="account-item border-0 ">
                 <img

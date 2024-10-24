@@ -1,4 +1,8 @@
 .create-post {
+    .create-post-row{
+        width: 1050px;
+        padding: 0px 0px;
+    }
     .card{
         border: none;
         border-radius: 10px;

@@ -16,11 +16,11 @@ const CreatePosts = () => {
       <main>
         <div className="create-post mb-5">
           <div className="container mt-4">
-            <div className="row">
-              <div className="col-md-8">
+            <div className="row create-post-row d-flex flex-row">
+              <div className="w-600">
                 <div className="card">
                   <div className="card-body">
-                    <div className="d-flex align-items-center justify-content-start gap-4 mb-3">
+                    <div className="d-flex align-items-center justify-content-start gap-2 mb-3">
                       <SocialMediaPostSelector
                         selectedPlatforms={selectedPlatforms}
                         setSelectedPlatforms={setSelectedPlatforms}
@@ -35,7 +35,7 @@ const CreatePosts = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4">
+              <div className=" w-500 ps-0">
                 <ReviewPost selectedPlatforms={selectedPlatforms}   editorContent={editorContent}
                   uploadedMedia={uploadedMedia} />
               </div>

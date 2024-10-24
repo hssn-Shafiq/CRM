@@ -27,6 +27,14 @@ body{
   background: var(--bg-main) !important;
 
 }
+.w-500{
+  max-width: 500px !important;
+  width: 100% !important;
+}
+.w-600{
+  max-width: 550px !important;
+  width: 100% !important;
+}
 input:focus-visible {
   outline-offset: 0px;
   outline: none;

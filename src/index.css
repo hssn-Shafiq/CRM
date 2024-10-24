@@ -43,10 +43,10 @@
   min-height: 100vh;
 }
 .ant-layout-sider {
-  flex: 0 0 250px !important;
-  max-width: 250px !important;
-  min-width: 250px !important;
-  width: 250px !important;
+  flex: 0 0 230px !important;
+  max-width: 230px !important;
+  min-width: 230px !important;
+  width: 230px !important;
   border-right: 2px solid hsla(225, 6%, 26%, 1);
 }
 .ant-layout-sider-collapsed {

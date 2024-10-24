@@ -284,7 +284,7 @@ function PostForm({
               <div>
                 {images.length > 0 && selectedForm !== "Story" && (
                   <div className="media-preview-main mb-3 d-flex gap-2">
-                    <div className="d-flex flex-wrap gap-2">
+                    <div className="d-flex flex-wrap gap-2 media-preview-row">
                       {images.map((img, index) => (
                         <div
                           key={index}
@@ -320,7 +320,7 @@ function PostForm({
                 {videos.length > 0 && (
                   <div className="media-preview-main mb-3">
                     <h5 className="text-light">Videos</h5>
-                    <div className="d-flex flex-wrap gap-2">
+                    <div className="d-flex flex-wrap gap-2 media-preview-row">
                       {videos.map((video, index) => (
                         <div
                           key={index}

@@ -32,6 +32,7 @@ const Login = () => {
         email,
         password
       );
+
       const user = userCredentails.user;
       console.log("user id is ", user.uid);
       // Query Firestore where the uid field matches user.uid
@@ -45,7 +46,7 @@ const Login = () => {
         const userData = querySnapshot.docs[0].data(); // Get the first matching document
 
         // Store user details in localStorage
-        storeUserToLocalStorage({ email: user.email, userName: userData.userName, uid: userData.uid });
+        storeUserToLocalStorage({ email: user.email, userName: userData.userName, uid: userData.uid, profileImageUrl: userData.profileImageUrl });
         
         // Check if the user is an admin
         if (userData.Role !== "User") {
