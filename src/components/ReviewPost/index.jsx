@@ -8,7 +8,10 @@ import {
   FaPinterest,
   FaWhatsapp,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import Facebook, { FacebookReel, FacebookShort } from "./Facebook"; // Import your Facebook component
+import Linkedin from "./Linkedin"; // Import your Facebook component
+import TikTok from "./TikTok";
+import Pinterest from "./Pinterest";
 
 // Platform icons for each social media
 const platformIcons = {
@@ -21,64 +24,85 @@ const platformIcons = {
   whatsapp: <FaWhatsapp size={24} className="me-2 social-account-icon" />,
 };
 
-// Platform-specific dimensions
-const platformSizes = {
-  facebook: { width: '100%', height: 'auto' },
-  instagram: { width: '400px', height: '400px' },
-  linkedin: { width: '600px', height: 'auto' },
-  twitter: { width: '500px', height: 'auto' },
-  tiktok: { width: '300px', height: '600px' },
-  pinterest: { width: '500px', height: 'auto' },
-  whatsapp: { width: '500px', height: 'auto' },
-};
-
-const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
+const ReviewPost = ({
+  selectedPlatforms,
+  editorContent,
+  uploadedMedia,
+  availablemediaType,
+}) => {
   const [selectedFilter, setSelectedFilter] = useState("All Accounts");
 
-  // Function to render images and videos from uploaded media
-  const renderMedia = (media) => {
-    if (!media) return null;
-    const { images = [], videos = [] } = media;
 
-    return (
-      <div className="media-gallery mt-3">
-        {/* Render images */}
-        {images.length > 0 && (
-          <div className="media-section mb-3">
-            <h6>Images</h6>
-            <div className="d-flex flex-wrap gap-2">
-              {images.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  className="img-thumbnail"
-                  alt={`Uploaded media ${index + 1}`}
-                  style={{ objectPosition: "top" }}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+  // Function to render the appropriate platform component
+  const renderPlatformComponent = (platform, platformIcon) => {
+    const commonProps = {
+      editorContent,
+      uploadedMedia,
+      icon: platformIcon,
+      platform,
+    };
 
-        {/* Render videos */}
-        {videos.length > 0 && (
-          <div className="media-section">
-            <h6>Videos</h6>
-            <div className="d-flex flex-wrap gap-2">
-              {videos.map((video, index) => (
-                <video
-                  key={index}
-                  src={video}
-                  controls
-                  className="img-thumbnail"
-                  alt={`Uploaded video ${index + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    );
+    switch (platform.toLowerCase()) {
+      case "facebook":
+        if (availablemediaType === "Post") {
+          return (
+            <Facebook
+              editorContent={editorContent}
+              uploadedMedia={uploadedMedia}
+              icon={platformIcon}
+              platform={platform}
+            />
+          );
+        } else if (availablemediaType === "Reel") {
+          return (
+            <FacebookReel
+              editorContent={editorContent}
+              uploadedMedia={uploadedMedia}
+              icon={platformIcon}
+              platform={platform}
+            />
+          );
+        } else {
+          return (
+          <FacebookShort
+            editorContent={editorContent}
+            uploadedMedia={uploadedMedia}
+            icon={platformIcon}
+            platform={platform}
+          />
+          );
+        }
+        break;
+
+      case "linkedin":
+        return (
+          <Linkedin
+            editorContent={editorContent}
+            uploadedMedia={uploadedMedia}
+            icon={platformIcon}
+          />
+        );
+      case "tiktok":
+        return (
+          <TikTok
+            editorContent={editorContent}
+            uploadedMedia={uploadedMedia}
+            icon={platformIcon}
+          />
+        );
+      case "pinterest":
+        return (
+          <Pinterest
+            editorContent={editorContent}
+            uploadedMedia={uploadedMedia}
+            icon={platformIcon}
+          />
+        );
+
+      // Add other platform-specific components here
+      default:
+        return <p>This is a dummy post for scheduling!</p>;
+    }
   };
 
   // Function to render the post content based on platform
@@ -86,7 +110,6 @@ const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
     if (!selectedPlatforms.length)
       return <p>Select a social account and a post to preview</p>;
 
-    // Filter posts based on selected filter
     const filteredPlatforms =
       selectedFilter === "All Accounts"
         ? selectedPlatforms
@@ -96,59 +119,13 @@ const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
           );
 
     return filteredPlatforms.map((platform, index) => {
-      // Get the icon for the selected platform or use a default icon
-      const platformIcon = platformIcons[platform] || (
-        <FaFacebook size={24} className="me-2 social-account-icon" />
-      );
-
-      // Get platform-specific sizes
-      const platformSize = platformSizes[platform] || { width: '500px', height: 'auto' };
+      const platformIcon = platformIcons[platform];
 
       return (
-        <div key={index} style={{ width: platformSize.width, height: platformSize.height }}>
-          {/* Post card with platform-specific styling */}
-          <div className="post-card" style={{ width: "100%", height: "100%" }}>
-            <div className="post-header bg-main d-flex align-items-center justify-content-start">
-              <div className="account-item border-0 ">
-                <img
-                  src="/images/profile.jpg"
-                  alt="profile"
-                  className="rounded-circle "
-                />
-                {platformIcon}
-              </div>
-              <div>
-                <strong className="mb-0 text-light">Hassan Shafiq</strong>
-                <br />
-                <small className="text-secondary">Just now</small>
-              </div>
-            </div>
-
-            {/* Post content from editor */}
-            <div className="post-content mt-3">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html:
-                    editorContent || "This is a dummy post for scheduling!",
-                }}
-              />
-
-              {/* Render uploaded media (images and videos separately) */}
-              {renderMedia(uploadedMedia)}
-            </div>
-
-            {/* Post actions */}
-            <div className="post-actions">
-              <Link to="#">
-                <i className="far fa-thumbs-up"></i> Like
-              </Link>
-              <Link to="#">
-                <i className="far fa-comment"></i> Comment
-              </Link>
-              <Link to="#">
-                <i className="fas fa-share"></i> Share
-              </Link>
-            </div>
+        <div key={index} style={{ width: "100%", height: "auto" }}>
+          {/* Only render the platform-specific component */}
+          <div className="post-content mt-3">
+            {renderPlatformComponent(platform, platformIcon)}
           </div>
         </div>
       );
@@ -159,10 +136,9 @@ const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
     <div className="card">
       <div className="card-header d-flex justify-content-between align-items-center">
         <span>Post Preview</span>
-        {/* Dropdown for filtering posts by platform */}
-        <div className="select-acc ">
+        <div className="select-acc">
           <select
-            className="form-select w-auto border-main "
+            className="form-select w-auto border-main"
             value={selectedFilter}
             onChange={(e) => setSelectedFilter(e.target.value)}
           >
@@ -175,7 +151,7 @@ const ReviewPost = ({ selectedPlatforms, editorContent, uploadedMedia }) => {
           </select>
         </div>
       </div>
-      <div className="card-body text-light rounded-0 p-2" id="postPreview">
+      <div className="card-body text-light rounded-0 p-2 px-4" id="postPreview">
         {renderPostContent()}
       </div>
     </div>

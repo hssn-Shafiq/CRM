@@ -1,0 +1,623 @@
+/* for facebook */
+
+/* Flex utility */
+.u-display-flex {
+    display: flex;
+}
+
+/* Facebook post layout */
+.facebook-post-preview-wrapper,
+.linkedin-post-preview-wrapper {
+    display: flex;
+    flex-direction: column;
+    border: var(--border-main);
+    border-radius: 10px;
+    max-width: 500px;
+    margin: auto;
+    padding: 12px 0;
+}
+
+.facebook-post-header,
+.linkedin-post-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+}
+
+
+.facebook-post-content,
+.linkedin-post-content {
+    padding: 0px 10px;
+}
+
+.facebook-post-preview-icon,
+.linkedin-post-preview-icon {
+    position: relative;
+
+    .social-account-icon {
+        position: absolute;
+        width: 14px;
+        transition: transform 0.2s ease;
+        height: 14px;
+        bottom: -2px;
+        right: 0;
+    }
+
+}
+
+.facebook-post-profile-icon,
+.linkedin-post-profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+    margin-right: 10px;
+}
+
+.facebook-post-three-dots-icon,
+.linkedin-post-three-dots-icon {
+    width: 30px;
+    height: 20;
+    cursor: pointer;
+}
+
+.facebook-post-account-name,
+.linkedin-post-account-name {
+    font-weight: 600;
+    color: var(--color-gray-800);
+}
+
+.facebook-post-account-time,
+.linkedin-post-account-time {
+    font-size: 13px;
+    color: #65676b;
+}
+
+/* Media section */
+.full-width-image {
+    width: 100%;
+}
+
+/* .facebook-preview-media {
+    min-height: 500px;
+    height: 100%;
+} */
+
+.column_1 {
+    height: 100%;
+}
+
+.facebook-two-columns-images {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    height: 500px;
+}
+
+.facebook-two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* display: flex;
+    flex-direction: column; */
+    gap: 2px;
+    height: 500px;
+}
+
+.facebook-three-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    height: 500px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.column-image {
+    width: 100%;
+    object-fit: cover;
+    height: 100%;
+}
+
+.column-image_2 {
+    height: 50%;
+}
+
+/* Post footer */
+.facebook-post-footer {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-top: 1px solid #dadde1;
+}
+
+.facebook-post-preview-footer-icon {
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.u-align-children-vertically {
+    display: flex;
+    align-items: center;
+}
+
+/* facebook reels */
+.facebook-reel-preview-wrapper {
+    width: 318px;
+    height: 565px;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    background-color: #000;
+}
+
+.facebook-reel-preview-sidenav {
+    position: absolute;
+    bottom: 25px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    text-align: center;
+}
+
+.facebook-reel-preview-footer {
+    position: absolute;
+    z-index: 1;
+    color: #fff;
+    bottom: 15px;
+    left: 15px;
+    width: 230px;
+}
+
+.facebook-reel-preview-sidenav i {
+    margin-top: 20px;
+}
+
+.facebook-reel-preview-text {
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.u-margin-top-5 {
+    margin-top: 5px !important;
+}
+
+.facebook-reel-preview-account.img {
+    aspect-ratio: attr(width)/attr(height);
+}
+
+.facebook-reel-preview-account {
+    width: 25px;
+    height: 25px;
+}
+
+.u-margin-right-10 {
+    margin-right: 10px;
+}
+
+.u-image-fit {
+    object-fit: cover;
+}
+
+.facebook-reel-preview-music {
+    display: flex;
+    flex-direction: row;
+    background: rgba(255, 255, 255, .3);
+    width: 50%;
+    border-radius: 19px;
+    padding: 5px 10px;
+}
+
+.facebook-reel-preview-song {
+    position: relative;
+    padding-left: 10px;
+    display: flex;
+    width: 220px;
+}
+
+/* Responsiveness */
+@media (max-width: 500px) {
+    .facebook-post-preview-wrapper {
+        max-width: 100%;
+    }
+}
+
+/* Container for image with overlay */
+.image-overlay-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+
+/* linkedin preview */
+
+/* LinkedIn Post Layout */
+.linkedin-preview-media {
+    /* min-height: 500px;
+    height: 100%; */
+    overflow: hidden;
+}
+
+.linkedin-media-container {
+    /* min-height:500px; */
+    /* height: 500px; */
+}
+
+.linkedin-media-container-fheight {
+    min-height: 500px;
+    height: 500px;
+}
+
+.linkedin-first-row,
+.linkedin-second-row {
+    display: flex;
+    gap: 4px;
+    height: 50%;
+}
+
+.linkedin-single-preview {
+    height: 100%;
+}
+
+.linkedin-second-row {
+    width: 100%;
+}
+
+.linkedin-column-image {
+    object-fit: cover;
+    border-radius: 4px;
+    height: 100%;
+}
+
+.linkedin-first-row img {
+    flex: 1;
+    width: 50%;
+}
+
+.linkedin-second-row img {
+    flex: 1;
+    width: 33.33%;
+}
+
+.linkedin-post-footer {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-top: 1px solid #dadde1;
+}
+
+.linkedin-post-preview-footer-icon {
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.u-align-children-vertically {
+    display: flex;
+    align-items: center;
+}
+
+
+/* tiktok post preview */
+
+.tiktok-post-preview-wrapper {
+    width: 318px;
+    height: 565px;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    background-color: #000;
+}
+
+.tiktok-post-preview-wrapper * {
+    color: #f5f5f5;
+}
+
+.tiktok-post-preview-sidenav {
+    position: absolute;
+    top: 47%;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+}
+
+.tiktok-post-preview-footer {
+    position: absolute;
+    z-index: 1;
+    color: #f5f5f5;
+    bottom: 15px;
+    left: 15px;
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-right: 60px;
+}
+
+.tiktok-preview-media {
+    display: flex;
+    flex-direction: column;
+    width: inherit;
+}
+
+.u-position-relative {
+    position: relative;
+}
+
+
+@media all {
+
+    .tiktok-post-preview-account {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid var(--color-white);
+        position: relative;
+        object-fit: cover;
+        margin-bottom: 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    i {
+        color: var(--color-gray-300);
+    }
+
+    .tiktok-post-preview-heart {
+        width: 32px;
+        height: 32px;
+        margin: auto;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMzInIGhlaWdodD0nMzInIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nI2ZmZicgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48Zz48Zz48cGF0aCBmaWxsLXJ1bGU9J2V2ZW5vZGQnIGNsaXAtcnVsZT0nZXZlbm9kZCcgZD0nTTcuNSAyLjI1QzEwLjUgMi4yNSAxMiA0LjI1IDEyIDQuMjVDMTIgNC4yNSAxMy41IDIuMjUgMTYuNSAyLjI1QzIwIDIuMjUgMjIuNSA0Ljk5OTk5IDIyLjUgOC41QzIyLjUgMTIuNSAxOS4yMzExIDE2LjA2NTcgMTYuMjUgMTguNzVDMTQuNDA5NSAyMC40MDcyIDEzIDIxLjUgMTIgMjEuNUMxMSAyMS41IDkuNTUwNTEgMjAuMzk4OSA3Ljc1IDE4Ljc1QzQuODE5NDkgMTYuMDY2MiAxLjUgMTIuNSAxLjUgOC41QzEuNSA0Ljk5OTk5IDQgMi4yNSA3LjUgMi4yNVonIC8+PC9nPjxwYXRoIGZpbGwtcnVsZT0nZXZlbm9kZCcgY2xpcC1ydWxlPSdldmVub2RkJyBkPSdNMi40MDE3OSAxMi4xOTk4QzMuNTg5MDIgMTQuNjk2NiA1Ljc1OTIgMTYuOTI2OSA3Ljc0OTg5IDE4Ljc1QzkuNTUwNCAyMC4zOTg5IDEwLjk5OTkgMjEuNSAxMS45OTk5IDIxLjVDMTIuOTk5OSAyMS41IDE0LjQwOTQgMjAuNDA3MiAxNi4yNDk5IDE4Ljc1QzE5LjIzMSAxNi4wNjU3IDIyLjQ5OTkgMTIuNSAyMi40OTk5IDguNDk5OTdDMjIuNDk5OSA4LjQxMjU4IDIyLjQ5ODMgOC4zMjU2NiAyMi40OTUyIDguMjM5MjNDMjAuNTY3MSAxMy42NjE5IDEzLjY3ODcgMTguNSAxMS43NSAxOC41QzEwLjMxMjcgMTguNSA1LjYxMDg3IDE1LjgxMzEgMi40MDE3OSAxMi4xOTk4WicgZmlsbC1vcGFjaXR5PScwLjAzJyAvPjwvZz48L3N2Zz4=);
+    }
+
+    .tiktok-post-preview-icon-text {
+        position: relative;
+        margin-bottom: 8px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        font-weight: 400;
+        color: #fff;
+        text-align: center;
+    }
+
+    .tiktok-post-preview-comment {
+        width: 32px;
+        height: 32px;
+        margin: auto;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMzInIGhlaWdodD0nMzInIHZpZXdCb3g9JzAgMCAyMCAyMCcgZmlsbD0nI2ZmZicgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48Zz48ZyBvcGFjaXR5PScxJz48cGF0aCBmaWxsLXJ1bGU9J2V2ZW5vZGQnIGNsaXAtcnVsZT0nZXZlbm9kZCcgZD0nTTE2LjAzOTMgMTQuNzEzN0MxNy43NSAxMyAxOC43NSAxMS4yMTUgMTguNzUgOS4xMzY2MkMxOC43NSA0LjkxODk3IDE0Ljg4ODcgMS40OTk5NyAxMC4xMjUgMS40OTk5N0M1LjM2MTI5IDEuNDk5OTcgMS41IDQuOTE4OTcgMS41IDkuMTM2NzVDMS41IDEzLjM1NDUgNS40ODYyMiAxNi4yNSAxMC4yNSAxNi4yNVYxNy42NDg3QzEwLjI1IDE4LjA5MTkgMTAuNzA5NSAxOC4zNzcxIDExLjA5OTIgMTguMTY1OUMxMi4zMTY2IDE3LjUwNjIgMTQuNTcyNSAxNi4xODMgMTYuMDM5MyAxNC43MTM3Wk01LjkzNTI3IDguMTA2NzlDNi42MTYwOCA4LjEwNjc5IDcuMTY3OTcgOC42NTQ3MSA3LjE2Nzk3IDkuMzI5NjJDNy4xNjc5NyAxMC4wMDU5IDYuNjE2MDggMTAuNTUzOCA1LjkzNTI3IDEwLjU1MzhDNS4yNTU2IDEwLjU1MzggNC43MDM2OCAxMC4wMDU5IDQuNzAzNjggOS4zMjk2MkM0LjcwMzY4IDguNjU0NzEgNS4yNTU2IDguMTA2NzkgNS45MzUyNyA4LjEwNjc5Wk0xMS4zNTcyIDkuMzI5NjJDMTEuMzU3MiA4LjY1NDcxIDEwLjgwNTUgOC4xMDY3OSAxMC4xMjUgOC4xMDY3OUM5LjQ0NDU5IDguMTA2NzkgOC44OTI4OSA4LjY1NDcxIDguODkyODkgOS4zMjk2MkM4Ljg5MjkyIDEwLjAwNTkgOS40NDQ2MiAxMC41NTM4IDEwLjEyNSAxMC41NTM4QzEwLjgwNTUgMTAuNTUzOCAxMS4zNTcyIDEwLjAwNTkgMTEuMzU3MiA5LjMyOTYyWk0xNC4zMTQ2IDguMTA2NzlDMTQuOTk1MyA4LjEwNjc5IDE1LjU0NjQgOC42NTQ3MSAxNS41NDY0IDkuMzI5NjJDMTUuNTQ2NCAxMC4wMDU5IDE0Ljk5NTMgMTAuNTUzOCAxNC4zMTQ2IDEwLjU1MzhDMTMuNjMzOSAxMC41NTM4IDEzLjA4MiAxMC4wMDU5IDEzLjA4MjEgOS4zMjk2MkMxMy4wODIxIDguNjU0NzEgMTMuNjMzOSA4LjEwNjc5IDE0LjMxNDYgOC4xMDY3OVonIC8+PC9nPjxwYXRoIG9wYWNpdHk9JzAuMScgZmlsbC1ydWxlPSdldmVub2RkJyBjbGlwLXJ1bGU9J2V2ZW5vZGQnIGQ9J00xMC4yNSAxNi4yNDk5QzEwLjI1IDE2LjI0OTkgMTUuMDI3OCAxNS44ODA3IDE3LjAyNSAxMy4zMjM0QzE1LjAyNzggMTYuMTM2NCAxMy4wMzA3IDE3LjY3MDggMTEuMjgzMSAxOC4xODIyQzkuNTM1NjEgMTguNjkzNyAxMC4yNSAxNi4yNDk5IDEwLjI1IDE2LjI0OTlaJyAvPjwvZz48L3N2Zz4=);
+    }
+
+    .tiktok-post-preview-share {
+        width: 32px;
+        height: 32px;
+        margin: auto;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMzInIGhlaWdodD0nMzInIHZpZXdCb3g9JzAgMCAyMCAyMCcgZmlsbD0nI2ZmZicgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48Zz48ZyBvcGFjaXR5PScxJz48cGF0aCBkPSdNMTAuOTM3NiAzLjE3NDk1QzEwLjkzNzYgMi41ODI3MiAxMS42NDY5IDIuMjc4NzMgMTIuMDc1OCAyLjY4NzE1TDE4LjYwMjEgOC45MDI0MUMxOS4xNzY0IDkuNDQ5MzcgMTkuMTU2NCAxMC4zNzE3IDE4LjU1ODggMTAuODkzMUwxMi4wNTQxIDE2LjU2ODlDMTEuNjE4NCAxNi45NDkxIDEwLjkzNzYgMTYuNjM5NyAxMC45Mzc2IDE2LjA2MTRWMTMuNDg5NEMxMC45Mzc2IDEzLjQ4OTQgMy45NTM0NCAxMi4yMzEyIDEuNzEzMSAxNi4zNDM0QzEuNTA0MjMgMTYuNzI2OCAwLjY5MDA3MiAxNi44NjA5IDAuODU1NTYzIDE0Ljk0OEMxLjU0NzYxIDExLjQyNzMgMi45NjE5NiA1LjkzMDg0IDEwLjkzNzYgNS45MzA4NFYzLjE3NDk1WicgLz48L2c+PHBhdGggb3BhY2l0eT0nMC4wMycgZD0nTTE1Ljc1MzggNi4yMTE2MUwxNy4wNDg2IDguODAxMzZDMTcuMjc3NyA5LjI1OTQ3IDE3LjE2NzcgOS44MTQ1MyAxNi43ODEyIDEwLjE1MDZMMTAuOTgyNCAxNS4xOTNDMTAuOTgyNCAxNS4xOTMgMTAuNzAxNyAxNi41OTY0IDExLjU0MzcgMTYuNTk2NEMxMi4zODU3IDE2LjU5NjQgMTkuMTIxOCAxMC40MjE3IDE5LjEyMTggMTAuNDIxN0MxOS4xMjE4IDEwLjQyMTcgMTkuNDAyNSA5LjU3OTY0IDE4LjU2MDUgOC43Mzc2M0MxNy43MTg1IDcuODk1NjMgMTUuNzUzOCA2LjIxMTYxIDE1Ljc1MzggNi4yMTE2MVonIC8+PHBhdGggb3BhY2l0eT0nMC4wOScgZD0nTTEwLjkzNzQgNi4yMjk4M1YxMy41MjcyQzEwLjkzNzQgMTMuNTI3MiA0LjI1MzU5IDEyLjU4NTQgMi4xNjAyNiAxNS43NzI2QzAuMTQ2MDIxIDE4LjgzOTQgMC4zMzEwMTEgMTIuMzA5MSAzLjM2MzMxIDkuMDU3MTFDNi4zOTU2MSA1LjgwNTEgMTAuOTM3NCA2LjIyOTgzIDEwLjkzNzQgNi4yMjk4M1onIC8+PC9nPjwvc3ZnPg==);
+    }
+
+    .tiktok-post-preview-caption {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        max-width: 240px;
+        word-wrap: break-word;
+    }
+
+    .isBold {
+        font-weight: 700;
+    }
+
+    .tiktok-post-preview-music {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .carousel-root {
+        outline: none;
+    }
+}
+
+.icon-music-tone-alt {
+    font-family: simple-line-icons;
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-music-tone-alt:before {
+    content: "\e061";
+}
+
+.tiktok-post-preview-song {
+    position: relative;
+    top: 3px;
+    padding-left: 10px;
+    padding-right: 90px;
+}
+
+.tiktok-post-preview-album {
+    position: absolute;
+    right: 10px;
+    bottom: 0;
+    width: 40px;
+    height: 40px;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc0MCcgaGVpZ2h0PSc0MCcgdmlld0JveD0nMCAwIDQ5IDQ5JyBmaWxsPSdub25lJz48cGF0aCBmaWxsLXJ1bGU9J2V2ZW5vZGQnIGNsaXAtcnVsZT0nZXZlbm9kZCcgZD0nTTI0LjUgNDlDMzguMDMxIDQ5IDQ5IDM4LjAzMSA0OSAyNC41QzQ5IDEwLjk2OSAzOC4wMzEgMCAyNC41IDBDMTAuOTY5IDAgMCAxMC45NjkgMCAyNC41QzAgMzguMDMxIDEwLjk2OSA0OSAyNC41IDQ5WicgZmlsbD0nIzAwMDAwMCcvPjwvc3ZnPg==);
+}
+
+
+
+
+@media all {
+    .tiktok-post-preview-album img {
+        position: relative;
+        top: 10px;
+        left: 10px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        animation: song 8s linear infinite;
+    }
+}
+
+
+@media all {
+    .tiktok-preview-media button {
+        background: 0 0;
+        outline: none;
+        border: none;
+    }
+}
+
+.tiktok-preview-media ul {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+@media all {
+    .tiktok-preview-media ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    .tiktok-preview-media ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .tiktok-preview-media .carousel .slider {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        list-style: none;
+        width: 100%;
+    }
+
+    .tiktok-preview-media .carousel .slider.animated {
+        -webkit-transition: all .35s ease-in-out;
+        -moz-transition: all .35s ease-in-out;
+        -ms-transition: all .35s ease-in-out;
+        -o-transition: all .35s ease-in-out;
+        transition: all .35s ease-in-out;
+    }
+
+    .tiktok-preview-media .carousel-slider .slider {
+        height: 100%;
+    }
+
+    .tiktok-preview-media .carousel .slider-wrapper.axis-horizontal .slider {
+        display: flex;
+    }
+}
+
+@media all {
+    .tiktok-preview-media .carousel .slide {
+        min-width: 100%;
+        margin: 0;
+        position: relative;
+        text-align: center;
+    }
+
+    .tiktok-preview-media .carousel-slider .slide {
+        justify-content: center;
+        background-color: var(--linkedin-slide-background-color);
+    }
+
+    .tiktok-preview-media .carousel .slider-wrapper.axis-horizontal .slider .slide {
+        flex-direction: column;
+        flex-flow: column;
+    }
+
+    .u-user-select-none {
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    .tiktok-preview-media .carousel img {
+        width: 100%;
+        display: inline-block;
+        pointer-events: none;
+    }
+
+    .tiktok-preview-media .carousel .slide img {
+        width: 100%;
+        vertical-align: top;
+        border: 0;
+    }
+
+    .tiktok-preview-media .carousel-slider .slide img {
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+    }
+}
+
+.tiktok-preview-media .tiktok_carousel_indicator {
+    width: 5px;
+    height: 5px;
+}
+
+
+@keyframes song {
+    0% {
+        transform: rotate(0);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+
+}
+
+
+
+/* pinterest preview */
+
+.pinterest-media-container {
+    width: 277px;
+    height: 277px;
+
+    img{
+        width: 100%;
+        height: 100%;
+    }
+}

@@ -10,6 +10,7 @@ const CreatePosts = () => {
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
   const [editorContent, setEditorContent] = useState(""); // State for post content
   const [uploadedMedia, setUploadedMedia] = useState(null); // State for uploaded media
+  const [availableMediaType, setAvailableMediaType] = useState(["Post"]);
 
   return (
     <>
@@ -31,13 +32,17 @@ const CreatePosts = () => {
                       editorContent={editorContent}
                       setEditorContent={setEditorContent}
                       setUploadedMedia={setUploadedMedia} // Pass media handler
+                      availablemediaType={availableMediaType}
+                      setAvailableMediaType={setAvailableMediaType} // Pass
                     />
                   </div>
                 </div>
               </div>
               <div className=" w-500 ps-0">
                 <ReviewPost selectedPlatforms={selectedPlatforms}   editorContent={editorContent}
-                  uploadedMedia={uploadedMedia} />
+                  uploadedMedia={uploadedMedia} 
+                  availablemediaType={availableMediaType}
+                   />
               </div>
             </div>
           </div>

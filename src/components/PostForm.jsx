@@ -22,7 +22,7 @@ const platformContentTypes = {
   instagram: ["Post", "Reel", "Story"],
   linkedin: ["Post"],
   twitter: ["Post"],
-  tiktok: ["Reel"],
+  tiktok: ["Post"],
   pinterest: ["Post"],
   whatsapp: ["Post"],
 };
@@ -32,6 +32,8 @@ function PostForm({
   editorContent,
   setEditorContent,
   setUploadedMedia,
+  availablemediaType,
+  setAvailableMediaType,
 }) {
   const [selectedForm, setSelectedForm] = useState("Post");
   const [showSchedulePicker, setShowSchedulePicker] = useState(false);
@@ -48,6 +50,7 @@ function PostForm({
   useEffect(() => {
     if (selectedPlatforms.length === 0) {
       setAvailablePostTypes(["Post"]); // Default to Post if no platforms selected
+      // setAvailableMediaType(["Post"]);
     } else {
       const commonTypes = selectedPlatforms.reduce((acc, platform) => {
         const platformTypes =
@@ -57,6 +60,7 @@ function PostForm({
           : acc.filter((type) => platformTypes.includes(type));
       }, []);
       setAvailablePostTypes(commonTypes);
+      // setAvailableMediaType(commonTypes);
 
       if (!commonTypes.includes(selectedForm)) {
         setSelectedForm(commonTypes[0]);
@@ -66,7 +70,7 @@ function PostForm({
 
   const handleFormSelection = (type) => {
     setSelectedForm(type);
-
+    setAvailableMediaType(type);
     // Clear images if switching to "Reel" or "Story"
     if (type === "Reel" || type === "Story") {
       setImages([]); // Remove selected images

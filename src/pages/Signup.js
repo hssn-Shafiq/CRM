@@ -60,7 +60,7 @@ const Register = () => {
       <div className="container-fluid admin-login-container admin-signup-container d-flex align-items-center justify-content-center m-0">
         <div className="content">
           <div className="text-center">
-            <img src="/images/logo.png" width={260} alt="CC TM Logo" />
+            <img src="/images/af1-logo.jpg" width={260} alt="AF1 Logo" />
           </div>
           <form
             className="content__form d-flex flex-column gap-3 "

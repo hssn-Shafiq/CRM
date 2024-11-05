@@ -1,16 +1,13 @@
 // src/Components/CustomerData.jsx
-import React, { useState, useEffect } from 'react';
-import RequestFromLeads from '../Leads/RequestFromLeads';
-import OrderPaddingLeads from '../Leads/OrderPaddingLeads';
-import OrderDeliverLeads from '../Leads/OrderDeliverLeads';
-import SendEmailLeads from '../Leads/SendEmailLeads';
-import { fetchCustomers } from '../../Services/shopifyService'; // Updated fetch function
-import Loader from '../Loader';
-
+import React, { useState, useEffect } from "react";
+import RequestFromLeads from "../Leads/RequestFromLeads";
+import OrderPaddingLeads from "../Leads/OrderPaddingLeads";
+import OrderDeliverLeads from "../Leads/OrderDeliverLeads";
+import SendEmailLeads from "../Leads/SendEmailLeads";
+import { fetchCustomers } from "../../Services/shopifyService"; // Updated fetch function
+import Loader from "../Loader";
 
 const CustomerData = () => {
-
-
   const [customers, setCustomers] = useState([]); // State to store fetched customer data
   const [loading, setLoading] = useState(true); // For loading state
   const [error, setError] = useState(null); // For error state
@@ -20,7 +17,7 @@ const CustomerData = () => {
   const customersPerPage = 10; // Show 10 rows per page
 
   // Set default value for selectedLead state to "All Leads"
-  const [selectedLead, setSelectedLead] = useState('All Leads'); // State for currently selected lead type
+  const [selectedLead, setSelectedLead] = useState("All Leads"); // State for currently selected lead type
 
   // Fetch customer data from the API on component mount
   useEffect(() => {
@@ -30,7 +27,7 @@ const CustomerData = () => {
         const customerData = await fetchCustomers();
         setCustomers(customerData); // Set fetched customer data
       } catch (err) {
-        setError(err.message || 'Failed to fetch customers');
+        setError(err.message || "Failed to fetch customers");
       } finally {
         setLoading(false);
       }
@@ -38,12 +35,14 @@ const CustomerData = () => {
     getCustomers();
   }, []);
 
-
   // Pagination calculations
   const indexOfLastCustomer = currentPage * customersPerPage;
   const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
-  const currentCustomers = customers.slice(indexOfFirstCustomer, indexOfLastCustomer);
-  const totalPages = Math.ceil(customers.length / customersPerPage);
+  const currentCustomers = customers
+    ? customers.slice(indexOfFirstCustomer, indexOfLastCustomer)
+    : "no data found";
+  let customerLength = customers ? customers.length : 0;
+  const totalPages = Math.ceil(customerLength / customersPerPage);
 
   const handlePageChange = (page) => setCurrentPage(page);
 
@@ -55,28 +54,33 @@ const CustomerData = () => {
 
   // Function to filter leads based on the selected type
   const filterLeadsByType = () => {
-    if (selectedLead === 'All Leads') {
+    if (selectedLead === "All Leads") {
       return currentCustomers; // Show all customers
     }
-    return currentCustomers.filter((customer) => customer.leadType === selectedLead);
+    return currentCustomers.filter(
+      (customer) => customer.leadType === selectedLead
+    );
   };
 
   // Function to render the selected component
   const renderLeadComponent = () => {
     const leadData = filterLeadsByType();
     switch (selectedLead) {
-      case 'Request From Leads':
+      case "Request From Leads":
         return <RequestFromLeads leads={leadData} />;
-      case 'Order Padding Leads':
+      case "Order Padding Leads":
         return <OrderPaddingLeads leads={leadData} />;
-      case 'Order Deliver Leads':
+      case "Order Deliver Leads":
         return <OrderDeliverLeads leads={leadData} />;
-      case 'Send Email Leads':
+      case "Send Email Leads":
         return <SendEmailLeads leads={leadData} />;
-      case 'All Leads':
+      case "All Leads":
         return (
           <div className="table-responsive">
-            <table className="table table-hover align-middle leads-table" id='customerTable'>
+            <table
+              className="table table-hover align-middle leads-table"
+              id="customerTable"
+            >
               <thead>
                 <tr className="border-main">
                   <th>Name</th>
@@ -91,34 +95,55 @@ const CustomerData = () => {
                 </tr>
               </thead>
               <tbody>
-                {leadData.length > 0 ? (
-                  leadData.map(({ id, first_name, last_name, company, address1, country, province, city, email, phone }) => (
-                    <tr key={id}>
-                      <td>{`${first_name} ${last_name}`}</td>
-                      <td>{company || 'No company'}</td>
-                      <td>{address1 || 'No address'}</td>
-                      <td>{country || 'No country'}</td>
-                      <td>{province || 'No state'}</td>
-                      <td>{city || 'No city'}</td>
-                      <td>{email}</td>
-                      <td>{phone || 'No phone'}</td>
-                      <td>
-                        <button className="btn btn-warning btn-sm me-2">
-                          <i className="fa fa-pencil" />
-                        </button>
-                        <button className="btn btn-danger btn-sm" onClick={() => handleDelete(id)}>
-                          <i className="fa fa-trash" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
+                {/* {leadData || leadData.length > 0 ? (
+                  leadData.map(
+                    ({
+                      id,
+                      first_name,
+                      last_name,
+                      company,
+                      address1,
+                      country,
+                      province,
+                      city,
+                      email,
+                      phone,
+                    }) => (
+                      <tr key={id}>
+                        <td>{`${first_name} ${last_name}`}</td>
+                        <td>{company || "No company"}</td>
+                        <td>{address1 || "No address"}</td>
+                        <td>{country || "No country"}</td>
+                        <td>{province || "No state"}</td>
+                        <td>{city || "No city"}</td>
+                        <td>{email}</td>
+                        <td>{phone || "No phone"}</td>
+                        <td>
+                          <button className="btn btn-warning btn-sm me-2">
+                            <i className="fa fa-pencil" />
+                          </button>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => handleDelete(id)}
+                          >
+                            <i className="fa fa-trash" />
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  )
                 ) : (
                   <tr>
                     <td colSpan="9" className="text-center">
                       No leads available
                     </td>
                   </tr>
-                )}
+                )} */}
+                 <tr>
+                    <td colSpan="9" className="text-center">
+                      No leads available
+                    </td>
+                  </tr>
               </tbody>
             </table>
           </div>
@@ -136,8 +161,6 @@ const CustomerData = () => {
     return <div className="text-danger">{error}</div>;
   }
 
-
-
   return (
     <>
       <div className="container-fluid lead-table-container mt-5">
@@ -152,14 +175,14 @@ const CustomerData = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                {selectedLead || 'Select Lead Type'}
+                {selectedLead || "Select Lead Type"}
               </button>
               <ul className="dropdown-menu" aria-labelledby="leadsDropdown">
                 <li>
                   <a
                     className="dropdown-item"
-                    href="#"
-                    onClick={() => setSelectedLead('All Leads')}
+                    href="#!"
+                    onClick={() => setSelectedLead("All Leads")}
                   >
                     All Leads
                   </a>
@@ -167,8 +190,8 @@ const CustomerData = () => {
                 <li>
                   <a
                     className="dropdown-item"
-                    href="#"
-                    onClick={() => setSelectedLead('Request From Leads')}
+                    href="#!"
+                    onClick={() => setSelectedLead("Request From Leads")}
                   >
                     Request From Leads
                   </a>
@@ -176,8 +199,8 @@ const CustomerData = () => {
                 <li>
                   <a
                     className="dropdown-item"
-                    href="#"
-                    onClick={() => setSelectedLead('Order Padding Leads')}
+                    href="#!"
+                    onClick={() => setSelectedLead("Order Padding Leads")}
                   >
                     Order Padding Leads
                   </a>
@@ -185,8 +208,8 @@ const CustomerData = () => {
                 <li>
                   <a
                     className="dropdown-item"
-                    href="#"
-                    onClick={() => setSelectedLead('Order Deliver Leads')}
+                    href="#!"
+                    onClick={() => setSelectedLead("Order Deliver Leads")}
                   >
                     Order Deliver Leads
                   </a>
@@ -194,8 +217,8 @@ const CustomerData = () => {
                 <li>
                   <a
                     className="dropdown-item"
-                    href="#"
-                    onClick={() => setSelectedLead('Send Email Leads')}
+                    href="#!"
+                    onClick={() => setSelectedLead("Send Email Leads")}
                   >
                     Send Email Leads
                   </a>
@@ -206,27 +229,43 @@ const CustomerData = () => {
         </div>
 
         {/* Render the selected lead component */}
-        <div className="lead-content">
-          {renderLeadComponent()}
-        </div>
+        <div className="lead-content">{renderLeadComponent()}</div>
 
         {/* Pagination */}
         <nav aria-label="Page navigation">
           <ul className="pagination justify-content-center">
-            <li className={`page-item ${currentPage === 1 && 'disabled'}`}>
-              <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+            <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+              <button
+                className="page-link"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
                 Previous
               </button>
             </li>
             {[...Array(totalPages)].map((_, index) => (
-              <li key={index + 1} className={`page-item ${currentPage === index + 1 && 'active'}`}>
-                <button className="page-link" onClick={() => handlePageChange(index + 1)}>
+              <li
+                key={index + 1}
+                className={`page-item ${currentPage === index + 1 && "active"}`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(index + 1)}
+                >
                   {index + 1}
                 </button>
               </li>
             ))}
-            <li className={`page-item ${currentPage === totalPages && 'disabled'}`}>
-              <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+            <li
+              className={`page-item ${
+                currentPage === totalPages && "disabled"
+              }`}
+            >
+              <button
+                className="page-link"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
                 Next
               </button>
             </li>
@@ -244,14 +283,22 @@ const CustomerData = () => {
         <div className="modal-dialog modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title text-dark text-center" id="leadFormModalLabel">
+              <h5
+                className="modal-title text-dark text-center"
+                id="leadFormModalLabel"
+              >
                 {isEditing ? "Edit Lead" : "Add Lead"}
               </h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div className="modal-body">
               {editCustomer && (
-                <form >
+                <form>
                   <div className="row">
                     <div className="col-lg-6 mb-3">
                       <label className="form-label text-dark">First Name</label>
@@ -259,7 +306,12 @@ const CustomerData = () => {
                         type="text"
                         className="form-control"
                         value={editCustomer.first_name}
-                        onChange={(e) => setEditCustomer({ ...editCustomer, first_name: e.target.value })}
+                        onChange={(e) =>
+                          setEditCustomer({
+                            ...editCustomer,
+                            first_name: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
@@ -269,7 +321,12 @@ const CustomerData = () => {
                         type="text"
                         className="form-control"
                         value={editCustomer.last_name}
-                        onChange={(e) => setEditCustomer({ ...editCustomer, last_name: e.target.value })}
+                        onChange={(e) =>
+                          setEditCustomer({
+                            ...editCustomer,
+                            last_name: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
@@ -280,7 +337,12 @@ const CustomerData = () => {
                       type="text"
                       className="form-control"
                       value={editCustomer.company}
-                      onChange={(e) => setEditCustomer({ ...editCustomer, company: e.target.value })}
+                      onChange={(e) =>
+                        setEditCustomer({
+                          ...editCustomer,
+                          company: e.target.value,
+                        })
+                      }
                     />
                   </div>
                   <div className="mb-3">
@@ -289,7 +351,12 @@ const CustomerData = () => {
                       type="text"
                       className="form-control"
                       value={editCustomer.address1}
-                      onChange={(e) => setEditCustomer({ ...editCustomer, address1: e.target.value })}
+                      onChange={(e) =>
+                        setEditCustomer({
+                          ...editCustomer,
+                          address1: e.target.value,
+                        })
+                      }
                       required
                     />
                   </div>
@@ -300,7 +367,12 @@ const CustomerData = () => {
                         type="text"
                         className="form-control"
                         value={editCustomer.country}
-                        onChange={(e) => setEditCustomer({ ...editCustomer, country: e.target.value })}
+                        onChange={(e) =>
+                          setEditCustomer({
+                            ...editCustomer,
+                            country: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
@@ -310,7 +382,12 @@ const CustomerData = () => {
                         type="text"
                         className="form-control"
                         value={editCustomer.province}
-                        onChange={(e) => setEditCustomer({ ...editCustomer, province: e.target.value })}
+                        onChange={(e) =>
+                          setEditCustomer({
+                            ...editCustomer,
+                            province: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
@@ -320,7 +397,12 @@ const CustomerData = () => {
                         type="text"
                         className="form-control"
                         value={editCustomer.city}
-                        onChange={(e) => setEditCustomer({ ...editCustomer, city: e.target.value })}
+                        onChange={(e) =>
+                          setEditCustomer({
+                            ...editCustomer,
+                            city: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
@@ -332,7 +414,12 @@ const CustomerData = () => {
                         type="email"
                         className="form-control"
                         value={editCustomer.email}
-                        onChange={(e) => setEditCustomer({ ...editCustomer, email: e.target.value })}
+                        onChange={(e) =>
+                          setEditCustomer({
+                            ...editCustomer,
+                            email: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
@@ -342,7 +429,12 @@ const CustomerData = () => {
                         type="tel"
                         className="form-control"
                         value={editCustomer.phone}
-                        onChange={(e) => setEditCustomer({ ...editCustomer, phone: e.target.value })}
+                        onChange={(e) =>
+                          setEditCustomer({
+                            ...editCustomer,
+                            phone: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>

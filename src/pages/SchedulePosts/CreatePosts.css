@@ -123,13 +123,13 @@
     border-radius: 50%;
     margin-right: 10px;
 }
-.post-content{
-    /* height: 250px; */
+/* .post-content{
+    
 
     img{
         height: 200px;
     }
-}
+} */
 .post-actions {
     display: flex;
     justify-content: space-around;

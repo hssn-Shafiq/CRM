@@ -5,12 +5,7 @@ import { Vortex } from "react-loader-spinner";
 import "react-toastify/dist/ReactToastify.css";
 import { db } from "../firebase/Config";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import {
-  query,
-  where,
-  getDocs,
-  collection,
-} from "firebase/firestore";
+import { query, where, getDocs, collection } from "firebase/firestore";
 import { storeUserToLocalStorage } from "../utils/localstorage";
 
 const Login = () => {
@@ -46,8 +41,13 @@ const Login = () => {
         const userData = querySnapshot.docs[0].data(); // Get the first matching document
 
         // Store user details in localStorage
-        storeUserToLocalStorage({ email: user.email, userName: userData.userName, uid: userData.uid, profileImageUrl: userData.profileImageUrl });
-        
+        storeUserToLocalStorage({
+          email: user.email,
+          userName: userData.userName,
+          uid: userData.uid,
+          profileImageUrl: userData.profileImageUrl,
+        });
+
         // Check if the user is an admin
         if (userData.Role !== "User") {
           toast.success("Welcome admin");
@@ -75,7 +75,7 @@ const Login = () => {
       <div className="container-fluid admin-login-container d-flex align-items-center justify-content-center m-0">
         <div className="content">
           <div className="text-center">
-            <img src="/images/logo.png" width={260} alt="Bus Mate Logo" />
+            <img src="/images/af1-logo.jpg" width={260} alt="AF1 Logo" />
           </div>
           <form
             className="content__form d-flex flex-column gap-3 "

@@ -124,14 +124,11 @@
   overflow-x: scroll;
   padding-bottom: 10px;
   margin-top: 10px;
-
-
-
 }
 
 .media-preview-main .media-preview {
-  width: 130px;
-  height: 100px;
+  width: 150px;
+  height: 120px;
   min-width: 130px;
   max-width: 130px;
 
@@ -152,8 +149,6 @@
 
 /* ==================================== calender_main_class ============================ */
 .calender_main_class {
-
-
   height: auto;
 
   .calender {
@@ -172,8 +167,6 @@
         top: 9px;
         right: 33px;
       }
-
-
       select {
         background-color: #2c2f35;
         color: #777F8D !important;
@@ -185,7 +178,6 @@
           color: black !important;
         }
       }
-
       .form-select:focus {
         box-shadow: none;
       }
