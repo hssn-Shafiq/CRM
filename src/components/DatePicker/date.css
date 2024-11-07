@@ -21,7 +21,7 @@
     }
 
     .table td.active-day {
-        color: #007bff;
+        color: var(--color-red);
         font-weight: 600;
     }
 

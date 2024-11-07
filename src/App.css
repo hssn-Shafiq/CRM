@@ -16,6 +16,9 @@ body{
   --bg-main: #1d1e22;
   --border-main: 1px solid rgb(62, 64, 70);
   --font-family: "Poppins", sans-serif;
+  /* --color-red: #fb4145; */
+  --color-red: rgb(53, 211, 158);
+
 }
 
 .border-main {

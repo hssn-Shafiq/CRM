@@ -34,6 +34,7 @@
     "react-datepicker": "^7.3.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-email-editor": "^1.7.11",
     "react-facebook-login": "^4.1.1",
     "react-fontawesome": "^1.7.1",
     "react-icons": "^4.12.0",

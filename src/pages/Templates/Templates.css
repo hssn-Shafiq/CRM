@@ -15,7 +15,7 @@
     }
 
     .btn-new-post {
-        background-color: #007bff;
+        background-color: var(--color-red);
         color: white;
         font-weight: bold;
         transition: background-color 0.3s ease;
@@ -78,7 +78,7 @@
     }
 
     .action-icon:hover {
-        color: #007bff;
+        color: var(--color-red);
     }
 
     @media (max-width: 768px) {
