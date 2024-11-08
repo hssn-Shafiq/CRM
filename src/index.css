@@ -104,7 +104,7 @@ main::-webkit-scrollbar {
   content: "";
   width: 120px;
   height: 4px;
-  background: var(--color-47ad24);
+  background: var(--color-red);
   position: absolute;
   bottom: 0;
 }

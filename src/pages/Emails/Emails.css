@@ -1,3 +1,5 @@
+
+
 .modal-content {
     color: black;
 }
@@ -21,7 +23,7 @@
     }
 
     .btn-new-post {
-        background-color: #007bff;
+        background-color: var(--color-red);
         color: white;
         font-weight: bold;
     }

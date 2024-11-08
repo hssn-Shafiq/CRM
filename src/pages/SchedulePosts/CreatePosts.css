@@ -17,7 +17,7 @@
     }
 
     .btn-social-media.active {
-        background-color: #0d6efd;
+        background-color: var(--color-red);
         color: white;
     }
 
@@ -34,19 +34,19 @@
 
     }
     .btn-labels{
-        background: rgb(29,195,140);
+        background: var(--color-red);
     }
     .top-button{
-        background: rgb(29,195,140);
+        background: var(--color-red);
     }
     .btn-emoji:hover{
-        background: rgb(29,195,140);
+        background: var(--color-red);
     }
     .btn-publish{
         color: gray;
     }
     .btn-publish:hover{
-        background-color: rgb(29,195,140);
+        background-color: var(--color-red);
         color: #000;
     }
 
@@ -57,7 +57,7 @@
     }
 
     .btn-schedule {
-        background: rgb(29, 195, 140);
+        background: var(--color-red);
     }
 
     .btn-schedule:hover {
@@ -140,7 +140,7 @@
     color: #555;
 }
 .post-actions a:hover {
-    color: #007bff;
+    color: var(--color-red);
 }
 
 @media (min-width:315px) and (max-width:720px) {

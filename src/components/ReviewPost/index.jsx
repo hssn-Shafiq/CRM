@@ -12,6 +12,10 @@ import Facebook, { FacebookReel, FacebookShort } from "./Facebook"; // Import yo
 import Linkedin from "./Linkedin"; // Import your Facebook component
 import TikTok from "./TikTok";
 import Pinterest from "./Pinterest";
+import { InstagramPostPreview, InstagramReelPreview, InstagramStoryPreview } from "./Instagram";
+import Twitter from "./Twitter";
+import Whatsapp from "./Whatsapp";
+
 
 // Platform icons for each social media
 const platformIcons = {
@@ -98,7 +102,30 @@ const ReviewPost = ({
             icon={platformIcon}
           />
         );
-
+        case "instagram":
+          return (
+            <InstagramStoryPreview
+              editorContent={editorContent}
+              uploadedMedia={uploadedMedia}
+              icon={platformIcon}
+            />
+          );
+          case "twitter":
+            return (
+              <Twitter
+                editorContent={editorContent}
+                uploadedMedia={uploadedMedia}
+                icon={platformIcon}
+              />
+            );
+            case "whatsapp":
+              return (
+                <Whatsapp
+                  editorContent={editorContent}
+                  uploadedMedia={uploadedMedia}
+                  icon={platformIcon}
+                />
+              );
       // Add other platform-specific components here
       default:
         return <p>This is a dummy post for scheduling!</p>;

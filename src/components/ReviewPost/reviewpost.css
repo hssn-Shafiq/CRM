@@ -608,16 +608,121 @@
 
 }
 
-
-
 /* pinterest preview */
-
 .pinterest-media-container {
     width: 277px;
     height: 277px;
 
-    img{
+    img {
         width: 100%;
         height: 100%;
     }
 }
+
+/* instagram post preview */
+.instagram-post-preview,
+.instagram-reel-preview,
+.instagram-story-preview {
+    background-color: var(--bg-main);
+    max-width: 400px;
+    margin: 0 auto;
+
+    .post-header {
+        background: var(--bg-main);
+    }
+
+    .profile-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .post-image img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+
+    .reel-placeholder,
+    .story-placeholder {
+        width: 100%;
+        height: 300px;
+        background-color: var(--bg-main);
+        border: var(--border-main);
+        border-radius: 8px;
+        font-size: 18px;
+        color: #555;
+        text-align: center;
+    }
+
+    .reel-placeholder {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .story-placeholder {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+
+/* twitter post preview */
+.twitter-post-preview {
+    background-color: #fff;
+    max-width: 500px;
+    margin: 0 auto;
+
+    .post-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .handle,
+    .post-time {
+        font-size: 0.85rem;
+    }
+
+    .post-content {
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .post-image img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+
+    .post-actions span {
+        font-size: 0.9rem;
+        cursor: pointer;
+    }
+}
+
+ /* whatsapp preview */
+ 
+.whatsapp-message-preview {
+    background-color: #e5fff3;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .message-details {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .sender-name {
+    font-size: 1rem;
+  }
+  
+  .message-time {
+    font-size: 0.85rem;
+  }
+  
+  .message-content {
+    font-size: 0.95rem;
+    color: #333;
+  }
+  
