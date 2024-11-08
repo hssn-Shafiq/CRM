@@ -169,7 +169,7 @@ const Templates = () => {
                 <div className="mb-3">
                     <label htmlFor="folderName" className="form-label">Folder Name</label>
                     <input
-                        type="text"
+                        type="text"  
                         className="form-control"
                         id="folderName"
                         placeholder="Enter folder name"
