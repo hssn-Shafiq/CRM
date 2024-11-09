@@ -52,6 +52,7 @@
     table th,
     table td {
         vertical-align: middle;
+        color: white;
     }
 
     .table .fa-ellipsis-v {
@@ -66,6 +67,8 @@
 
     .table tbody td {
         vertical-align: middle;
+        color: white;
+
     }
 
     .table tbody img {
