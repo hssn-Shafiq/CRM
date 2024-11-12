@@ -84,7 +84,6 @@ function App() {
             element={<DeliveredOrders />}
           />
           <Route path="Shopify/Cancelled-Orders" element={<RejectedOrders />} />
-
           <Route path="Settings" element={<Settings />} />
 
           <Route path="Product-Approval" element={<DeliveredOrders />} />
