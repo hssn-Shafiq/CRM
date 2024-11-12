@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Emails.css"; // Import the CSS file for styling
 import { Modal, Button } from "react-bootstrap";
 
@@ -9,11 +9,69 @@ const Emails = () => {
   // State for "Create Folder" modal
   const [showCreateFolder, setShowCreateFolder] = useState(false);
 
+  // State for folders and folder name
+  const [folders, setFolders] = useState([]);
+  const [newFolderName, setNewFolderName] = useState("");
+  const [editingFolder, setEditingFolder] = useState(null);
+
+  // Load folders from localStorage on component mount
+  useEffect(() => {
+    const storedFolders = localStorage.getItem("folders");
+    if (storedFolders) {
+      setFolders(JSON.parse(storedFolders));
+    }
+  }, []);
+
+  // Function to save folders to localStorage
+  const saveFoldersToLocalStorage = (folders) => {
+    localStorage.setItem("folders", JSON.stringify(folders));
+  };
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleCloseCreateFolder = () => setShowCreateFolder(false);
-  const handleShowCreateFolder = () => setShowCreateFolder(true);
+  const handleCloseCreateFolder = () => {
+    setShowCreateFolder(false);
+    setNewFolderName("");
+    setEditingFolder(null);
+  };
+
+  const handleShowCreateFolder = () => {
+    setShowCreateFolder(true);
+  };
+
+  const handleCreateFolder = () => {
+    if (newFolderName.trim() !== "") {
+      const newFolder = { id: Date.now(), name: newFolderName };
+      const updatedFolders = [...folders, newFolder];
+      setFolders(updatedFolders);
+      saveFoldersToLocalStorage(updatedFolders);
+      handleCloseCreateFolder();
+    }
+  };
+
+  const handleRenameFolder = () => {
+    if (editingFolder && newFolderName.trim() !== "") {
+      const updatedFolders = folders.map((folder) =>
+        folder.id === editingFolder.id ? { ...folder, name: newFolderName } : folder
+      );
+      setFolders(updatedFolders);
+      saveFoldersToLocalStorage(updatedFolders);
+      handleCloseCreateFolder();
+    }
+  };
+
+  const handleDeleteFolder = (id) => {
+    const updatedFolders = folders.filter((folder) => folder.id !== id);
+    setFolders(updatedFolders);
+    saveFoldersToLocalStorage(updatedFolders);
+  };
+
+  const startRenameFolder = (folder) => {
+    setEditingFolder(folder);
+    setNewFolderName(folder.name);
+    handleShowCreateFolder();
+  };
 
   return (
     <>
@@ -24,7 +82,7 @@ const Emails = () => {
         <div className="Compagnie">
           <div className="header">
             <div>
-              <h1>All Compaigns</h1>
+              <h1>All Campaigns</h1>
             </div>
             <div>
               <button
@@ -58,6 +116,32 @@ const Emails = () => {
               </div>
             </div>
             <div className="table-responsive">
+              <h4>Folders</h4>
+              <ul className="list-group mb-3">
+                {folders.length > 0 ? (
+                  folders.map((folder) => (
+                    <li key={folder.id} className="list-group-item d-flex justify-content-between align-items-center">
+                      {folder.name}
+                      <div>
+                        <button
+                          className="btn btn-sm btn-warning me-2"
+                          onClick={() => startRenameFolder(folder)}
+                        >
+                          Rename
+                        </button>
+                        <button
+                          className="btn btn-sm btn-danger"
+                          onClick={() => handleDeleteFolder(folder.id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </li>
+                  ))
+                ) : (
+                  <p className="text-muted">No folders created yet.</p>
+                )}
+              </ul>
               <table className="table">
                 <thead>
                   <tr>
@@ -70,23 +154,13 @@ const Emails = () => {
                   </tr>
                 </thead>
                 <tbody>
+                  {/* Sample data rows */}
                   <tr>
                     <td>Master Email</td>
                     <td><span>Published</span></td>
                     <td>Sep 20, 2024 12:03 PM</td>
                     <td>Sep 17, 2024 12:03 PM</td>
                     <td>Draft</td>
-                    <td>
-                      <i className="fa fa-edit fa-lg" style={{ marginRight: '10px', cursor: 'pointer' }}></i>
-                      <i className="fa fa-trash fa-lg" style={{ cursor: 'pointer' }}></i>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Seans Greencard</td>
-                    <td><span>Published</span></td>
-                    <td>Dec 25, 2024 12:03 PM</td>
-                    <td>Sep 17, 2024 12:03 PM</td>
-                    <td>Send</td>
                     <td>
                       <i className="fa fa-edit fa-lg" style={{ marginRight: '10px', cursor: 'pointer' }}></i>
                       <i className="fa fa-trash fa-lg" style={{ cursor: 'pointer' }}></i>
@@ -124,9 +198,7 @@ const Emails = () => {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="lastUpdated" className="form-label">
-                  Last Updated
-                </label>
+                <label htmlFor="lastUpdated" className="form-label">Last Updated</label>
                 <input
                   type="datetime-local"
                   className="form-control"
@@ -134,9 +206,7 @@ const Emails = () => {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="executionDate" className="form-label">
-                  Execution Date
-                </label>
+                <label htmlFor="executionDate" className="form-label">Execution Date</label>
                 <input
                   type="datetime-local"
                   className="form-control"
@@ -154,50 +224,35 @@ const Emails = () => {
             </form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={handleClose}>
-              Save Changes
-            </Button>
+            <Button variant="secondary" onClick={handleClose}>Close</Button>
+            <Button variant="primary" onClick={handleClose}>Save Changes</Button>
           </Modal.Footer>
         </Modal>
 
-        {/* Modal for creating a folder */}
+        {/* Modal for creating/renaming a folder */}
         <Modal show={showCreateFolder} onHide={handleCloseCreateFolder}>
           <Modal.Header closeButton>
-            <Modal.Title>Create New Folder</Modal.Title>
+            <Modal.Title>{editingFolder ? "Rename Folder" : "Create New Folder"}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form>
               <div className="mb-3">
-                <label htmlFor="folderName" className="form-label">Folder Name</label>
+                <label htmlFor="folderName" className="form-label">{editingFolder ? "New Folder Name" : "Folder Name"}</label>
                 <input
                   type="text"
                   className="form-control"
                   id="folderName"
-                  placeholder="Enter folder name"
+                  placeholder={editingFolder ? "Enter new folder name" : "Enter folder name"}
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
                 />
               </div>
-              {/* <div className="mb-3">
-                <label htmlFor="folderDescription" className="form-label">
-                  Folder Description
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="folderDescription"
-                  placeholder="Enter folder description"
-                />
-              </div> */}
             </form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseCreateFolder}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={handleCloseCreateFolder}>
-              Create Folder
+            <Button variant="secondary" onClick={handleCloseCreateFolder}>Close</Button>
+            <Button variant="primary" onClick={editingFolder ? handleRenameFolder : handleCreateFolder}>
+              {editingFolder ? "Rename Folder" : "Create Folder"}
             </Button>
           </Modal.Footer>
         </Modal>

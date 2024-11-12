@@ -114,9 +114,9 @@ const Index = () => {
 
   return (
     <div>
-      <div className="export_button">
+      {/* <div className="export_button">
         <MDBBtn onClick={() => exportHtml()}>Send Newsleter</MDBBtn>
-      </div>
+      </div> */}
 
       <EmailEditor
         editorId="editor_container"

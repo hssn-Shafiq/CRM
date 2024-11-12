@@ -1,21 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Templates.css";
-import { Dropdown } from "react-bootstrap"; // Add Bootstrap for easy dropdown
+import { Dropdown } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 // Reusable Modal Component for Templates and Folder
-const TemplateModal = ({ show, onClose, title, content }) => {
+const TemplateModal = ({ show, onClose, title, children }) => {
     if (!show) return null;
 
     return (
-        <div className="modal fade show" style={{ display: "block" }} tabIndex={-1}>
-            <div className="modal-dialog modal-lg">
+        <div className="modal fade show" style={{ display: "block" }} tabIndex={-1} role="dialog">
+            <div className="modal-dialog modal-lg" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title">{title}</h5>
                         <button type="button" className="btn-close" onClick={onClose}></button>
                     </div>
                     <div className="modal-body">
-                        <form>{content}</form> {/* Dynamic form content */}
+                        {children}
                     </div>
                 </div>
             </div>
@@ -25,167 +26,96 @@ const TemplateModal = ({ show, onClose, title, content }) => {
 
 const Templates = () => {
     const [showModal, setShowModal] = useState(false);
-    const [modalContent, setModalContent] = useState("");
     const [modalTitle, setModalTitle] = useState("");
-    const [folders, setFolders] = useState([
-        { id: 1, name: "Marketing Campaigns" },
-        { id: 2, name: "Promotional Emails" },
-        { id: 3, name: "Client Communication" },
-    ]); // Dummy folder names
-    const [templates, setTemplates] = useState([
-        {
-            id: 1,
-            name: "Newsletter Template",
-            type: "Newsletter",
-            subject: "Weekly Newsletter",
-            recipients: 500,
-            status: "Published",
-            createdAt: "2024-10-01",
-        },
-        {
-            id: 2,
-            name: "Promotional Campaign",
-            type: "Promotional",
-            subject: "Special Discount for Eid",
-            recipients: 1000,
-            status: "Draft",
-            createdAt: "2024-10-03",
-        },
-        {
-            id: 3,
-            name: "Reminder Email",
-            type: "Reminder",
-            subject: "Don't Miss Our Upcoming Webinar",
-            recipients: 150,
-            status: "Scheduled",
-            createdAt: "2024-10-05",
-        },
-    ]); // Dummy template data
+    const [folders, setFolders] = useState([]); // State for list of folders
+    const [newFolderName, setNewFolderName] = useState(""); // State for new folder name
+    const [editingFolder, setEditingFolder] = useState(null); // State for folder being edited
+    const navigate = useNavigate(); // Hook for navigation
+
+    // Load folders from localStorage when the component mounts
+    useEffect(() => {
+        const storedFolders = localStorage.getItem("folders");
+        if (storedFolders) {
+            setFolders(JSON.parse(storedFolders));
+        }
+    }, []);
+
+    // Function to save folders to localStorage
+    const saveFoldersToLocalStorage = (folders) => {
+        localStorage.setItem("folders", JSON.stringify(folders));
+    };
 
     const handleCloseModal = () => {
         setShowModal(false);
-        setModalContent("");
         setModalTitle("");
+        setNewFolderName("");
+        setEditingFolder(null); // Reset editing state
     };
 
     const handleSelectOption = (option) => {
-        let title = "";
-        let content = "";
-
         switch (option) {
-            case "existingCampaign":
-                title = "Create Template from Existing Campaign";
-                content = (
-                    <>
-                        <div className="mb-3">
-                            <label htmlFor="campaign" className="form-label">Select Campaign</label>
-                            <select className="form-select" id="campaign">
-                                <option>Select existing campaign</option>
-                                <option>Campaign 1</option>
-                                <option>Campaign 2</option>
-                            </select>
-                        </div>
-                    </>
-                );
-                break;
-
-            case "emailMarketing":
-                title = "Email Marketing Templates";
-                content = (
-                    <>
-                        <div className="mb-3">
-                            <label htmlFor="templateName" className="form-label">Template Name</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="templateName"
-                                placeholder="Enter template name"
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="emailSubject" className="form-label">Subject</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="emailSubject"
-                                placeholder="Enter subject"
-                            />
-                        </div>
-                    </>
-                );
-                break;
-
             case "blankTemplate":
-                title = "Blank Template";
-                content = (
-                    <>
-                        <div className="mb-3">
-                            <label htmlFor="templateTitle" className="form-label">Template Title</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="templateTitle"
-                                placeholder="Enter template title"
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="templateContent" className="form-label">Content</label>
-                            <textarea
-                                className="form-control"
-                                id="templateContent"
-                                rows={6}
-                                placeholder="Enter your content"
-                            ></textarea>
-                        </div>
-                    </>
-                );
+                navigate("/admin/EmailEditors");
+                return;
+
+            case "createFolder":
+                setModalTitle("Create New Folder");
+                setShowModal(true);
                 break;
 
+            case "renameFolder":
+                setModalTitle("Rename Folder");
+                setNewFolderName(editingFolder ? editingFolder.name : "");
+                setShowModal(true);
+                break;
+
+            case "existingCampaign":
+            case "emailMarketing":
             case "importEmail":
-                title = "Import Email";
-                content = (
-                    <>
-                        <div className="mb-3">
-                            <label htmlFor="importFile" className="form-label">Import Email File</label>
-                            <input type="file" className="form-control" id="importFile" />
-                        </div>
-                    </>
-                );
+                setModalTitle("Template Operation");
+                setShowModal(true);
                 break;
 
             default:
                 break;
         }
-
-        setModalTitle(title);
-        setModalContent(content);
-        setShowModal(true);
     };
 
     const handleCreateFolder = () => {
-        setModalTitle("Create New Folder");
-        setModalContent(
-            <>
-                <div className="mb-3">
-                    <label htmlFor="folderName" className="form-label">Folder Name</label>
-                    <input
-                        type="text"  
-                        className="form-control"
-                        id="folderName"
-                        placeholder="Enter folder name"
-                    />
-                </div>
-                <button className="btn btn-outline-light">Create Folder</button>
-            </>
-        );
-        setShowModal(true);
+        if (newFolderName.trim() !== "") {
+            const newFolder = { id: Date.now(), name: newFolderName };
+            const updatedFolders = [...folders, newFolder];
+            setFolders(updatedFolders); // Add the new folder to the state
+            saveFoldersToLocalStorage(updatedFolders); // Save to localStorage
+            handleCloseModal(); // Close the modal
+        }
+    };
+
+    const handleRenameFolder = () => {
+        if (editingFolder && newFolderName.trim() !== "") {
+            const updatedFolders = folders.map((folder) =>
+                folder.id === editingFolder.id ? { ...folder, name: newFolderName } : folder
+            );
+            setFolders(updatedFolders);
+            saveFoldersToLocalStorage(updatedFolders); // Save to localStorage
+            handleCloseModal(); // Close the modal
+        }
+    };
+
+    const handleDeleteFolder = (id) => {
+        const updatedFolders = folders.filter((folder) => folder.id !== id);
+        setFolders(updatedFolders);
+        saveFoldersToLocalStorage(updatedFolders); // Save to localStorage
+    };
+
+    const startRenameFolder = (folder) => {
+        setEditingFolder(folder);
+        handleSelectOption("renameFolder");
     };
 
     return (
         <>
             <div className="Compagnie d-flex">
-
-
                 {/* Main content */}
                 <div className="main-content flex-grow-1">
                     <div className="text-center">
@@ -194,16 +124,17 @@ const Templates = () => {
 
                     {/* Sidebar for folders */}
                     <div className="row">
-
                         <div className="d-flex align-items-center justify-content-center">
-                            {/* Create Folder and New Button like the image */}
-                            <button className="btn btn-secondary me-3" onClick={handleCreateFolder}>
+                            {/* Create Folder and New Button */}
+                            <button
+                                className="btn btn-secondary me-3"
+                                onClick={() => handleSelectOption("createFolder")}
+                            >
                                 Create Folder
                             </button>
 
                             <Dropdown>
                                 <Dropdown.Toggle className="btn btn-primary">+ New</Dropdown.Toggle>
-
                                 <Dropdown.Menu>
                                     <Dropdown.Item onClick={() => handleSelectOption("existingCampaign")}>
                                         <i className="fa fa-download me-2"></i> Create Template from Existing Campaign
@@ -220,45 +151,36 @@ const Templates = () => {
                                 </Dropdown.Menu>
                             </Dropdown>
                         </div>
-
                     </div>
-                    {/* Table displaying dummy data */}
-                    <div className="folder-list ">
+
+                    {/* Table displaying folders */}
+                    <div className="folder-list mt-3">
                         <h4>Folders</h4>
                         <ul className="list-group">
-                            {folders.map((folder) => (
-                                <li key={folder.id} className="list-group-item">
-                                    {folder.name}
-                                </li>
-                            ))}
+                            {folders.length > 0 ? (
+                                folders.map((folder) => (
+                                    <li key={folder.id} className="list-group-item d-flex justify-content-between align-items-center">
+                                        {folder.name}
+                                        <div>
+                                            <button
+                                                className="btn btn-sm btn-warning me-2"
+                                                onClick={() => startRenameFolder(folder)}
+                                            >
+                                                Rename
+                                            </button>
+                                            <button
+                                                className="btn btn-sm btn-danger"
+                                                onClick={() => handleDeleteFolder(folder.id)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </li>
+                                ))
+                            ) : (
+                                <p className="text-muted">No folders created yet.</p>
+                            )}
                         </ul>
-                    </div>
-                    <div className="table-responsive mt-4">
-
-                        <table className="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Template Name</th>
-                                    <th>Template Type</th>
-                                    <th>Subject</th>
-                                    <th>Recipients</th>
-                                    <th>Status</th>
-                                    <th>Created At</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {templates.map((template) => (
-                                    <tr key={template.id}>
-                                        <td>{template.name}</td>
-                                        <td>{template.type}</td>
-                                        <td>{template.subject}</td>
-                                        <td>{template.recipients}</td>
-                                        <td>{template.status}</td>
-                                        <td>{template.createdAt}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
@@ -268,8 +190,54 @@ const Templates = () => {
                 show={showModal}
                 onClose={handleCloseModal}
                 title={modalTitle}
-                content={modalContent}
-            />
+            >
+                {modalTitle === "Create New Folder" && (
+                    <>
+                        <div className="mb-3">
+                            <label htmlFor="folderName" className="form-label">Folder Name</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="folderName"
+                                placeholder="Enter folder name"
+                                value={newFolderName}
+                                onChange={(e) => setNewFolderName(e.target.value)}
+                                autoFocus
+                            />
+                        </div>
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleCreateFolder}
+                        >
+                            Create Folder
+                        </button>
+                    </>
+                )}
+                {modalTitle === "Rename Folder" && (
+                    <>
+                        <div className="mb-3">
+                            <label htmlFor="renameFolderName" className="form-label">Rename Folder</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="renameFolderName"
+                                placeholder="Enter new folder name"
+                                value={newFolderName}
+                                onChange={(e) => setNewFolderName(e.target.value)}
+                                autoFocus
+                            />
+                        </div>
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleRenameFolder}
+                        >
+                            Rename Folder
+                        </button>
+                    </>
+                )}
+            </TemplateModal>
         </>
     );
 };
