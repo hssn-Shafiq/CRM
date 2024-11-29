@@ -39,17 +39,20 @@ const Pinterest = ({ editorContent, uploadedMedia, icon }) => {
       <div className="pinterest-post-wrapper u-align-children-center">
         <div className="pinterest-post-header">
           <img
-            className="pinterest-post-profile-picture"
-            src="https://example.com/path/to/profile.jpg"
+            className="pinterest-post-profile-picture rounded-circle"
+            src="/images/Profile.jpg"
             alt="Profile"
+            width="30"
+            height="30"
+
           />
           <div className="pinterest-post-username">User Name</div>
         </div>
         
-        <div className="pinterest-media-container">{renderMediaContent()}</div>
+        <div className="pinterest-media-container text-center">{renderMediaContent()}</div>
         
         <div className="pinterest-post-footer">
-          <div className="pinterest-post-caption">{editorContent}</div>
+          <div className="pinterest-post-caption"  dangerouslySetInnerHTML={{ __html: editorContent }} />
           <div className="pinterest-engagement-section">
             <button className="pinterest-like-btn">
               <i className="icon-like" /> Like

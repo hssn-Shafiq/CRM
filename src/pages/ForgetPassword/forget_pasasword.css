@@ -1,0 +1,26 @@
+.forget_pasasword {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.forget{
+    max-width: 600px;
+    width: 100%;
+ 
+    form input{
+        width: 100%;
+        
+    }
+
+    form button[type="submit"]{
+        width: 100%;
+        padding: 10px;
+        color: white;
+        margin-top: 20px;
+        border-radius: 10px;
+}
+}

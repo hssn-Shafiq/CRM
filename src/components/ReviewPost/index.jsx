@@ -12,10 +12,13 @@ import Facebook, { FacebookReel, FacebookShort } from "./Facebook"; // Import yo
 import Linkedin from "./Linkedin"; // Import your Facebook component
 import TikTok from "./TikTok";
 import Pinterest from "./Pinterest";
-import { InstagramPostPreview, InstagramReelPreview, InstagramStoryPreview } from "./Instagram";
+import {
+  InstagramPostPreview,
+  InstagramReelPreview,
+  InstagramStoryPreview,
+} from "./Instagram";
 import Twitter from "./Twitter";
 import Whatsapp from "./Whatsapp";
-
 
 // Platform icons for each social media
 const platformIcons = {
@@ -35,7 +38,6 @@ const ReviewPost = ({
   availablemediaType,
 }) => {
   const [selectedFilter, setSelectedFilter] = useState("All Accounts");
-
 
   // Function to render the appropriate platform component
   const renderPlatformComponent = (platform, platformIcon) => {
@@ -68,12 +70,12 @@ const ReviewPost = ({
           );
         } else {
           return (
-          <FacebookShort
-            editorContent={editorContent}
-            uploadedMedia={uploadedMedia}
-            icon={platformIcon}
-            platform={platform}
-          />
+            <FacebookShort
+              editorContent={editorContent}
+              uploadedMedia={uploadedMedia}
+              icon={platformIcon}
+              platform={platform}
+            />
           );
         }
         break;
@@ -86,6 +88,7 @@ const ReviewPost = ({
             icon={platformIcon}
           />
         );
+
       case "tiktok":
         return (
           <TikTok
@@ -101,31 +104,54 @@ const ReviewPost = ({
             uploadedMedia={uploadedMedia}
             icon={platformIcon}
           />
+          
         );
-        case "instagram":
+      case "instagram":
+        if (availablemediaType === "Post") {
+          return (
+            <InstagramPostPreview
+              editorContent={editorContent}
+              uploadedMedia={uploadedMedia}
+              icon={platformIcon}
+              platform={platform}
+            />
+          );
+        } else if (availablemediaType === "Reel") {
+          return (
+            <InstagramReelPreview
+              editorContent={editorContent}
+              uploadedMedia={uploadedMedia}
+              icon={platformIcon}
+              platform={platform}
+            />
+          );
+        } else {
           return (
             <InstagramStoryPreview
               editorContent={editorContent}
               uploadedMedia={uploadedMedia}
               icon={platformIcon}
+              platform={platform}
             />
           );
-          case "twitter":
-            return (
-              <Twitter
-                editorContent={editorContent}
-                uploadedMedia={uploadedMedia}
-                icon={platformIcon}
-              />
-            );
-            case "whatsapp":
-              return (
-                <Whatsapp
-                  editorContent={editorContent}
-                  uploadedMedia={uploadedMedia}
-                  icon={platformIcon}
-                />
-              );
+        };
+        
+      case "twitter":
+        return (
+          <Twitter
+            editorContent={editorContent}
+            uploadedMedia={uploadedMedia}
+            icon={platformIcon}
+          />
+        );
+      case "whatsapp":
+        return (
+          <Whatsapp
+            editorContent={editorContent}
+            uploadedMedia={uploadedMedia}
+            icon={platformIcon}
+          />
+        );
       // Add other platform-specific components here
       default:
         return <p>This is a dummy post for scheduling!</p>;

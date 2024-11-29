@@ -6,7 +6,7 @@ import { emailTemplateApi } from '../../Services/api';
 
 // Reusable Modal Component
 const TemplateModal = ({ show, onClose, title, children }) => {
-    if (!show) return null;
+  if (!show) return null;
 
     return (
         <div className="modal fade show" style={{ display: "block" }} tabIndex={-1} role="dialog">
