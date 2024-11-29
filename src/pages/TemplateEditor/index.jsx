@@ -3,6 +3,7 @@ import EmailEditor from 'react-email-editor';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { emailTemplateApi } from '../../Services/api';
 import './TemplateEditor.css';
+import { Modal } from 'react-bootstrap';
 
 const TemplateEditor = () => {
     const emailEditorRef = useRef(null);
@@ -18,6 +19,11 @@ const TemplateEditor = () => {
     });
     const location = useLocation();
     const templateFromLocation = location.state?.template;
+    const [showSaveModal, setShowSaveModal] = useState(false);
+    const [showFolderModal, setShowFolderModal] = useState(false);
+    const [selectedFolder, setSelectedFolder] = useState('');
+    const [newFolderName, setNewFolderName] = useState('');
+    const [folders, setFolders] = useState([]);
 
     useEffect(() => {
         if (templateFromLocation) {
@@ -38,6 +44,14 @@ const TemplateEditor = () => {
             loadTemplate();
         }
     }, [id]);
+
+    // Add this useEffect to load folders from localStorage
+    useEffect(() => {
+        const storedFolders = localStorage.getItem("folders");
+        if (storedFolders) {
+            setFolders(JSON.parse(storedFolders));
+        }
+    }, []);
 
     const loadTemplate = async () => {
         try {
@@ -79,41 +93,82 @@ const TemplateEditor = () => {
         }
     };
 
-    const handleSave = async () => {
+    const handleSave = () => {
         if (!templateData.name.trim()) {
             alert('Please enter a template name');
             return;
         }
+        setShowSaveModal(true);
+    };
 
+    const handleSaveToFolder = async () => {
+        setShowSaveModal(false);
+        setShowFolderModal(true);
+    };
+
+    const handleCreateNewFolder = async () => {
+        if (!newFolderName.trim()) {
+            alert('Please enter a folder name');
+            return;
+        }
+
+        const newFolder = { id: Date.now(), name: newFolderName, templates: [] };
+        const updatedFolders = [...folders, newFolder];
+        setFolders(updatedFolders);
+        localStorage.setItem("folders", JSON.stringify(updatedFolders));
+        
+        await saveTemplateToFolder(newFolder.id);
+    };
+
+    const handleSelectExistingFolder = async () => {
+        if (!selectedFolder) {
+            alert('Please select a folder');
+            return;
+        }
+        await saveTemplateToFolder(selectedFolder);
+    };
+
+    const saveTemplateToFolder = async (folderId) => {
         try {
             setIsLoading(true);
             
-            // Export the design and HTML
             emailEditorRef.current.editor.exportHtml(async (data) => {
                 const { design, html } = data;
                 
                 const updatedTemplateData = {
                     ...templateData,
                     design_json: JSON.stringify(design),
-                    html_content: html
+                    html_content: html,
+                    folderId: folderId // Add folder reference
                 };
 
                 if (id) {
-                    // Update existing template
                     await emailTemplateApi.updateTemplate(id, updatedTemplateData);
                 } else {
-                    // Create new template
                     await emailTemplateApi.createTemplate(updatedTemplateData);
                 }
 
+                // Update folder's templates in localStorage
+                const updatedFolders = folders.map(folder => {
+                    if (folder.id === folderId) {
+                        return {
+                            ...folder,
+                            templates: [...(folder.templates || []), updatedTemplateData]
+                        };
+                    }
+                    return folder;
+                });
+                
+                localStorage.setItem("folders", JSON.stringify(updatedFolders));
                 alert('Template saved successfully!');
-                navigate('/templates');
+                navigate('/admin/templates');
             });
         } catch (error) {
             console.error('Error saving template:', error);
             alert('Failed to save template. Please try again.');
         } finally {
             setIsLoading(false);
+            setShowFolderModal(false);
         }
     };
 
@@ -122,73 +177,144 @@ const TemplateEditor = () => {
     }
 
     return (
-        <div className="template-editor-container">
-            <div className="editor-header">
-                <button 
-                    className="btn btn-secondary" 
-                    onClick={handleBack}
-                >
-                    <i className="fas fa-arrow-left me-2"></i>Back
-                </button>
-
-                <div className="template-info">
-                    <input
-                        type="text"
-                        className="form-control mb-2"
-                        placeholder="Template Name *"
-                        name="name"
-                        value={templateData.name}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    <input
-                        type="text"
-                        className="form-control mb-2"
-                        placeholder="Email Subject"
-                        name="subject"
-                        value={templateData.subject}
-                        onChange={handleInputChange}
-                    />
-                    <select
-                        className="form-control"
-                        name="category"
-                        value={templateData.category}
-                        onChange={handleInputChange}
+        <>
+            <div className="template-editor-container">
+                <div className="editor-header">
+                    <button 
+                        className="btn btn-secondary" 
+                        onClick={handleBack}
                     >
-                        <option value="">Select Category</option>
-                        <option value="marketing">Marketing</option>
-                        <option value="notification">Notification</option>
-                        <option value="newsletter">Newsletter</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
+                        <i className="fas fa-arrow-left me-2"></i>Back
+                    </button>
 
-                <button 
-                    className="btn btn-primary" 
-                    onClick={handleSave}
-                    disabled={isLoading}
-                >
-                    <i className="fas fa-save me-2"></i>
-                    {isLoading ? 'Saving...' : 'Save Template'}
-                </button>
-            </div>
-            
-            <div className="editor-content">
-                <EmailEditor
-                    ref={emailEditorRef}
-                    onLoad={() => console.log("Editor Loaded")}
-                    minHeight="700px"
-                    options={{
-                        features: {
-                            textEditor: {
-                                tables: true,
-                                images: true
+                    <div className="template-info">
+                        <input
+                            type="text"
+                            className="form-control mb-2"
+                            placeholder="Template Name *"
+                            name="name"
+                            value={templateData.name}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        <input
+                            type="text"
+                            className="form-control mb-2"
+                            placeholder="Email Subject"
+                            name="subject"
+                            value={templateData.subject}
+                            onChange={handleInputChange}
+                        />
+                        <select
+                            className="form-control"
+                            name="category"
+                            value={templateData.category}
+                            onChange={handleInputChange}
+                        >
+                            <option value="">Select Category</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="notification">Notification</option>
+                            <option value="newsletter">Newsletter</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <button 
+                        className="btn btn-primary" 
+                        onClick={handleSave}
+                        disabled={isLoading}
+                    >
+                        <i className="fas fa-save me-2"></i>
+                        {isLoading ? 'Saving...' : 'Save Template'}
+                    </button>
+                </div>
+                
+                <div className="editor-content">
+                    <EmailEditor
+                        ref={emailEditorRef}
+                        onLoad={() => console.log("Editor Loaded")}
+                        minHeight="700px"
+                        options={{
+                            features: {
+                                textEditor: {
+                                    tables: true,
+                                    images: true
+                                }
                             }
-                        }
-                    }}
-                />
+                        }}
+                    />
+                </div>
             </div>
-        </div>
+
+            {/* Save Options Modal */}
+            <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Save Template</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="d-grid gap-2">
+                        <button className="btn btn-primary" onClick={handleSaveToFolder}>
+                            Save to Folder
+                        </button>
+                        <button className="btn btn-secondary" onClick={() => {
+                            setShowSaveModal(false);
+                            handleSave();
+                        }}>
+                            Save Without Folder
+                        </button>
+                    </div>
+                </Modal.Body>
+            </Modal>
+
+            {/* Folder Selection Modal */}
+            <Modal show={showFolderModal} onHide={() => setShowFolderModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Select or Create Folder</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="mb-3">
+                        <h6>Create New Folder</h6>
+                        <div className="input-group">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="New Folder Name"
+                                value={newFolderName}
+                                onChange={(e) => setNewFolderName(e.target.value)}
+                            />
+                            <button 
+                                className="btn btn-primary" 
+                                onClick={handleCreateNewFolder}
+                            >
+                                Create & Save
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="mb-3">
+                        <h6>Or Select Existing Folder</h6>
+                        <select 
+                            className="form-select mb-2"
+                            value={selectedFolder}
+                            onChange={(e) => setSelectedFolder(e.target.value)}
+                        >
+                            <option value="">Select a folder</option>
+                            {folders.map(folder => (
+                                <option key={folder.id} value={folder.id}>
+                                    {folder.name}
+                                </option>
+                            ))}
+                        </select>
+                        <button 
+                            className="btn btn-primary w-100"
+                            onClick={handleSelectExistingFolder}
+                        >
+                            Save to Selected Folder
+                        </button>
+                    </div>
+                </Modal.Body>
+            </Modal>
+        </>
     );
 };
 

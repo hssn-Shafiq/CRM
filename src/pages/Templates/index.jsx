@@ -24,20 +24,20 @@ const TemplateModal = ({ show, onClose, title, children }) => {
 };
 
 const Templates = () => {
-    const [showModal, setShowModal] = useState(false);
-    const [modalTitle, setModalTitle] = useState("");
-    const [folders, setFolders] = useState([]);
-    const [newFolderName, setNewFolderName] = useState("");
-    const [editingFolder, setEditingFolder] = useState(null);
+    const [folders, setFolders] = useState(() => {
+        const savedFolders = localStorage.getItem('folders');
+        return savedFolders ? JSON.parse(savedFolders) : [];
+    });
     const [templates, setTemplates] = useState([]);
+    const [selectedFolder, setSelectedFolder] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [newFolderName, setNewFolderName] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        const storedFolders = localStorage.getItem("folders");
-        if (storedFolders) {
-            setFolders(JSON.parse(storedFolders));
-        }
-    }, []);
+        localStorage.setItem('folders', JSON.stringify(folders));
+    }, [folders]);
 
     useEffect(() => {
         fetchTemplates();
@@ -52,15 +52,10 @@ const Templates = () => {
         }
     };
 
-    const saveFoldersToLocalStorage = (folders) => {
-        localStorage.setItem("folders", JSON.stringify(folders));
-    };
-
     const handleCloseModal = () => {
         setShowModal(false);
         setModalTitle("");
         setNewFolderName("");
-        setEditingFolder(null);
     };
 
     const handleSelectOption = (option) => {
@@ -83,7 +78,7 @@ const Templates = () => {
                 break;
             case "renameFolder":
                 setModalTitle("Rename Folder");
-                setNewFolderName(editingFolder ? editingFolder.name : "");
+                setNewFolderName(selectedFolder ? selectedFolder.name : "");
                 setShowModal(true);
                 break;
             default:
@@ -92,22 +87,25 @@ const Templates = () => {
     };
 
     const handleCreateFolder = () => {
-        if (newFolderName.trim() !== "") {
-            const newFolder = { id: Date.now(), name: newFolderName };
-            const updatedFolders = [...folders, newFolder];
-            setFolders(updatedFolders);
-            saveFoldersToLocalStorage(updatedFolders);
-            handleCloseModal();
+        if (newFolderName.trim()) {
+            const newFolder = {
+                id: Date.now(),
+                name: newFolderName,
+                templates: []
+            };
+            setFolders([...folders, newFolder]);
+            setNewFolderName('');
+            setShowModal(false);
         }
     };
 
     const handleRenameFolder = () => {
-        if (editingFolder && newFolderName.trim() !== "") {
+        if (selectedFolder && newFolderName.trim() !== "") {
             const updatedFolders = folders.map((folder) =>
-                folder.id === editingFolder.id ? { ...folder, name: newFolderName } : folder
+                folder.id === selectedFolder.id ? { ...folder, name: newFolderName } : folder
             );
             setFolders(updatedFolders);
-            saveFoldersToLocalStorage(updatedFolders);
+            localStorage.setItem('folders', JSON.stringify(updatedFolders));
             handleCloseModal();
         }
     };
@@ -115,11 +113,11 @@ const Templates = () => {
     const handleDeleteFolder = (id) => {
         const updatedFolders = folders.filter((folder) => folder.id !== id);
         setFolders(updatedFolders);
-        saveFoldersToLocalStorage(updatedFolders);
+        localStorage.setItem('folders', JSON.stringify(updatedFolders));
     };
 
     const startRenameFolder = (folder) => {
-        setEditingFolder(folder);
+        setSelectedFolder(folder);
         handleSelectOption("renameFolder");
     };
 
@@ -136,6 +134,38 @@ const Templates = () => {
                 template: formattedTemplate
             }
         });
+    };
+
+    const handleDeleteTemplate = async (templateId, folderId) => {
+        if (window.confirm('Are you sure you want to delete this template?')) {
+            const updatedFolders = folders.map(folder => {
+                if (folder.id === folderId) {
+                    return {
+                        ...folder,
+                        templates: folder.templates.filter(t => t.id !== templateId)
+                    };
+                }
+                return folder;
+            });
+            setFolders(updatedFolders);
+            localStorage.setItem('folders', JSON.stringify(updatedFolders));
+        }
+    };
+
+    const handleFolderClick = (folder) => {
+        setSelectedFolder(folder);
+    };
+
+    const handleAddTemplateToFolder = (template, folderId) => {
+        setFolders(folders.map(folder => {
+            if (folder.id === folderId) {
+                return {
+                    ...folder,
+                    templates: [...folder.templates, template]
+                };
+            }
+            return folder;
+        }));
     };
 
     return (
@@ -178,22 +208,70 @@ const Templates = () => {
                     <ul className="list-group">
                         {folders.length > 0 ? (
                             folders.map((folder) => (
-                                <li key={folder.id} className="list-group-item d-flex justify-content-between align-items-center">
-                                    {folder.name}
-                                    <div>
-                                        <button
-                                            className="btn btn-sm btn-warning me-2"
-                                            onClick={() => startRenameFolder(folder)}
+                                <li key={folder.id} className="list-group-item">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div 
+                                            className={`folder-name ${selectedFolder?.id === folder.id ? 'selected-folder' : ''}`}
+                                            onClick={() => handleFolderClick(folder)}
+                                            style={{ cursor: 'pointer' }}
                                         >
-                                            Rename
-                                        </button>
-                                        <button
-                                            className="btn btn-sm btn-danger"
-                                            onClick={() => handleDeleteFolder(folder.id)}
-                                        >
-                                            Delete
-                                        </button>
+                                            <i className={`fas fa-folder${selectedFolder?.id === folder.id ? '-open' : ''} me-2`}></i>
+                                            {folder.name}
+                                        </div>
+                                        <div>
+                                            <button
+                                                className="btn btn-sm btn-warning me-2"
+                                                onClick={() => startRenameFolder(folder)}
+                                            >
+                                                Rename
+                                            </button>
+                                            <button
+                                                className="btn btn-sm btn-danger"
+                                                onClick={() => handleDeleteFolder(folder.id)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </div>
+                                    {selectedFolder?.id === folder.id && (
+                                        <div className="folder-templates mt-2">
+                                            <div className="table-responsive">
+                                                <table className="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Category</th>
+                                                            <th>Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {folder.templates.map((template) => (
+                                                            <tr key={template.id}>
+                                                                <td>{template.name}</td>
+                                                                <td>{template.category}</td>
+                                                                <td>
+                                                                    <div className="btn-group btn-group-sm">
+                                                                        <button
+                                                                            className="btn btn-primary"
+                                                                            onClick={() => handleEditTemplate(template)}
+                                                                        >
+                                                                            <i className="fas fa-edit"></i>
+                                                                        </button>
+                                                                        <button
+                                                                            className="btn btn-danger"
+                                                                            onClick={() => handleDeleteTemplate(template.id, folder.id)}
+                                                                        >
+                                                                            <i className="fas fa-trash"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    )}
                                 </li>
                             ))
                         ) : (

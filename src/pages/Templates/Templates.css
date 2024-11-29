@@ -180,6 +180,7 @@
     padding: 2rem;
     background: #f8f9fa;
     border-radius: 8px;
+    margin-top: 1rem;
 }
 
 .template-preview {
@@ -206,4 +207,12 @@
     position: relative;
     z-index: 1000;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.selected-folder {
+    font-weight: bold;
+    color: #0d6efd;
+    background-color: #f8f9fa;
+    padding: 5px;
+    border-radius: 4px;
 }
