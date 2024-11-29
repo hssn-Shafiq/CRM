@@ -1,7 +1,13 @@
 import React from "react";
 import "./reviewpost.css";
 
-export const FacebookReel = () => {
+export const FacebookReel = ({
+  editorContent,
+  uploadedMedia,
+  icon,
+  platform,
+}) => {
+  const { images = [], videos = [] } = uploadedMedia || {};
   return (
     <>
       <div className="u-align-children-center snipcss-1Y3V4 d-flex align-items-center justify-content-center">
@@ -25,7 +31,7 @@ export const FacebookReel = () => {
             <div className="u-align-children-vertically u-margin-bottom-15">
               <img
                 className="facebook-reel-preview-account img img-circle img-responsive u-image-fit u-margin-right-10"
-                src="https://cdn.publer.io/uploads/picture/facebook/366626813203750.jpg?v=a2b277b10ab957daa721"
+                src={images[0] || "/images/Profile.jpg"}
                 alt=""
               />
               <span className="facebook-reel-preview-text isBold">
@@ -49,7 +55,13 @@ export const FacebookReel = () => {
   );
 };
 
-export const FacebookShort = () => {
+export const FacebookShort = ({
+  editorContent,
+  uploadedMedia,
+  icon,
+  platform,
+}) => {
+  const { images = [], videos = [] } = uploadedMedia || {};
   return (
     <>
       <div className="u-align-children-center snipcss-1Y3V4 d-flex align-items-center justify-content-center">
@@ -58,7 +70,7 @@ export const FacebookShort = () => {
             <div className="u-align-children-vertically u-margin-bottom-15">
               <img
                 className="facebook-reel-preview-account img img-circle img-responsive u-image-fit u-margin-right-10"
-                src="https://cdn.publer.io/uploads/picture/facebook/366626813203750.jpg?v=a2b277b10ab957daa721"
+                src={images[0] || "/images/Profile.jpg"}
                 alt=""
               />
               <span className="facebook-reel-preview-text isBold">
@@ -75,90 +87,143 @@ export const FacebookShort = () => {
 const Facebook = ({ editorContent, uploadedMedia, icon, platform }) => {
   const { images = [], videos = [] } = uploadedMedia || {};
 
-  console.log("selected plafrom is ", platform);
+  // Restrict videos to only one
+  const singleVideo = videos.slice(0, 1);
 
-  const renderImagesLayout = () => {
-    const maxImages = images.slice(0, 5); // Limit to 5 images
-    const extraImagesCount = images.length > 5 ? images.length - 5 : 0;
+  const renderMediaLayout = () => {
+    const maxMedia = [...images.slice(0, 5), ...singleVideo];
+    const extraMediaCount =
+      images.length + singleVideo.length > 5 ? images.length - 5 : 0;
 
-    if (maxImages.length === 1) {
-      // Single full-width image
-      return (
-        <img src={maxImages[0]} alt="Media 1" className="full-width-image" />
+    if (maxMedia.length === 1) {
+      return typeof maxMedia[0] === "string" && maxMedia[0].includes(".mp4") ? (
+        <video src={maxMedia[0]} controls className="full-width-video" />
+      ) : (
+        <img src={maxMedia[0]} alt="Media 1" className="full-width-image" />
       );
     }
 
-    if (maxImages.length === 2) {
-      // Two images in two columns
+    if (maxMedia.length === 2) {
       return (
-        <div className=" facebook-two-columns-images">
-          {maxImages.map((img, index) => (
-            <img
-              key={index}
-              src={img}
-              alt={`Media ${index + 1}`}
-              className="column-image column-image_2"
-            />
-          ))}
+        <div className="facebook-two-columns-images">
+          {maxMedia.map((media, index) =>
+            typeof media === "string" && media.includes(".mp4") ? (
+              <video
+                key={index}
+                src={media}
+                controls
+                className="two-columns-videos "
+              />
+            ) : (
+              <img
+                key={index}
+                src={media}
+                alt={`Media ${index + 1}`}
+                className="two-columns-images column-image"
+              />
+            )
+          )}
         </div>
       );
     }
 
-    if (maxImages.length === 3) {
-      // First two images in 1st column, third image in 2nd column
+    if (maxMedia.length === 3) {
       return (
         <div className="facebook-three-columns">
-          <div className="column">
-            <img src={maxImages[0]} alt="Media 1" className="column-image" />
-            <img src={maxImages[1]} alt="Media 2" className="column-image" />
+          <div className="column three-columns-1">
+            {maxMedia
+              .slice(0, 2)
+              .map((media, index) =>
+                typeof media === "string" && media.includes(".mp4") ? (
+                  <video
+                    key={index}
+                    src={media}
+                    controls
+                    className="column-video column-media"
+                  />
+                ) : (
+                  <img
+                    key={index}
+                    src={media}
+                    alt={`Media ${index + 1}`}
+                    className="column-image column-media"
+                  />
+                )
+              )}
           </div>
-          <div className="column">
-            <img src={maxImages[2]} alt="Media 3" className="column-image" />
+          <div className="column three-columns-2">
+            {typeof maxMedia[2] === "string" && maxMedia[2].includes(".mp4") ? (
+              <video
+                src={maxMedia[2]}
+                controls
+                className="column-video column-media"
+              />
+            ) : (
+              <img
+                src={maxMedia[2]}
+                alt="Media 3"
+                className="column-image column-media"
+              />
+            )}
           </div>
         </div>
       );
     }
 
-    if (maxImages.length > 3) {
-      // First two images in 1st column, three images in 2nd column
+    if (maxMedia.length > 3) {
       return (
         <div className="facebook-two-columns">
           <div className="column column_1">
-            <img
-              src={maxImages[0]}
-              alt="Media 1"
-              className="column-image column-image_2"
-            />
-            <img
-              src={maxImages[1]}
-              alt="Media 2"
-              className="column-image column-image_2"
-            />
+            {maxMedia
+              .slice(0, 2)
+              .map((media, index) =>
+                typeof media === "string" && media.includes(".mp4") ? (
+                  <video
+                    key={index}
+                    src={media}
+                    controls
+                    className="column-video column-media"
+                  />
+                ) : (
+                  <img
+                    key={index}
+                    src={media}
+                    alt={`Media ${index + 1}`}
+                    className="column-image column-image_2 column-media"
+                  />
+                )
+              )}
           </div>
-          <div className="column">
-            {maxImages.slice(2).map((img, index) => {
+          <div className="column column_2">
+            {maxMedia.slice(2).map((media, index) => {
               if (
-                index === maxImages.slice(2).length - 1 &&
-                extraImagesCount > 0
+                index === maxMedia.slice(2).length - 1 &&
+                extraMediaCount > 0
               ) {
-                // If this is the last image and there are extra images, show the +n overlay
                 return (
-                  <div className="image-overlay-container" key={index}>
+                  <div className="media-overlay-container" key={index}>
                     <img
-                      src={img}
+                      src={media}
                       alt={`Media ${index + 3}`}
-                      className="column-image"
+                      className="column-image column-media column-image_3"
                     />
-                    <div className="image-overlay">+{extraImagesCount}</div>
+                    <div className="media-overlay">+{extraMediaCount}</div>
                   </div>
                 );
               } else {
-                return (
+                return typeof media === "string" && media.includes(".mp4") ? (
+                  <video
+                    key={index}
+                    src={media}
+                    controls
+                    className="column-video column-media"
+                  />
+                ) : (
                   <img
                     key={index}
-                    src={img}
+                    src={media}
                     alt={`Media ${index + 3}`}
-                    className="column-image"
+                    className="column-image column-media column-image_3"
                   />
                 );
               }
@@ -212,7 +277,7 @@ const Facebook = ({ editorContent, uploadedMedia, icon, platform }) => {
           </div>
 
           {/* Media section */}
-          <div className="facebook-preview-media">{renderImagesLayout()}</div>
+          <div className="facebook-preview-media">{renderMediaLayout()}</div>
 
           <div className="facebook-post-footer">
             <div className="u-align-children-vertically facebook-post-preview-icon">

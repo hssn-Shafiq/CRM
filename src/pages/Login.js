@@ -138,7 +138,7 @@ const Login = () => {
             <span />
           </div>
           <div className="content__forgot-buttons text-center">
-            <Link>Forget Password</Link>
+            <Link to="/admin/forgotpassword">Forget Password</Link>
           </div>
         </div>
       </div>

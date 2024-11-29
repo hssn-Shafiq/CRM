@@ -24,7 +24,7 @@ const TikTok = ({ editorContent, uploadedMedia, icon }) => {
             <div className="tiktok-post-preview-caption isBold">
               Hassan Shafiq
             </div>
-            <div className="tiktok-post-preview-caption">{editorContent}</div>
+            <div className="tiktok-post-preview-caption"  dangerouslySetInnerHTML={{ __html: editorContent }} />
             <div className="tiktok-post-preview-music u-align-children-vertically">
             <i class="fa-solid fa-music"></i>
               <span className="tiktok-post-preview-song">
