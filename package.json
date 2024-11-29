@@ -21,6 +21,7 @@
     "bootstrap": "^5.3.3",
     "datatables.net": "^2.1.8",
     "datatables.net-dt": "^2.1.8",
+    "dompurify": "^3.2.1",
     "emoji-picker-react": "^4.12.0",
     "firebase": "^10.9.0",
     "formik": "^2.2.9",
