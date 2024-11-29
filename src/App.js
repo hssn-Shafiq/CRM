@@ -30,7 +30,10 @@ import OrderDetail from "./pages/ShopifyManagement/OrderDetail";
 import { getUserFromLocalStorage } from "./utils/localstorage";
 import CustomerSegments from "./pages/CustomerSegments";
 import Profile from "./pages/Profile";
-import EmailEditors from "./pages/EmailEditors";
+// import EmailEditors from "./pages/EmailEditors";
+import TemplateEditor from "./pages/TemplateEditor";
+import TemplatePreview from "./pages/TemplatePreview";
+
 
 function App() {
   const user = getUserFromLocalStorage();
@@ -88,7 +91,11 @@ function App() {
 
           <Route path="Product-Approval" element={<DeliveredOrders />} />
           <Route path="CustomerSegments" element={<CustomerSegments />} />
-          <Route path="EmailEditors" element={<EmailEditors />} />
+
+          <Route path="template-editor" element={<TemplateEditor />} />
+          <Route path="/admin/template-editor/:id" element={<TemplateEditor />} />
+          <Route path="/admin/template-preview/:id" element={<TemplatePreview />} />
+          
         </Route>
       </Routes>
     </Router>

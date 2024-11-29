@@ -1,0 +1,50 @@
+.template-editor-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.editor-header {
+    padding: 1rem 2rem;
+    background-color: white;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.template-info {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 2rem;
+}
+
+.editor-content {
+    flex: 1;
+    position: relative;
+}
+
+.loading-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-control {
+    margin-bottom: 0.5rem;
+}
+
+.form-control:last-child {
+    margin-bottom: 0;
+} 
