@@ -1,9 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import EmailEditor from 'react-email-editor';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { emailTemplateApi } from '../../Services/api';
+import { emailTemplateApi, folderApi } from '../../Services/api';
 import './TemplateEditor.css';
 import { Modal } from 'react-bootstrap';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TemplateEditor = () => {
     const emailEditorRef = useRef(null);
@@ -24,10 +26,11 @@ const TemplateEditor = () => {
     const [selectedFolder, setSelectedFolder] = useState('');
     const [newFolderName, setNewFolderName] = useState('');
     const [folders, setFolders] = useState([]);
+    const [selectedFolderId, setSelectedFolderId] = useState(null);
 
     useEffect(() => {
         if (templateFromLocation) {
-            // Update the templateData state with the location data
+            
             setTemplateData({
                 name: templateFromLocation.name,
                 subject: templateFromLocation.subject,
@@ -38,27 +41,46 @@ const TemplateEditor = () => {
         }
     }, [templateFromLocation]);
 
-    // Load existing template if editing
+    useEffect(() => {
+        if (location.state?.folderId) {
+            setSelectedFolderId(location.state.folderId);
+        }
+    }, [location]);
+
+    
     React.useEffect(() => {
         if (id) {
             loadTemplate();
         }
     }, [id]);
 
-    // Add this useEffect to load folders from localStorage
+    
     useEffect(() => {
-        const storedFolders = localStorage.getItem("folders");
-        if (storedFolders) {
-            setFolders(JSON.parse(storedFolders));
-        }
+        loadFolders();
     }, []);
+
+    const loadFolders = async () => {
+        try {
+            const response = await folderApi.getFolders();
+            setFolders(response.data);
+        } catch (error) {
+            console.error('Error loading folders:', error);
+            toast.error('Failed to load folders');
+        }
+    };
+
+    
+    useEffect(() => {
+        
+        console.log('Initial folder ID from location:', location.state?.folderId);
+    }, [location]);
 
     const loadTemplate = async () => {
         try {
             setIsLoading(true);
             const response = await emailTemplateApi.getTemplate(id);
             const template = response.data;
-            
+
             setTemplateData({
                 name: template.name,
                 subject: template.subject,
@@ -67,13 +89,13 @@ const TemplateEditor = () => {
                 html_content: template.html_content
             });
 
-            // Load design into editor
+            
             if (template.design_json) {
                 emailEditorRef.current?.editor?.loadDesign(JSON.parse(template.design_json));
             }
         } catch (error) {
             console.error('Error loading template:', error);
-            alert('Failed to load template');
+            toast.error('Failed to load template');
         } finally {
             setIsLoading(false);
         }
@@ -95,7 +117,7 @@ const TemplateEditor = () => {
 
     const handleSave = () => {
         if (!templateData.name.trim()) {
-            alert('Please enter a template name');
+            toast.warning('Please enter a template name');
             return;
         }
         setShowSaveModal(true);
@@ -106,69 +128,151 @@ const TemplateEditor = () => {
         setShowFolderModal(true);
     };
 
+    
     const handleCreateNewFolder = async () => {
         if (!newFolderName.trim()) {
-            alert('Please enter a folder name');
+            toast.warning('Please enter a folder name');
             return;
         }
 
-        const newFolder = { id: Date.now(), name: newFolderName, templates: [] };
-        const updatedFolders = [...folders, newFolder];
-        setFolders(updatedFolders);
-        localStorage.setItem("folders", JSON.stringify(updatedFolders));
-        
-        await saveTemplateToFolder(newFolder.id);
+        try {
+            setIsLoading(true);
+            
+            const folderResponse = await folderApi.createFolder({
+                name: newFolderName,
+                is_active: true,
+                created_by: "2" 
+            });
+
+            console.log('New folder created:', folderResponse.data);
+
+            
+            await loadFolders();
+
+            
+            const newFolderId = folderResponse.data.id;
+
+            
+            await saveTemplateToFolder(newFolderId);
+
+            
+            setNewFolderName('');
+
+        } catch (error) {
+            console.error('Error creating folder:', error);
+            toast.error('Failed to create folder: ' + (error.response?.data?.message || error.message));
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleSelectExistingFolder = async () => {
         if (!selectedFolder) {
-            alert('Please select a folder');
+            toast.warning('Please select a folder');
             return;
         }
-        await saveTemplateToFolder(selectedFolder);
+
+        
+        console.log('Selected folder value:', selectedFolder);
+
+        
+        const folderId = parseInt(selectedFolder);
+        if (isNaN(folderId)) {
+            console.error('Invalid folder ID:', selectedFolder);
+            toast.error('Invalid folder selection');
+            return;
+        }
+
+        try {
+            await saveTemplateToFolder(folderId);
+        } catch (error) {
+            console.error('Error saving to folder:', error);
+            toast.error('Failed to save template to folder');
+        }
     };
 
     const saveTemplateToFolder = async (folderId) => {
         try {
             setIsLoading(true);
-            
+
             emailEditorRef.current.editor.exportHtml(async (data) => {
                 const { design, html } = data;
+
                 
-                const updatedTemplateData = {
-                    ...templateData,
+                const templatePayload = {
+                    name: templateData.name,
+                    subject: templateData.subject,
+                    category: templateData.category,
                     design_json: JSON.stringify(design),
                     html_content: html,
-                    folderId: folderId // Add folder reference
+                    folder_id: folderId,  
+                    is_active: true,
+                    created_by: "2"  
                 };
 
-                if (id) {
-                    await emailTemplateApi.updateTemplate(id, updatedTemplateData);
-                } else {
-                    await emailTemplateApi.createTemplate(updatedTemplateData);
-                }
+                console.log('Saving template with payload:', templatePayload);
 
-                // Update folder's templates in localStorage
-                const updatedFolders = folders.map(folder => {
-                    if (folder.id === folderId) {
-                        return {
-                            ...folder,
-                            templates: [...(folder.templates || []), updatedTemplateData]
-                        };
+                try {
+                    if (id) {
+                        await emailTemplateApi.updateTemplate(id, templatePayload);
+                    } else {
+                        await emailTemplateApi.createTemplate(templatePayload);
                     }
-                    return folder;
-                });
-                
-                localStorage.setItem("folders", JSON.stringify(updatedFolders));
-                alert('Template saved successfully!');
-                navigate('/admin/templates');
+
+                    toast.success('Template saved successfully!');
+                    navigate('/admin/templates');
+                } catch (apiError) {
+                    console.error('API Error:', apiError.response?.data);
+                    throw apiError;
+                }
             });
         } catch (error) {
             console.error('Error saving template:', error);
-            alert('Failed to save template. Please try again.');
+            toast.error('Failed to save template');
         } finally {
             setIsLoading(false);
             setShowFolderModal(false);
+        }
+    };
+
+    const handleSaveWithoutFolder = async () => {
+        try {
+            setIsLoading(true);
+
+            emailEditorRef.current.editor.exportHtml(async (data) => {
+                const { design, html } = data;
+
+                const templatePayload = {
+                    name: templateData.name,
+                    subject: templateData.subject,
+                    category: templateData.category,
+                    design_json: JSON.stringify(design),
+                    html_content: html,
+                    folder_id: null,  
+                    is_active: true,
+                    created_by: "2"  
+                };
+
+                try {
+                    if (id) {
+                        await emailTemplateApi.updateTemplate(id, templatePayload);
+                    } else {
+                        await emailTemplateApi.createTemplate(templatePayload);
+                    }
+
+                    toast.success('Template saved successfully!');
+                    navigate('/admin/templates');
+                } catch (apiError) {
+                    console.error('API Error:', apiError.response?.data);
+                    throw apiError;
+                }
+            });
+        } catch (error) {
+            console.error('Error saving template:', error);
+            toast.error('Failed to save template');
+        } finally {
+            setIsLoading(false);
+            setShowSaveModal(false);
         }
     };
 
@@ -178,10 +282,11 @@ const TemplateEditor = () => {
 
     return (
         <>
+            <ToastContainer position="top-right" autoClose={3000} />
             <div className="template-editor-container">
                 <div className="editor-header">
-                    <button 
-                        className="btn btn-secondary" 
+                    <button
+                        className="btn btn-secondary"
                         onClick={handleBack}
                     >
                         <i className="fas fa-arrow-left me-2"></i>Back
@@ -219,8 +324,8 @@ const TemplateEditor = () => {
                         </select>
                     </div>
 
-                    <button 
-                        className="btn btn-primary" 
+                    <button
+                        className="btn btn-primary"
                         onClick={handleSave}
                         disabled={isLoading}
                     >
@@ -228,7 +333,7 @@ const TemplateEditor = () => {
                         {isLoading ? 'Saving...' : 'Save Template'}
                     </button>
                 </div>
-                
+
                 <div className="editor-content">
                     <EmailEditor
                         ref={emailEditorRef}
@@ -253,13 +358,32 @@ const TemplateEditor = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="d-grid gap-2">
-                        <button className="btn btn-primary" onClick={handleSaveToFolder}>
+                        {/* <button className="btn btn-primary" onClick={handleSaveToFolder}>
                             Save to Folder
+                        </button> */}
+
+                        <select
+                            className="form-select mb-2"
+                            value={selectedFolder}
+                            onChange={(e) => {
+                                console.log('Selected folder changed to:', e.target.value);
+                                setSelectedFolder(e.target.value);
+                            }}
+                        >
+                            <option value="">Select a folder</option>
+                            {folders.map(folder => (
+                                <option key={folder.id} value={folder.id}>
+                                    {folder.name}
+                                </option>
+                            ))}
+                        </select>
+                        <button
+                            className="btn btn-primary w-100"
+                            onClick={handleSelectExistingFolder}
+                        >
+                            Save to Selected Folder
                         </button>
-                        <button className="btn btn-secondary" onClick={() => {
-                            setShowSaveModal(false);
-                            handleSave();
-                        }}>
+                        <button className="btn btn-secondary" onClick={handleSaveWithoutFolder}>
                             Save Without Folder
                         </button>
                     </div>
@@ -267,7 +391,7 @@ const TemplateEditor = () => {
             </Modal>
 
             {/* Folder Selection Modal */}
-            <Modal show={showFolderModal} onHide={() => setShowFolderModal(false)}>
+            {/* <Modal show={showFolderModal} onHide={() => setShowFolderModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Select or Create Folder</Modal.Title>
                 </Modal.Header>
@@ -286,34 +410,17 @@ const TemplateEditor = () => {
                                 className="btn btn-primary" 
                                 onClick={handleCreateNewFolder}
                             >
-                                Create & Save
+                                Create 
                             </button>
                         </div>
                     </div>
 
                     <div className="mb-3">
                         <h6>Or Select Existing Folder</h6>
-                        <select 
-                            className="form-select mb-2"
-                            value={selectedFolder}
-                            onChange={(e) => setSelectedFolder(e.target.value)}
-                        >
-                            <option value="">Select a folder</option>
-                            {folders.map(folder => (
-                                <option key={folder.id} value={folder.id}>
-                                    {folder.name}
-                                </option>
-                            ))}
-                        </select>
-                        <button 
-                            className="btn btn-primary w-100"
-                            onClick={handleSelectExistingFolder}
-                        >
-                            Save to Selected Folder
-                        </button>
+                      
                     </div>
                 </Modal.Body>
-            </Modal>
+            </Modal> */}
         </>
     );
 };

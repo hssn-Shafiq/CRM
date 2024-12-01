@@ -19,6 +19,7 @@ import {
   FaUserLock,
   FaUsers,
   FaTrash,
+  FaUserFriends,
 } from "react-icons/fa";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { BiUser } from "react-icons/bi";
@@ -180,7 +181,7 @@ const MainLayout = () => {
                 },
                 {
                   key: "CustomerSegments",
-                  icon: <FaLayerGroup className="fs-4" />,
+                  icon: <FaUserFriends className="fs-4" />,
                   label: "Segments",
                 },
               ],
