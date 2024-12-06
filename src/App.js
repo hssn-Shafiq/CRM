@@ -32,125 +32,50 @@ import CustomerSegments from "./pages/CustomerSegments";
 import Profile from "./pages/Profile";
 // import EmailEditors from "./pages/EmailEditors";
 import ForgotPassword from "./pages/ForgetPassword";
-// import EmailEditors from "./pages/EmailEditors";
 import TemplateEditor from "./pages/TemplateEditor";
 import TemplatePreview from "./pages/TemplatePreview";
-
 
 function App() {
     const user = getUserFromLocalStorage();
     const role = user?.role || "Guest";
+    const permissions = JSON.parse(localStorage.getItem("routePermissions")) || {};
 
-    // Retrieve permissions from localStorage
-    const permissions =
-        JSON.parse(localStorage.getItem("routePermissions")) || {};
-
-    return (<
-        Router >
-        <
-            Routes >
-            <
-                Route path="ForgotPassword"
-                element={< ForgotPassword />}
-            /> <
-                Route path="/"
-                element={< Login />}
-            />{" "} <
-                Route path="/signup"
-                element={< Register />}
-            />{" "} <
-                Route path="/reset-password"
-                element={< Resetpassword />}
-            />{" "} <
-                Route path="/forgot-password"
-                element={< Forgotpassword />}
-            />{" "} <
-                Route path="/admin"
-                element={< MainLayout />} >
-                <
-                    Route index element={< Dashboard />}
-                />{" "} <
-                    Route path="Profile"
-                    element={< Profile />}
-                /> <
-                    Route path="RegisteredUser"
-                    element={< RegisteredUser />}
-                />{" "} <
-                    Route path="Users/User-List"
-                    element={< UserList />}
-                />{" "} <
-                    Route path="Users/User-Permission"
-                    element={< UserPermission />}
-                />{" "} <
-                    Route path="Users/User-Role"
-                    element={< UserRole />}
-                />{" "}
-                 <
-                    Route path="SchedulePosts/Create-Post"
-                    element={< CreatePosts />}
-                />{" "} <
-                    Route path="SchedulePosts/Calendar"
-                    element={< Calendar />}
-                />{" "} <
-                    Route path="SchedulePosts/SocialAccounts"
-                    element={< SocialAccounts />}
-                />{" "} <
-                    Route path="SchedulePosts/Posts"
-                    element={< Posts />}
-                />
-   
-                 <
-                    Route path="Contacts"
-                    element={< Contacts />}
-                />{" "} <
-                    Route path="Emails"
-                    element={< Emails />}
-                />{" "} <
-                    Route path="Check-Book-Appointments"
-                    element={< CheckBookedAppointments />}
-                />{" "} <
-                    Route path="Templates"
-                    element={< Templates />}
-                /> 
-                
-                
-                <
-                    Route path="Shopify/OrderList"
-                    element={< OrderList />}
-                />{" "} <
-                    Route path="Shopify/Order/:orderId"
-                    element={< OrderDetail />}
-                />{" "} <
-                    Route path="Shopify/Delivered-Orders"
-                    element={< DeliveredOrders />}
-                />{" "} <
-                    Route path="Shopify/Cancelled-Orders"
-                    element={< RejectedOrders />}
-                />{" "} <
-                    Route path="Settings"
-                    element={< Settings />}
-                />
-
-                <
-                    Route path="Product-Approval"
-                    element={< DeliveredOrders />}
-                /> <
-                    Route path="CustomerSegments"
-                    element={< CustomerSegments />}
-                />
-
-                <
-                    Route path="template-editor"
-                    element={< TemplateEditor />}
-                /> <
-                    Route path="/admin/template-editor/:id"
-                    element={< TemplateEditor />}
-                /> <
-                    Route path="/admin/template-preview/:id"
-                    element={< TemplatePreview />}
-                />
-
-            </Route> </Routes > </Router>
+    return (
+        <Router>
+            <Routes>
+                <Route path="ForgotPassword" element={<ForgotPassword />} />
+                <Route path="/" element={<Login />} />
+                <Route path="/signup" element={<Register />} />
+                <Route path="/reset-password" element={<Resetpassword />} />
+                <Route path="/forgot-password" element={<Forgotpassword />} />
+                <Route path="/admin" element={<MainLayout />}>
+                    <Route index element={<Dashboard />} />
+                    <Route path="Profile" element={<Profile />} />
+                    <Route path="RegisteredUser" element={<RegisteredUser />} />
+                    <Route path="Users/User-List" element={<UserList />} />
+                    <Route path="Users/User-Permission" element={<UserPermission />} />
+                    <Route path="Users/User-Role" element={<UserRole />} />
+                    <Route path="SchedulePosts/Create-Post" element={<CreatePosts />} />
+                    <Route path="SchedulePosts/Calendar" element={<Calendar />} />
+                    <Route path="SchedulePosts/SocialAccounts" element={<SocialAccounts />} />
+                    <Route path="SchedulePosts/Posts" element={<Posts />} />
+                    <Route path="Contacts" element={<Contacts />} />
+                    <Route path="Emails" element={<Emails />} />
+                    <Route path="Check-Book-Appointments" element={<CheckBookedAppointments />} />
+                    <Route path="Templates" element={<Templates />} />
+                    <Route path="Shopify/OrderList" element={<OrderList />} />
+                    <Route path="Shopify/Order/:orderId" element={<OrderDetail />} />
+                    <Route path="Shopify/Delivered-Orders" element={<DeliveredOrders />} />
+                    <Route path="Shopify/Cancelled-Orders" element={<RejectedOrders />} />
+                    <Route path="Settings" element={<Settings />} />
+                    <Route path="Product-Approval" element={<DeliveredOrders />} />
+                    <Route path="CustomerSegments" element={<CustomerSegments />} />
+                    <Route path="template-editor" element={<TemplateEditor />} />
+                    <Route path="/admin/template-editor/:id" element={<TemplateEditor />} />
+                    <Route path="/admin/template-preview/:id" element={<TemplatePreview />} />
+                </Route>
+            </Routes>
+        </Router>
     );
 }
 

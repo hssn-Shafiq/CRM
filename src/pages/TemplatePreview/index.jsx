@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { emailTemplateApi } from '../../Services/api';
+import { toast } from 'react-toastify';
 import './TemplatePreview.css';
 
 const TemplatePreview = () => {
@@ -20,15 +21,16 @@ const TemplatePreview = () => {
             setError(null);
             const response = await emailTemplateApi.getTemplate(id);
 
-            // Assuming your Laravel API returns data in response.data
             if (response.data.data) {
                 setTemplate(response.data.data);
             } else {
-                setTemplate(response.data); // If data is not nested
+                setTemplate(response.data);
             }
         } catch (error) {
             console.error('Error fetching template:', error);
-            setError(error.response?.data?.message || 'Failed to fetch template');
+            const errorMessage = error.response?.data?.message || 'Failed to fetch template';
+            setError(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -47,31 +49,26 @@ const TemplatePreview = () => {
     if (error) {
         return (
             <div className="template-preview-error">
-                <div className="alert alert-danger">
-                    {error}
-                    <button
-                        className="btn btn-link"
-                        onClick={() => navigate('/admin/templates')}
-                    >
-                        Back to Templates
-                    </button>
-                </div>
+                <button
+                    className="btn btn-primary"
+                    onClick={() => navigate('/admin/templates')}
+                >
+                    Back to Templates
+                </button>
             </div>
         );
     }
 
     if (!template) {
+        toast.warning('Template not found');
         return (
             <div className="template-preview-error">
-                <div className="alert alert-warning">
-                    Template not found
-                    <button
-                        className="btn btn-link"
-                        onClick={() => navigate('/admin/templates')}
-                    >
-                        Back to Templates
-                    </button>
-                </div>
+                <button
+                    className="btn btn-primary"
+                    onClick={() => navigate('/admin/templates')}
+                >
+                    Back to Templates
+                </button>
             </div>
         );
     }
