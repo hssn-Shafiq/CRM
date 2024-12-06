@@ -39,6 +39,8 @@ const ReviewPost = ({
 }) => {
   const [selectedFilter, setSelectedFilter] = useState("All Accounts");
 
+  console.log("uploaded media is ", uploadedMedia);
+  
   // Function to render the appropriate platform component
   const renderPlatformComponent = (platform, platformIcon) => {
     const commonProps = {

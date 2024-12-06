@@ -319,8 +319,8 @@ function PostForm({
                       </div>
                     </div>
                   </div>
-                )}
-
+                    )}
+                    
                 {videos.length > 0 && (
                   <div className="media-preview-main mb-3">
                     <h5 className="text-light">Videos</h5>
@@ -332,7 +332,6 @@ function PostForm({
                         >
                           <video
                             src={video}
-                            controls
                             className="img-thumbnail"
                           />
                           <button

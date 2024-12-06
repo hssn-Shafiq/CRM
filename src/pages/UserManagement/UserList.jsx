@@ -206,7 +206,7 @@ const UserList = () => {
           </h2>
         </div>
         <div className="container table-responsive border-0 mt-3">
-          <div className="new_role mb-3 text-end">
+          <div className="new_role d-flex justify-content-end  mb-3 text-end">
             <button
               className="btn btn-primary mb-0 bg-main border-main mb-0"
               type="button"

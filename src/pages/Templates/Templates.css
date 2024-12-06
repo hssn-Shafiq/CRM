@@ -8,90 +8,74 @@
         /* border-bottom: 1px solid #dee2e6; */
         /* background-color: var(--bg-main); */
     }
-
     .header h1 {
         font-size: 24px;
         font-weight: bold;
     }
-
     .btn-new-post {
         background-color: var(--color-red);
         color: white;
         font-weight: bold;
         transition: background-color 0.3s ease;
     }
-
     .btn-new-post:hover {
         background-color: #0056b3;
     }
-
     .planner-content {
         margin: 20px;
     }
-
     .icons-container img {
         width: 35px;
         height: 35px;
         border-radius: 50%;
         margin-right: 10px;
     }
-
     .date-picker {
         display: flex;
         align-items: center;
         margin-left: 20px;
     }
-
     .fa-calendar-days {
         margin-right: 10px;
     }
-
     table th,
     table td {
         vertical-align: middle;
         text-align: center;
         color: white;
     }
-
     .table thead th {
         background-color: var(--color-212529);
         color: var(--color-c3d4da);
         font-weight: bold;
     }
-
     .table tbody td img {
         width: 60px;
         height: 60px;
         object-fit: cover;
     }
-
     .status-published {
         background-color: var(--color-212529);
         color: var(--color-c3d4da);
         padding: 5px 10px;
         border-radius: 5px;
     }
-
     .action-icon {
         margin-right: 10px;
         cursor: pointer;
         transition: color 0.3s ease;
     }
-
     .action-icon:hover {
         color: var(--color-red);
     }
-
     @media (max-width: 768px) {
         .date-picker {
             flex-direction: column;
             align-items: flex-start;
         }
-
         .table {
             font-size: 14px;
         }
-
         .table tbody img {
             width: 40px;
             height: 40px;
@@ -105,7 +89,7 @@
     margin: 0 auto;
 }
 
-.page-title {
+.templates-container .page-title {
     color: #333;
     margin-bottom: 2rem;
 }
@@ -126,7 +110,7 @@
 .table-responsive {
     margin-top: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .table {
@@ -156,7 +140,9 @@
     font-weight: 500;
 }
 
+
 /* Add loading state */
+
 .templates-list {
     position: relative;
     min-height: 200px;
@@ -168,13 +154,15 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255,255,255,0.8);
+    background: rgba(255, 255, 255, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+
 /* Add empty state */
+
 .empty-state {
     text-align: center;
     padding: 2rem;
@@ -206,7 +194,7 @@
     max-height: 300px;
     position: relative;
     z-index: 1000;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .selected-folder {

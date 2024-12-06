@@ -78,35 +78,31 @@
 
 /* Media section */
 
-.full-width-image {
-    width: 100%;
-    max-height: 500px;
-    object-fit: cover;
+.facebook-preview-media {
+    max-height: 750px;
+    overflow: hidden;
 }
 
-.facebook-preview-media {
-    /* min-height: 500px; */
-    /* height: 100%; */
-    overflow: hidden;
+.full-width-image {
+    width: 100%;
+    object-fit: cover;
 }
 
 .column-image {
     object-fit: cover;
 }
 
-.facebook-two-columns-images {
+.facebook-two-columns {
     display: flex;
     flex-direction: row;
     gap: 2px;
-    /* height: auto; */
-    max-height: 500px;
-    /* height: 100%; */
+    height: 300px;
     .two-columns-images {
         width: 50%;
     }
 }
 
-.facebook-two-columns {
+.facebook-two-columns-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     /* display: flex;
@@ -133,31 +129,27 @@
     height: 500px;
 }
 
-.three-columns-1 {
-    display: flex;
-    flex-direction: row;
-    gap: 4px;
-    height: 50%;
-    img {
-        width: 50%;
-    }
-}
-
-.three-columns-2 {
-    width: 100%;
-    height: 50%;
+.preview-column-1 {
+    width: 50%;
     img {
         width: 100%;
         height: 100%;
     }
 }
 
-.column-image_2 {
-    height: 50%;
+.preview-column-2 {
+    width: 50%;
+    height: 100%;
+    img {
+        width: 100%;
+        height: 50%;
+    }
 }
 
-.column-image_3 {
-    height: 33.33%;
+.preview-column-2-extended {
+    img {
+        height: 33.33%;
+    }
 }
 
 
@@ -269,13 +261,19 @@
 
 /* Container for image with overlay */
 
-.image-overlay-container {
+.facebook-media-overlay-container {
+    position: relative;
+    width: 100%;
+    height: 33.33%;
+}
+
+.media-overlay-container {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
-.image-overlay {
+.media-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -284,7 +282,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.886);
     color: white;
     font-size: 24px;
     font-weight: bold;
@@ -298,30 +296,30 @@
 /* LinkedIn Post Layout */
 
 .linkedin-preview-media {
-    /* min-height: 500px;
-    height: 100%; */
+    max-height: 750px;
     overflow: hidden;
 }
 
-.linkedin-media-container {
-    /* min-height:500px; */
-    /* height: 500px; */
-}
-
 .linkedin-media-container-fheight {
-    min-height: 500px;
-    height: 500px;
+    height: 450px;
 }
 
 .linkedin-first-row,
 .linkedin-second-row {
     display: flex;
     gap: 4px;
-    height: 50%;
+}
+
+.linkedin-first-row {
+    height: 60%;
+}
+
+.linkedin-second-row {
+    height: 40%;
 }
 
 .linkedin-single-preview {
-    height: 100%;
+    height: 300px;
 }
 
 .linkedin-second-row {
