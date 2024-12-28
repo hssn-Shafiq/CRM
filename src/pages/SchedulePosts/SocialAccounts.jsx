@@ -7,6 +7,8 @@ import "./post.css"
 // import img01 from '../../../public/images/facebook-circle.svg'
 
 const SocialAccounts = () => {
+
+  console.log("facebook id: ", process.env.REACT_APP_FACEBOOK_ID);
   const [fbData, setFbData] = useState({
     isLoggedIn: false,
     name: "",
@@ -201,7 +203,7 @@ const SocialAccounts = () => {
                   </div>
                 ) : (
                   <FacebookLogin
-                    appId="446027444501615"
+                    appId={process.env.REACT_APP_FACEBOOK_ID}
                     autoLoad={false}
                     fields="name,email,picture"
                     callback={responseFacebook}
