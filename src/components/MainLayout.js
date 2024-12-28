@@ -220,6 +220,16 @@ const MainLayout = () => {
               icon: <BiUser className="fs-4" />,
               label: "Registered User",
             },
+            {
+              key: "/privacy-policy",
+              icon: <AiOutlineSetting className="fs-4" />,
+              label: "Privacy Policy",
+            },
+            {
+              key: "/terms-and-conditions",
+              icon: <AiOutlineSetting className="fs-4" />,
+              label: "Terms and Conditions",
+            },
           ]}
         />
 
