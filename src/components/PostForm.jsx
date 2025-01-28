@@ -367,6 +367,7 @@ function PostForm({
                       <p className="mb-0">
                         No date selected{" "}
                         <button type="button" onClick={handleSchedule}>Select Now</button>
+                        {/* <input type="datetime-local" placeholder="select date " /> */}
                       </p>
                     </div>
                   </>
