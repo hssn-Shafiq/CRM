@@ -8,6 +8,10 @@ export const FacebookReel = ({
   platform,
 }) => {
   const { images = [], videos = [] } = uploadedMedia || {};
+
+  const maxVideo = videos.slice(0, 1);
+
+  console.log("max video is ", maxVideo);
   return (
     <>
       <div className="u-align-children-center snipcss-1Y3V4 d-flex align-items-center justify-content-center">
@@ -49,6 +53,15 @@ export const FacebookReel = ({
               </div>
             </div>
           </div>
+          <div className="u-width-100 ">
+            <div className="" role="region" tabIndex={-1}>
+              <video
+                className="video-react-video w-100"
+                autoPlay
+                src={maxVideo}
+              ></video>
+            </div>
+          </div>
         </div>
       </div>
     </>
@@ -84,215 +97,172 @@ export const FacebookShort = ({
   );
 };
 
+// Update the MediaItem component
+const MediaItem = ({ media, index = 0, className, isFirstColumn = false }) => {
+  const altText = isFirstColumn ? "First Media" : `Media ${index + 1}`;
+  return (
+    <img
+      key={index}
+      src={media}
+      alt={altText}
+      className={`column-image ${className}`}
+    />
+  );
+};
+
+const MediaOverlay = ({ media, extraCount }) => (
+  <div className="facebook-media-overlay-container">
+    <img
+      src={media}
+      alt="Third Visible Media"
+      className="column-image column-media h-100"
+    />
+    {extraCount > 0 && <div className="media-overlay">+{extraCount}</div>}
+  </div>
+);
+
+const PostHeader = ({ icon }) => (
+  <div className="facebook-post-header">
+    <div className="u-display-flex u-width-100 u-text-overflow-ellipsis">
+      <div className="facebook-post-preview-icon">
+        <img
+          src="/images/profile.jpg"
+          alt="Profile"
+          className="facebook-post-profile-icon"
+        />
+        {icon}
+      </div>
+      <div>
+        <div className="facebook-post-preview-account-wrapper">
+          <div className="facebook-album-preview-account">
+            <span className="facebook-post-account-name">
+              Tech Sphere Logix
+            </span>
+          </div>
+          <div className="u-display-flex gap-4">
+            <span className="facebook-post-account-time">Just now</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="facebook-post-preview-icon">
+      <img
+        src="/images/menu.png"
+        alt="More options"
+        className="facebook-post-three-dots-icon"
+      />
+    </div>
+  </div>
+);
+
+const PostFooter = () => (
+  <div className="facebook-post-footer">
+    <div className="u-align-children-vertically facebook-post-preview-icon">
+      <i className="far fa-thumbs-up facebook-post-preview-footer-icon"></i>
+      Like
+    </div>
+    <div className="u-align-children-vertically facebook-post-preview-icon">
+      <i className="far fa-comment facebook-post-preview-footer-icon"></i>
+      Comment
+    </div>
+    <div className="u-align-children-vertically facebook-post-preview-icon">
+      <i className="fas fa-share facebook-post-preview-footer-icon"></i>
+      Share
+    </div>
+  </div>
+);
+
+const MediaLayout = ({ maxMedia, extraMediaCount }) => {
+  if (!maxMedia.length) return null;
+
+  if (maxMedia.length === 1) {
+    return <MediaItem media={maxMedia[0]} className="full-width-image" />;
+  }
+
+  if (maxMedia.length === 2) {
+    return (
+      <div className="facebook-two-columns">
+        {maxMedia.map((media, index) => (
+          <MediaItem
+            key={index}
+            media={media}
+            index={index}
+            className="two-columns-images column-media"
+          />
+        ))}
+      </div>
+    );
+  }
+
+  const firstColumnMedia = maxMedia[0];
+  const secondColumnItems = maxMedia.slice(1);
+  const visibleItems = secondColumnItems.slice(0, 3);
+
+  return (
+    <div className="facebook-two-columns">
+      <div className="column preview-column-1">
+        <MediaItem
+          media={firstColumnMedia}
+          className="column-media"
+          isFirstColumn
+        />
+      </div>
+
+      <div
+        className={`column preview-column-2 ${
+          maxMedia.length > 3 ? "preview-column-2-extended" : ""
+        }`}
+      >
+        {visibleItems.slice(0, 2).map((media, index) => (
+          <MediaItem
+            key={index}
+            media={media}
+            index={index}
+            className="column-media"
+          />
+        ))}
+        {visibleItems.length >= 3 && (
+          <MediaOverlay media={visibleItems[2]} extraCount={extraMediaCount} />
+        )}
+      </div>
+    </div>
+  );
+};
+
 const Facebook = ({ editorContent, uploadedMedia, icon, platform }) => {
   const { images = [], videos = [] } = uploadedMedia || {};
-
-  // Restrict videos to only one
   const singleVideo = videos.slice(0, 1);
-
-  const renderMediaLayout = () => {
-    const maxMedia = [...images.slice(0, 5), ...singleVideo];
-    const extraMediaCount =
-      images.length + singleVideo.length > 5 ? images.length - 5 : 0;
-
-    if (maxMedia.length === 1) {
-      return typeof maxMedia[0] === "string" && maxMedia[0].includes(".mp4") ? (
-        <video src={maxMedia[0]} controls className="full-width-video" />
-      ) : (
-        <img src={maxMedia[0]} alt="Media 1" className="full-width-image" />
-      );
-    }
-
-    if (maxMedia.length === 2) {
-      return (
-        <div className="facebook-two-columns-images">
-          {maxMedia.map((media, index) =>
-            typeof media === "string" && media.includes(".mp4") ? (
-              <video
-                key={index}
-                src={media}
-                controls
-                className="two-columns-videos "
-              />
-            ) : (
-              <img
-                key={index}
-                src={media}
-                alt={`Media ${index + 1}`}
-                className="two-columns-images column-image"
-              />
-            )
-          )}
-        </div>
-      );
-    }
-
-    if (maxMedia.length === 3) {
-      return (
-        <div className="facebook-three-columns">
-          <div className="column three-columns-1">
-            {maxMedia
-              .slice(0, 2)
-              .map((media, index) =>
-                typeof media === "string" && media.includes(".mp4") ? (
-                  <video
-                    key={index}
-                    src={media}
-                    controls
-                    className="column-video column-media"
-                  />
-                ) : (
-                  <img
-                    key={index}
-                    src={media}
-                    alt={`Media ${index + 1}`}
-                    className="column-image column-media"
-                  />
-                )
-              )}
-          </div>
-          <div className="column three-columns-2">
-            {typeof maxMedia[2] === "string" && maxMedia[2].includes(".mp4") ? (
-              <video
-                src={maxMedia[2]}
-                controls
-                className="column-video column-media"
-              />
-            ) : (
-              <img
-                src={maxMedia[2]}
-                alt="Media 3"
-                className="column-image column-media"
-              />
-            )}
-          </div>
-        </div>
-      );
-    }
-
-    if (maxMedia.length > 3) {
-      return (
-        <div className="facebook-two-columns">
-          <div className="column column_1">
-            {maxMedia
-              .slice(0, 2)
-              .map((media, index) =>
-                typeof media === "string" && media.includes(".mp4") ? (
-                  <video
-                    key={index}
-                    src={media}
-                    controls
-                    className="column-video column-media"
-                  />
-                ) : (
-                  <img
-                    key={index}
-                    src={media}
-                    alt={`Media ${index + 1}`}
-                    className="column-image column-image_2 column-media"
-                  />
-                )
-              )}
-          </div>
-          <div className="column column_2">
-            {maxMedia.slice(2).map((media, index) => {
-              if (
-                index === maxMedia.slice(2).length - 1 &&
-                extraMediaCount > 0
-              ) {
-                return (
-                  <div className="media-overlay-container" key={index}>
-                    <img
-                      src={media}
-                      alt={`Media ${index + 3}`}
-                      className="column-image column-media column-image_3"
-                    />
-                    <div className="media-overlay">+{extraMediaCount}</div>
-                  </div>
-                );
-              } else {
-                return typeof media === "string" && media.includes(".mp4") ? (
-                  <video
-                    key={index}
-                    src={media}
-                    controls
-                    className="column-video column-media"
-                  />
-                ) : (
-                  <img
-                    key={index}
-                    src={media}
-                    alt={`Media ${index + 3}`}
-                    className="column-image column-media column-image_3"
-                  />
-                );
-              }
-            })}
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
+  const maxMedia = [...images.slice(0, 4), ...singleVideo];
+  const extraMediaCount =
+    images.length + singleVideo.length > 4 ? images.length - 4 : 0;
 
   return (
     <section className="live-preview__content">
       <div className="live-preview__post">
         <div className="facebook-post-preview-wrapper">
-          <div className="facebook-post-header">
-            <div className="u-display-flex u-width-100 u-text-overflow-ellipsis">
-              <div className="facebook-post-preview-icon">
-                <img
-                  src="/images/profile.jpg"
-                  alt="Profile"
-                  className="facebook-post-profile-icon"
-                />
-                {icon}
-              </div>
-              <div>
-                <div className="facebook-post-preview-account-wrapper">
-                  <div className="facebook-album-preview-account">
-                    <span className="facebook-post-account-name">
-                      Tech Sphere Logix
-                    </span>
-                  </div>
-                  <div className="u-display-flex gap-4">
-                    <span className="facebook-post-account-time">Just now</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="facebook-post-preview-icon">
-              <img
-                src="/images/menu.png"
-                alt="More options"
-                className="facebook-post-three-dots-icon"
-              />
-            </div>
-          </div>
+          <PostHeader icon={icon} />
 
-          {/* Post content */}
           <div className="facebook-post-content">
             <div dangerouslySetInnerHTML={{ __html: editorContent }} />
           </div>
 
-          {/* Media section */}
-          <div className="facebook-preview-media">{renderMediaLayout()}</div>
-
-          <div className="facebook-post-footer">
-            <div className="u-align-children-vertically facebook-post-preview-icon">
-              <i className="far fa-thumbs-up facebook-post-preview-footer-icon"></i>
-              Like
-            </div>
-            <div className="u-align-children-vertically facebook-post-preview-icon">
-              <i className="far fa-comment facebook-post-preview-footer-icon"></i>
-              Comment
-            </div>
-            <div className="u-align-children-vertically facebook-post-preview-icon">
-              <i className="fas fa-share facebook-post-preview-footer-icon"></i>
-              Share
-            </div>
+          <div className="facebook-preview-media">
+            {videos.length > 0 ? (
+              <video
+                className="facebook-post-preview-video w-100"
+                src={singleVideo}
+                autoPlay
+                muted
+              />
+            ) : (
+              <MediaLayout
+                maxMedia={maxMedia}
+                extraMediaCount={extraMediaCount}
+              />
+            )}
           </div>
+
+          <PostFooter />
         </div>
       </div>
     </section>

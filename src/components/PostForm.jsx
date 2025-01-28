@@ -319,8 +319,8 @@ function PostForm({
                       </div>
                     </div>
                   </div>
-                )}
-
+                    )}
+                    
                 {videos.length > 0 && (
                   <div className="media-preview-main mb-3">
                     <h5 className="text-light">Videos</h5>
@@ -332,7 +332,6 @@ function PostForm({
                         >
                           <video
                             src={video}
-                            controls
                             className="img-thumbnail"
                           />
                           <button
@@ -368,6 +367,7 @@ function PostForm({
                       <p className="mb-0">
                         No date selected{" "}
                         <button type="button" onClick={handleSchedule}>Select Now</button>
+                        {/* <input type="datetime-local" placeholder="select date " /> */}
                       </p>
                     </div>
                   </>

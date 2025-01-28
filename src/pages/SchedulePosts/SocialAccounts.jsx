@@ -3,10 +3,13 @@ import axios from "axios";
 import FacebookLogin from "react-facebook-login";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./post.css"
+import "./post.css";
 // import img01 from '../../../public/images/facebook-circle.svg'
-
+import LinkedInConnection from "../../components/AccountLinked/linkedin";
 const SocialAccounts = () => {
+  const CLIENT_ID = process.env.REACT_APP_LINKEDIN_REDIRECT_URI;
+  console.log("linkedin client id is ", CLIENT_ID);
+  console.log("facebook id: ", process.env.REACT_APP_FACEBOOK_ID);
   const [fbData, setFbData] = useState({
     isLoggedIn: false,
     name: "",
@@ -42,7 +45,7 @@ const SocialAccounts = () => {
                 aria-expanded="false"
               >
                 <i className="fa-solid fa-chart-simple icon-drowp-status" />
-               Status
+                Status
               </button>
               <ul
                 className="dropdown-menu dropdown-menu-custom"
@@ -50,8 +53,8 @@ const SocialAccounts = () => {
               >
                 <li>
                   <a className="dropdown-item dropdown-item-custom" href="#">
-                    <i className="fa-solid fa-chart-simple icon-drowp-status" /> All
-                    Accounts
+                    <i className="fa-solid fa-chart-simple icon-drowp-status" />{" "}
+                    All Accounts
                   </a>
                 </li>
                 <li>
@@ -91,8 +94,8 @@ const SocialAccounts = () => {
               >
                 <li>
                   <a className="dropdown-item dropdown-item-custom" href="#">
-                    <i className="fa-solid fa-user-group icon-drowp-status" /> All
-                    Accounts
+                    <i className="fa-solid fa-user-group icon-drowp-status" />{" "}
+                    All Accounts
                   </a>
                 </li>
                 <li>
@@ -140,7 +143,7 @@ const SocialAccounts = () => {
                 <li>
                   <a className="dropdown-item dropdown-item-custom" href="#">
                     <i className="fa-brands fa-square-google-plus" />
-                     Google
+                    Google
                   </a>
                 </li>
               </ul>
@@ -187,36 +190,49 @@ const SocialAccounts = () => {
             <div className="row">
               {/* Facebook Section */}
               <div className="col-12">
-              <div className="account-connect-custom d-flex  align-items-center">
-                <div className="d-flex align-items-center text-light">
-                  <img width={25} src="/images/facebook-circle.svg" alt="Facebook" />
-                  <h5>Facebook</h5>
-                </div>
-                <span className="bar-span-custom" />
-                {/* Facebook Login Button */}
-                {fbData.isLoggedIn ? (
-                  <div className="d-flex align-items-center">
-                    <img src={fbData.picture} alt={fbData.name} width="40" height="40" />
-                    <h6 className="ms-3">Welcome, {fbData.name}!</h6>
+                <div className="account-connect-custom d-flex  align-items-center">
+                  <div className="d-flex align-items-center text-light">
+                    <img
+                      width={25}
+                      src="/images/facebook-circle.svg"
+                      alt="Facebook"
+                    />
+                    <h5>Facebook</h5>
                   </div>
-                ) : (
-                  <FacebookLogin
-                    appId="446027444501615"
-                    autoLoad={false}
-                    fields="name,email,picture"
-                    callback={responseFacebook}
-                    icon="fa-facebook"
-                    textButton="Connect"
-                    cssClass="btn btn-primary btn-connect-custom"
-                  />
-                )}
+                  <span className="bar-span-custom" />
+                  {/* Facebook Login Button */}
+                  {fbData.isLoggedIn ? (
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={fbData.picture}
+                        alt={fbData.name}
+                        width="40"
+                        height="40"
+                      />
+                      <h6 className="ms-3">Welcome, {fbData.name}!</h6>
+                    </div>
+                  ) : (
+                    <FacebookLogin
+                      appId={process.env.REACT_APP_FACEBOOK_ID}
+                      autoLoad={false}
+                      fields="name,email,picture"
+                      callback={responseFacebook}
+                      icon="fa-facebook"
+                      textButton="Connect"
+                      cssClass="btn btn-primary btn-connect-custom"
+                    />
+                  )}
+                </div>
               </div>
-            </div>
               {/* Instgram */}
               <div className="col-12">
                 <div className="account-connect-custom d-flex  align-items-center">
                   <div className="d-flex align-items-center text-light">
-                    <img src="/images/instagram-circle.svg " width={25} alt="" />
+                    <img
+                      src="/images/instagram-circle.svg "
+                      width={25}
+                      alt=""
+                    />
                     <h5>Instagram</h5>
                   </div>{" "}
                   <span className="bar-span-custom" />
@@ -249,8 +265,8 @@ const SocialAccounts = () => {
                           >
                             Instagram <br />
                             <a href="#" className="btn btn icon-ins-follow">
-                              <i className="fa-solid fa-thumbs-up" /> Follow Us On
-                              Instagram{" "}
+                              <i className="fa-solid fa-thumbs-up" /> Follow Us
+                              On Instagram{" "}
                             </a>
                           </h5>
                           <button
@@ -267,7 +283,11 @@ const SocialAccounts = () => {
                                 <div className="fb-icon">
                                   <i className="bi bi-person-circle" />
                                 </div>
-                                <img width={30} src="/images/insta.svg" alt="" />
+                                <img
+                                  width={30}
+                                  src="/images/insta.svg"
+                                  alt=""
+                                />
                                 <div className="fb-title">Professionals</div>
                               </div>
                             </div>
@@ -286,14 +306,15 @@ const SocialAccounts = () => {
                     <h5>Linkedin</h5>
                   </div>{" "}
                   <span className="bar-span-custom" />
-                  <button
+                  {/* <button
                     type="button"
                     className="btn btn-primary btn btn-connect-custom"
                     data-bs-toggle="modal"
                     data-bs-target="#linkedin-model"
                   >
                     Connect
-                  </button>
+                  </button> */}
+                  <LinkedInConnection />
                 </div>
               </div>
               <div
@@ -355,7 +376,11 @@ const SocialAccounts = () => {
                         <div className="col-md-3 col-6 fb-model-se-col">
                           <div className="fb-icon-box">
                             <div className="fb-icon">
-                              <img width={30} src="/images/location.svg" alt="" />
+                              <img
+                                width={30}
+                                src="/images/location.svg"
+                                alt=""
+                              />
                             </div>
                             <div className="fb-title">Location</div>
                           </div>
@@ -415,8 +440,8 @@ const SocialAccounts = () => {
                           >
                             Twitter <br />
                             <a href="#" className="btn btn icon-ins-follow">
-                              <i className="fa-solid fa-thumbs-up" /> Follow Us On
-                              Twitter/X{" "}
+                              <i className="fa-solid fa-thumbs-up" /> Follow Us
+                              On Twitter/X{" "}
                             </a>
                           </h5>
                           <button
@@ -433,7 +458,11 @@ const SocialAccounts = () => {
                                 <div className="fb-icon">
                                   <i className="bi bi-person-circle" />
                                 </div>
-                                <img width={30} src="/images/twitter.svg" alt="" />
+                                <img
+                                  width={30}
+                                  src="/images/twitter.svg"
+                                  alt=""
+                                />
                                 <div className="fb-title">Professionals</div>
                               </div>
                             </div>
@@ -481,8 +510,8 @@ const SocialAccounts = () => {
                           >
                             Instagram <br />
                             <a href="#" className="btn btn icon-ins-follow">
-                              <i className="fa-solid fa-thumbs-up" /> Follow Us On
-                              Tiktok{" "}
+                              <i className="fa-solid fa-thumbs-up" /> Follow Us
+                              On Tiktok{" "}
                             </a>
                           </h5>
                           <button
@@ -499,7 +528,11 @@ const SocialAccounts = () => {
                                 <div className="fb-icon">
                                   <i className="bi bi-person-circle" />
                                 </div>
-                                <img width={30} src="/images/tiktok.svg" alt="" />
+                                <img
+                                  width={30}
+                                  src="/images/tiktok.svg"
+                                  alt=""
+                                />
                                 <div className="fb-title">Tiktok</div>
                               </div>
                             </div>
@@ -547,8 +580,8 @@ const SocialAccounts = () => {
                           >
                             Pinterest <br />
                             <a href="#" className="btn btn icon-ins-follow">
-                              <i className="fa-solid fa-thumbs-up" /> Follow Us On
-                              Pinterest{" "}
+                              <i className="fa-solid fa-thumbs-up" /> Follow Us
+                              On Pinterest{" "}
                             </a>
                           </h5>
                           <button
@@ -565,7 +598,11 @@ const SocialAccounts = () => {
                                 <div className="fb-icon">
                                   <i className="bi bi-person-circle" />
                                 </div>
-                                <img width={30} src="/images/pinterest.svg" alt="" />
+                                <img
+                                  width={30}
+                                  src="/images/pinterest.svg"
+                                  alt=""
+                                />
                                 <div className="fb-title">Pinterest</div>
                               </div>
                             </div>
@@ -580,7 +617,11 @@ const SocialAccounts = () => {
               <div className="col-12">
                 <div className="account-connect-custom d-flex  align-items-center">
                   <div className="d-flex align-items-center text-light">
-                    <img src="/images/mybusiness-circle.svg " width={25} alt="" />
+                    <img
+                      src="/images/mybusiness-circle.svg "
+                      width={25}
+                      alt=""
+                    />
                     <h5>Google</h5>
                   </div>{" "}
                   <span className="bar-span-custom" />
@@ -631,7 +672,11 @@ const SocialAccounts = () => {
                                 <div className="fb-icon">
                                   <i className="bi bi-person-circle" />
                                 </div>
-                                <img width={30} src="/images/mybusiness.svg" alt="" />
+                                <img
+                                  width={30}
+                                  src="/images/mybusiness.svg"
+                                  alt=""
+                                />
                                 <div className="fb-title">Professionals</div>
                               </div>
                             </div>
@@ -719,10 +764,8 @@ const SocialAccounts = () => {
           </div>
         </div>
       </main>
-
     </>
-
-  )
+  );
 };
 
 export default SocialAccounts;

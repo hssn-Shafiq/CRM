@@ -16,16 +16,15 @@ const LinkedIn = ({ editorContent, uploadedMedia, icon }) => {
             <img key={index} src={img} alt={`Media ${index + 1}`} className="linkedin-column-image" />
           ))}
         </div>
-
         {/* Second row with three images */}
         <div className="linkedin-second-row">
           {maxImages.slice(2).map((img, index) => {
             if (index === maxImages.slice(2).length - 1 && extraImagesCount > 0) {
               // If this is the last image and there are extra images, show the +n overlay
               return (
-                <div className="image-overlay-container" key={index}>
+                <div className="media-overlay-container" key={index}>
                   <img src={img} alt={`Media ${index + 3}`} className="linkedin-column-image w-100" />
-                  <div className="image-overlay">
+                  <div className="media-overlay">
                     +{extraImagesCount}
                   </div>
                 </div>
