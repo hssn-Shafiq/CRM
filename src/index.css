@@ -48,6 +48,7 @@
   min-width: 230px !important;
   width: 230px !important;
   border-right: 2px solid hsla(225, 6%, 26%, 1);
+  max-height: 100vh !important;
 }
 .ant-layout-sider-collapsed {
   flex: 0 0 80px !important;

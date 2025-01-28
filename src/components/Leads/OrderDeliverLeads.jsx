@@ -1,7 +1,7 @@
 // src/Components/Leads/OrderDeliverLeads.jsx
 import React from 'react';
 
-const OrderDeliverLeads = ({leads}) => {
+const OrderDeliverLeads = ({ leads }) => {
     return (
         <div className="table-responsive">
             <table className="table table-hover align-middle leads-table">
@@ -50,7 +50,7 @@ const OrderDeliverLeads = ({leads}) => {
                     )}
                 </tbody>
             </table>
-            
+
         </div>
     );
 };

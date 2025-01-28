@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL; // Getting the API base URL from the .env file
-const ACCESS_TOKEN = process.env.REACT_APP_SHOPIFY_ACCESS_TOKEN; // Shopify Access Token from .env
-const BEARER_TOKEN = process.env.REACT_APP_BEARER_TOKEN; // Bearer Token from .env
+const API_URL = process.env.REACT_APP_API_URL; 
+const ACCESS_TOKEN = process.env.REACT_APP_SHOPIFY_ACCESS_TOKEN; 
+const BEARER_TOKEN = process.env.REACT_APP_BEARER_TOKEN; 
 
-// Fetch Orders
+
 export const fetchOrders = async () => {
   try {
     const response = await fetch(`${API_URL}/orders`, {
@@ -29,7 +29,7 @@ export const fetchOrders = async () => {
   }
 };
 
-// Fetch Single Order by ID
+
 export const fetchSingleOrders = async ({
   orderId
 }) => {
@@ -56,7 +56,7 @@ export const fetchSingleOrders = async ({
   }
 };
 
-// Fetch Customers
+
 export const fetchCustomers = async () => {
   try {
     const response = await fetch(`${API_URL}/customers`, {
@@ -81,7 +81,7 @@ export const fetchCustomers = async () => {
   }
 };
 
-// Fetch Total Sales Data
+
 export const fetchSalesData = async () => {
   const orders = await fetchOrders();
   const totalSales = orders.reduce((total, order) => total + parseFloat(order.total_price), 0);
@@ -89,43 +89,49 @@ export const fetchSalesData = async () => {
 };
 
 
-export const fetchShopifyCustomers = async (filterType) => {
-  let url = `${API_URL}/customers`;
 
-  // Modify URL for specific customer filters
+
+export const fetchShopifyCustomers = async (filterType) => {
+  const API_URL = "https://crmapi.alayaarts.com/api/shopify";
+  const BEARER_TOKEN = "1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc";
+
+  const customersEndpoint = `${API_URL}/customers`;
+  const checkoutsEndpoint = `${API_URL}/getCheckout`;
+
+  let url = "";
   switch (filterType) {
-    case "purchased_once":
-      url += "?orders_count=1"; // Customers who have purchased exactly once
-      break;
-    case "purchased_more_than_once":
-      url += "?orders_count[gt]=1"; // Customers who have purchased more than once
-      break;
-    case "not_purchased":
-      url += "?orders_count=0"; // Customers who have not purchased anything
-      break;
-    case "email_subscribers":
-      url += "?email_marketing_consent[state]=subscribed"; // Customers who are email subscribers
-      break;
-    case "not_subscribed":
-      url += "?email_marketing_consent[state]=not_subscribed"; // Customers who are not subscribed to emails
-      break;
-    case "abandoned_checkout":
-      url += "?state=abandoned"; // Customers with abandoned checkouts
-      break;
-    default:
-      break;
+      case "purchased_once":
+          url = `${customersEndpoint}?orders_count=1`;
+          break;
+      case "purchased_more_than_once":
+          url = `${customersEndpoint}?orders_count[gt]=1`;
+          break;
+      case "not_purchased":
+          url = `${customersEndpoint}?orders_count=0`;
+          break;
+      case "email_subscribers":
+          url = `${customersEndpoint}?email_marketing_consent[state]=subscribed`;
+          break;
+      case "not_subscribed":
+          url = `${customersEndpoint}?email_marketing_consent[state]=not_subscribed`;
+          break;
+      case "orders_count":
+          url = `${checkoutsEndpoint}?state=orders_count`;
+          break;
+      default:
+          throw new Error("Invalid filter type provided");
   }
 
   try {
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${BEARER_TOKEN}`,
-      },
-    });
+      const response = await axios.get(url, {
+          headers: {
+              Authorization: `Bearer ${BEARER_TOKEN}`,
+          },
+      });
 
-    return response.data.data; // Assuming the data is in the 'data' field
+      return response.data.data;
   } catch (error) {
-    console.error("Error fetching data: ", error);
-    throw error;
+      console.error("Error fetching data: ", error);
+      throw error;
   }
 };
