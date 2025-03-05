@@ -1,4 +1,3 @@
-// src/components/CustomerSegments.js
 import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import { Form, Modal, Button } from "react-bootstrap";
@@ -13,22 +12,19 @@ const CustomerSegments = () => {
     const [selectedSegment, setSelectedSegment] = useState("");
     const [showModal, setShowModal] = useState(false);
 
-    // Sample data for the table (segments)
     const segments = [
         { id: 1, name: "Customers who have purchased at least once", filter: "purchased_once", lastActivity: "Created on Jul 11, 2023", author: img1 },
         { id: 2, name: "Email subscribers", filter: "email_subscribers", lastActivity: "Edited on May 12, 2023", author: img1 },
         { id: 3, name: "Customers who have purchased more than once", filter: "purchased_more_than_once", lastActivity: "Edited on May 12, 2023", author: img1 },
         { id: 4, name: "Customers who haven't purchased", filter: "not_purchased", lastActivity: "Edited on May 12, 2023", author: img1 },
-        { id: 5, name: "Filed checkout (Abandoned checkouts)", filter: "abandoned_checkout", lastActivity: "Edited on May 12, 2023", author: img1 },
+        { id: 5, name: "Filed checkout (Abandoned checkouts)", filter: "orders_count", lastActivity: "Edited on May 12, 2023", author: img1 },
         { id: 6, name: "Customers not subscribed", filter: "not_subscribed", lastActivity: "Edited on Oct 10, 2023", author: img1 },
     ];
 
-    // Filter segments based on search input
     const filteredSegments = segments.filter((item) =>
         item.name.toLowerCase().includes(filterText.toLowerCase())
     );
 
-    // Define conditional columns based on the selected segment
     const getCustomerColumns = () => {
         switch (selectedSegment) {
             case "Customers who have purchased at least once":
@@ -61,13 +57,13 @@ const CustomerSegments = () => {
                     { name: "Name", selector: (row) => `${row.first_name || ""} ${row.last_name || ""}`, sortable: true },
                     { name: "Checkout State", selector: (row) => row.state || "No State", sortable: true },
                     { name: "Total Spent", selector: (row) => `$${row.total_spent || "0.00"}`, sortable: true },
+                    { name: "Email", selector: (row) => row.email || "Not Found", sortable: true },
                 ];
             default:
                 return [];
         }
     };
 
-    // Handle row click to fetch data based on selected segment and show modal
     const handleRowClick = async (row) => {
         setSelectedSegment(row.name);
         setLoading(true);
@@ -75,7 +71,25 @@ const CustomerSegments = () => {
 
         try {
             const data = await fetchShopifyCustomers(row.filter);
-            setCustomers(data);
+
+            const filteredData = data.filter((customer) => {
+                if (row.filter === "purchased_once") {
+                    return customer.orders_count === 1;
+                } else if (row.filter === "purchased_more_than_once") {
+                    return customer.orders_count > 1;
+                } else if (row.filter === "not_purchased") {
+                    return customer.orders_count === 0;
+                } else if (row.filter === "email_subscribers") {
+                    return customer.email_marketing_consent?.state === "subscribed";
+                } else if (row.filter === "not_subscribed") {
+                    return customer.email_marketing_consent?.state === "not_subscribed";
+                } else if (row.filter === "orders_count") {
+                    return customer.state === "orders_count";
+                }
+                return true;
+            });
+
+            setCustomers(filteredData);
         } catch (error) {
             console.error("Error fetching customer data", error);
         } finally {
@@ -150,7 +164,6 @@ const CustomerSegments = () => {
                 }}
             />
 
-            {/* Modal to display customer data */}
             <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
                 <Modal.Header closeButton>
                     <Modal.Title>Customer Data for: {selectedSegment}</Modal.Title>

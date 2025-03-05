@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-body{
+body {
   font-family: "Poppins", sans-serif;
 }
 
@@ -30,57 +30,68 @@ body{
   background: var(--bg-main) !important;
 
 }
-.w-500{
+
+.w-500 {
   max-width: 498px !important;
   width: 100% !important;
 }
-.w-600{
+
+.w-600 {
   max-width: 550px !important;
   width: 100% !important;
 }
+
 input:focus-visible {
   outline-offset: 0px;
   outline: none;
   box-shadow: none;
 }
 
-.filters .input-group{
+.filters .input-group {
   margin-top: 10px;
 }
-.form-control.bg-main.border-main::placeholder{
+
+.form-control.bg-main.border-main::placeholder {
   color: rgba(255, 255, 255, 0.532);
   font-size: 14px;
 }
+
 .green {
   color: var(--color-47ad24);
   font-size: 14px;
   font-family: Roboto !important;
 }
+
 .red {
   color: var(--color-212529);
   font-size: 14px;
   font-family: Roboto !important;
 }
+
 .quill {
   background-color: white;
   border-radius: 10px;
 
-  .ql-toolbar.ql-snow + .ql-container.ql-snow{
+  .ql-toolbar.ql-snow+.ql-container.ql-snow {
     border: none;
     padding: 10px;
   }
-  .ql-toolbar.ql-snow{
+
+  .ql-toolbar.ql-snow {
     border: none;
     border-bottom: 1px solid black;
   }
 }
-.quill::placeholder{
+
+.quill::placeholder {
   color: white;
 }
+
 .form-control {
   box-shadow: none;
   border-color: var(--color-c3d4da);
 }
+
 .title {
   font: 28px;
   font-family: Roboto !important;
@@ -92,20 +103,24 @@ input:focus-visible {
   font-family: Roboto !important;
   color: var(--color-212529);
 }
+
 .desc {
   font: 14px;
   font-family: Roboto !important;
   color: var(--color-828599);
 }
-.main.ant-layout-content.css-dev-only-do-not-override-1rqnfsa{
+
+.main.ant-layout-content.css-dev-only-do-not-override-1rqnfsa {
   margin: 0px !important;
   min-height: auto !important;
   padding: 20px !important;
 }
-.dropdown-menu{
+
+.dropdown-menu {
   box-shadow: 0px 0px 3px black;
 }
-.dropdown-menu .dropdown-item{
+
+.dropdown-menu .dropdown-item {
   font-size: 14px;
   font-weight: 500;
   font-family: var(--font-family);
@@ -113,15 +128,20 @@ input:focus-visible {
   border-bottom: 1px solid rgba(0, 0, 0, 0.349);
   transition: all .3s ease;
 }
-.dropdown-menu .dropdown-item:hover{
+
+.dropdown-menu .dropdown-item:hover {
   background-color: var(--bg-main);
   color: white;
 }
 
-:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark, :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark>.ant-menu, .ant-layout-sider-children{
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark,
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark>.ant-menu,
+.ant-layout-sider-children {
   background: #1d1e22 !important;
 }
-:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark .ant-menu-item-selected, :where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark>.ant-menu .ant-menu-item-selected{
+
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark .ant-menu-item-selected,
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark>.ant-menu .ant-menu-item-selected {
   background: #2c2f36;
   color: white;
   font-size: 16px;
@@ -131,18 +151,24 @@ input:focus-visible {
   transition: all .3s ease;
 }
 
-:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark .ant-menu-item:hover, .ant-menu-submenu.ant-menu-submenu-inline:hover, .ant-layout-sider-children .ant-menu-item:hover, .ant-menu-item.ant-menu-item-selected{
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-menu-dark .ant-menu-item:hover,
+.ant-menu-submenu.ant-menu-submenu-inline:hover,
+.ant-layout-sider-children .ant-menu-item:hover,
+.ant-menu-item.ant-menu-item-selected {
   background: #2c2f36 !important;
   border-right: 4px solid #4cbf9d;
   border-radius: 0px;
 }
-.ant-menu-submenu .ant-menu-submenu-title .ant-menu-item-icon{
+
+.ant-menu-submenu .ant-menu-submenu-title .ant-menu-item-icon {
   font-size: 1rem !important;
 }
-.ant-menu-title-content{
+
+.ant-menu-title-content {
   font-size: 1rem;
 }
-.modal-content{
+
+.modal-content {
   background-color: var(--color-212529) !important;
   color: var(--color-c3d4da) !important;
 }
