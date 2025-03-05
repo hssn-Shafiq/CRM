@@ -1,14 +1,35 @@
+// LinkedInCallback.js (Frontend)
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+// Backend API configuration
 const api = axios.create({
-  baseURL: "https://crmapi.alayaarts.com/api",
+  baseURL: "http://localhost:5000",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
+  withCredentials: true
 });
+
+// LinkedIn OAuth configuration
+const LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization";
+const CLIENT_ID = "786fnf34f2gbey";
+const REDIRECT_URI = "http://localhost:3000/auth/linkedin/callback"; // Frontend callback URL
+
+// Function to initiate LinkedIn login
+export const initiateLinkedInLogin = () => {
+  const params = new URLSearchParams({
+    response_type: 'code',
+    client_id: CLIENT_ID,
+    redirect_uri: REDIRECT_URI,
+    scope: 'openid profile email',
+    state: Math.random().toString(36).substring(7)
+  });
+
+  window.location.href = `${LINKEDIN_AUTH_URL}?${params.toString()}`;
+};
 
 const LinkedInCallback = () => {
   const navigate = useNavigate();
@@ -20,23 +41,20 @@ const LinkedInCallback = () => {
 
       if (code) {
         try {
-          const response = await api.post('/auth/linkedin/callback', {
+          // Send the code to your backend
+          const response = await api.post('/api/auth/linkedin', { 
             code,
-            redirect_uri: 'http://localhost:3000/auth/linkedin/callback'
-          }, {
-            withCredentials: true
+            redirect_uri: REDIRECT_URI
           });
 
           if (response.data.success) {
             localStorage.setItem('linkedin_token', response.data.access_token);
-            navigate('/dashboard');
+            localStorage.setItem('user_data', JSON.stringify(response.data.user));
+            navigate('/admin/SchedulePosts/SocialAccounts');
           }
         } catch (error) {
           console.error('Error during LinkedIn callback:', error);
-          if (error.response) {
-            console.error('Error details:', error.response.data);
-          }
-          navigate('/login');
+          navigate('/admin/SchedulePosts/SocialAccounts');
         }
       }
     };
