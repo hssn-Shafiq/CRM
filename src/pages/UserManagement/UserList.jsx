@@ -13,6 +13,7 @@ import UserTable from "./UserTable";
 import RoleModal from "./RoleModal";
 import UserRoles from "./UserRoles";
 import Loader from "../../components/Loader";
+import { fetchAndStoreRolePermissions } from "../../utils/permissions";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -30,23 +31,6 @@ const UserList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRoleFilter, setSelectedRoleFilter] = useState("");
 
-  const allRoutes = [
-    "Dashboard",
-    "Users",
-    "User-List",
-    "User-Permission",
-    "SchedulePosts",
-    "Create-Post",
-    "Calendar",
-    "Shopify",
-    "OrderList",
-    "Delivered-Orders",
-    "Cancelled-Orders",
-    "Marketing",
-    "Settings",
-    "RegisteredUser",
-  ];
-
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "Users"), (snapshot) => {
       setUsers(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
@@ -57,10 +41,15 @@ const UserList = () => {
 
   useEffect(() => {
     const fetchRoles = async () => {
-      const rolesSnapshot = await getDocs(collection(db, "userRole"));
-      setRoles(
-        rolesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-      );
+      try {
+        const rolesSnapshot = await getDocs(collection(db, "userRole"));
+        setRoles(
+          rolesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+        );
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+        toast.error("Error loading roles.");
+      }
     };
     fetchRoles();
   }, []);
@@ -75,8 +64,15 @@ const UserList = () => {
       await updateDoc(doc(db, "Users", userId), {
         Role: selectedRoles[userId],
       });
+      
+      // Refresh permissions in localStorage
+      if (typeof fetchAndStoreRolePermissions === 'function') {
+        await fetchAndStoreRolePermissions();
+      }
+      
       toast.success("Role updated successfully!");
     } catch (error) {
+      console.error("Error updating role:", error);
       toast.error("Error updating role.");
     } finally {
       setRowLoading((prev) => ({ ...prev, [userId]: false }));
@@ -87,37 +83,77 @@ const UserList = () => {
     try {
       await deleteDoc(doc(db, "Users", userId));
       toast.success("User deleted.");
-    } catch {
+    } catch (error) {
+      console.error("Error deleting user:", error);
       toast.error("Failed to delete user.");
     }
   };
 
+  const handleRouteChange = (route, checked) => {
+    setSelectedRoutes((prev) =>
+      checked 
+        ? [...prev, route] 
+        : prev.filter((r) => r !== route)
+    );
+  };
+
   const handleAddOrUpdateRole = async () => {
     try {
+      // Add validation to prevent empty role names
+      if (!name.trim()) {
+        toast.error("Role name cannot be empty");
+        return;
+      }
+
       if (isEditMode) {
         await updateDoc(doc(db, "userRole", editRoleId), {
           roleName: name,
-          routes: selectedRoutes,
+          routes: selectedRoutes, // This will be an array
         });
       } else {
         await addUserRole("userRole", {
           roleName: name,
-          routes: selectedRoutes,
+          routes: selectedRoutes, // This will be an array
         });
       }
+      
+      // Refresh the roles list
+      const rolesSnapshot = await getDocs(collection(db, "userRole"));
+      setRoles(rolesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      
+      // After saving, refresh permissions in localStorage
+      if (typeof fetchAndStoreRolePermissions === 'function') {
+        await fetchAndStoreRolePermissions();
+      }
+      
       toast.success("Role saved successfully!");
-    } catch {
+      setShowRoleModal(false);
+      setName("");
+      setSelectedRoutes([]);
+    } catch (error) {
+      console.error("Error saving role:", error);
       toast.error("Error saving role.");
     }
-    setShowRoleModal(false);
-    setName("");
-    setSelectedRoutes([]);
   };
 
   const handleEditRole = (role) => {
     setEditRoleId(role.id);
     setName(role.roleName);
-    setSelectedRoutes(role.routes);
+    
+    // Make sure we handle both array and object formats for routes
+    if (role.routes) {
+      if (Array.isArray(role.routes)) {
+        setSelectedRoutes(role.routes);
+      } else if (typeof role.routes === 'object') {
+        // Convert from object format (if it's in that format)
+        setSelectedRoutes(Object.values(role.routes));
+      } else {
+        setSelectedRoutes([]);
+      }
+    } else {
+      setSelectedRoutes([]);
+    }
+    
     setIsEditMode(true);
     setShowRoleModal(true);
   };
@@ -125,17 +161,74 @@ const UserList = () => {
   const handleDeleteRole = async (roleId) => {
     try {
       await deleteDoc(doc(db, "userRole", roleId));
+      
+      // Refresh the roles list
+      const rolesSnapshot = await getDocs(collection(db, "userRole"));
+      setRoles(rolesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      
+      // Update permissions in localStorage
+      if (typeof fetchAndStoreRolePermissions === 'function') {
+        await fetchAndStoreRolePermissions();
+      }
+      
       toast.success("Role deleted.");
-    } catch {
+    } catch (error) {
+      console.error("Error deleting role:", error);
       toast.error("Error deleting role.");
+    }
+  };
+
+  // Add a temporary function to fix existing role formats
+  const convertRoleRoutes = async () => {
+    setLoading(true);
+    try {
+      const rolesSnapshot = await getDocs(collection(db, "userRole"));
+      
+      let updatedCount = 0;
+      for (const roleDoc of rolesSnapshot.docs) {
+        const roleData = roleDoc.data();
+        const routes = roleData.routes;
+        
+        // If routes is an object with numeric keys, convert it to an array
+        if (routes && typeof routes === 'object' && !Array.isArray(routes)) {
+          const routesArray = Object.values(routes);
+          
+          // Update the document with the array
+          await updateDoc(doc(db, "userRole", roleDoc.id), {
+            routes: routesArray
+          });
+          
+          updatedCount++;
+        }
+      }
+      
+      if (updatedCount > 0) {
+        // Refresh the roles list
+        const updatedRolesSnapshot = await getDocs(collection(db, "userRole"));
+        setRoles(updatedRolesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+        
+        // Update permissions in localStorage
+        if (typeof fetchAndStoreRolePermissions === 'function') {
+          await fetchAndStoreRolePermissions();
+        }
+        
+        toast.success(`Fixed data format for ${updatedCount} roles!`);
+      } else {
+        toast.info("All roles are already in the correct format.");
+      }
+    } catch (error) {
+      console.error("Error converting routes:", error);
+      toast.error("Error updating roles: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Filter and Search Logic
   const filteredUsers = users.filter((user) => {
     const matchesSearch = searchTerm
-      ? user.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.userEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ? user.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.userEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (user.Role || "User").toLowerCase().includes(searchTerm.toLowerCase())
       : true;
 
@@ -181,6 +274,12 @@ const UserList = () => {
       <div className="container table-responsive border-0 mt-3">
         <div className="new_role d-flex justify-content-end mb-3 text-end">
           <button
+            className="btn btn-warning mx-2"
+            onClick={convertRoleRoutes}
+          >
+            Fix Role Format
+          </button>
+          <button
             className="btn btn-primary"
             onClick={() => {
               setIsEditMode(false); // Reset to add mode
@@ -216,13 +315,8 @@ const UserList = () => {
         setName={setName}
         selectedRoutes={selectedRoutes}
         setSelectedRoutes={setSelectedRoutes}
-        handleRouteChange={(route, checked) =>
-          setSelectedRoutes((prev) =>
-            checked ? [...prev, route] : prev.filter((r) => r !== route)
-          )
-        }
+        handleRouteChange={handleRouteChange}
         handleAddOrUpdateRole={handleAddOrUpdateRole}
-        allRoutes={allRoutes}
       />
       <UserRoles
         show={showManageRoles}

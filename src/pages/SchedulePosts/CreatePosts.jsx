@@ -17,8 +17,8 @@ const CreatePosts = () => {
       <main>
         <div className="create-post mb-5">
           <div className="container mt-4">
-            <div className="row create-post-row d-flex flex-row">
-              <div className="w-600">
+            <div className="row create-post-row d-flex flex-row ">
+              <div className="w-600 create-post-editor">
                 <div className="card">
                   <div className="card-body">
                     <div className="d-flex align-items-center justify-content-start gap-2 mb-3">
@@ -38,7 +38,7 @@ const CreatePosts = () => {
                   </div>
                 </div>
               </div>
-              <div className=" w-500 ps-0">
+              <div className=" w-500 ps-0 create-post-preview">
                 <ReviewPost selectedPlatforms={selectedPlatforms}   editorContent={editorContent}
                   uploadedMedia={uploadedMedia} 
                   availablemediaType={availableMediaType}

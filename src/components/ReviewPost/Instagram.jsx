@@ -1,10 +1,8 @@
-// InstagramPreview.js
 import React from "react";
-// import './InstagramPreview.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BiShare, BiHeart, BiChat } from "react-icons/bi";
+import TruncateText from "../../Services/TruncateText";
 
-// Function for Instagram Post Preview
 export const InstagramPostPreview = ({
   editorContent,
   uploadedMedia,
@@ -16,6 +14,7 @@ export const InstagramPostPreview = ({
   return (
     <>
       <div className="instagram-post-preview border rounded mb-4">
+        
         <div className="post-header d-flex align-items-center mb-2">
           <img
             src="/images/Profile.jpg"
@@ -24,6 +23,7 @@ export const InstagramPostPreview = ({
           />
           <span className="username fw-bold">hssn-shafiq</span>
         </div>
+
         <div className="post-image mb-2">
           {images.length > 0 ? (
             <img
@@ -35,7 +35,8 @@ export const InstagramPostPreview = ({
             " "
           )}
         </div>
-        <div className="post-icon">
+
+        <div className="post-icon d-flex gap-3 align-items-center">
           {images.length > 0 ? (
             <>
               <BiHeart title="like" />
@@ -46,18 +47,20 @@ export const InstagramPostPreview = ({
             " "
           )}
         </div>
+
         <div className="post-caption mt-2">
-          <p
-            className="m-0 px-3"
-            dangerouslySetInnerHTML={{ __html: editorContent }}
+          <TruncateText
+            text={editorContent || "A caption below"}
+            maxLength={50}
           />
         </div>
+
       </div>
     </>
   );
 };
 
-// Function for Instagram Reel Preview
+
 export const InstagramReelPreview = () => (
   <div className="instagram-reel-preview border rounded p-3 mb-4">
     <div className="reel-header d-flex align-items-center mb-2">

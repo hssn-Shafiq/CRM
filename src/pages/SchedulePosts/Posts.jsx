@@ -6,6 +6,7 @@ import {
   FaCheckCircle,
   FaInstagram,
   FaCalendar,
+  FaTwitter,
 } from "react-icons/fa"; // Import FaCheckCircle for the tick mark
 import "./post.css";
 import { Link } from "react-router-dom";
@@ -13,6 +14,9 @@ import axios from "axios";
 import { ClipLoader } from "react-spinners"; // Import a spinner loader from react-spinners
 import PostCreation from "../../components/PostCreation"; // Import PostCreation for editing post
 import { Modal } from "react-bootstrap";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css"; // Import tooltip styles
+
 const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -118,6 +122,45 @@ const Posts = () => {
       alert("Error deleting post");
     } finally {
       setLoading(false); // Hide loader after deletion
+    }
+  };
+
+  const renderIcon = (platform) => {
+    switch (platform.toLowerCase()) {
+      case "facebook":
+        return (
+          <FaFacebook
+            key={platform}
+            data-tooltip-id="tooltip"
+            data-tooltip-content="scheduled for facebook"
+          />
+        );
+      case "instagram":
+        return (
+          <FaInstagram
+            key={platform}
+            data-tooltip-id="tooltip"
+            data-tooltip-content="scheduled for instagram"
+          />
+        );
+      case "twitter":
+        return (
+          <FaTwitter
+            key={platform}
+            data-tooltip-id="tooltip"
+            data-tooltip-content="scheduled for Twitter"
+          />
+        );
+      case "linkedin":
+        return (
+          <FaLinkedin
+            key={platform}
+            data-tooltip-id="tooltip"
+            data-tooltip-content="scheduled for LinkedIn"
+          />
+        );
+      default:
+        return null;
     }
   };
 
@@ -231,16 +274,6 @@ const Posts = () => {
                 <option value="Scheduled">Scheduled</option>
                 <option value="Published">Published</option>
               </select>
-              <div className="form-check form-switch w-30 ms-3">
-                <label className="form-check-label" htmlFor="gridViewSwitch">
-                  Grid view
-                </label>
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="gridViewSwitch"
-                />
-              </div>
             </div>
 
             {/* Loader */}
@@ -257,20 +290,28 @@ const Posts = () => {
                     className="card bg-main text-white border-main soical_post_editable mb-3"
                   >
                     <div className="card-body">
-                      <div className="d-flex align-items-center mb-2">
-                        <img
-                          src="/images/profile.jpg"
-                          width={40}
-                          height={40}
-                          alt="profile"
-                          style={{ objectPosition: "top" }}
-                          className="rounded-circle me-2 object-fit-cover"
-                        />
-                        <div>
-                          <h5 className="card-title mb-0">Hassan Shafiq</h5>
-                          <small className="text-secondary">
-                            {post.user_id ? `By User ID ${post.user_id}` : ""}
-                          </small>
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <div className="source-data d-flex align-items-center">
+                          <img
+                            src="/images/profile.jpg"
+                            width={40}
+                            height={40}
+                            alt="profile"
+                            style={{ objectPosition: "top" }}
+                            className="rounded-circle me-2 object-fit-cover"
+                          />
+                          <div>
+                            <h5 className="card-title mb-0">Hassan Shafiq</h5>
+                            <small className="text-secondary">
+                              {post.user_id ? `By User ID ${post.user_id}` : ""}
+                            </small>
+                          </div>
+                        </div>
+                        <div className="source-icons d-flex align-items-center gap-3 pe-4">
+                          {post.platform.map((platform) =>
+                            renderIcon(platform)
+                          )}
+                          <Tooltip id="tooltip" place="top" effect="solid" />
                         </div>
                       </div>
                       <p className="card-text">{post.caption}</p>
@@ -287,20 +328,17 @@ const Posts = () => {
                             />
                           ))}
                       </div>
-                      <p className="text-secondary">
-                        Platforms: {post.platform.join(", ")}
-                      </p>
                       <div className="d-flex justify-content-between align-items-center">
-                        <span className="text-secondary">
+                        <div className="text-secondary d-flex align-items-center gap-2">
                           Scheduled for{" "}
                           <span
-                            className="border-main p-1 px-2 rounded-3"
+                            className="border-main p-1 px-2 rounded-3 d-flex align-items-center gap-2"
                             style={{ cursor: "pointer" }}
                           >
                             <FaCalendar />{" "}
                             {new Date(post.scheduled_for).toLocaleString()}
                           </span>
-                        </span>
+                        </div>
                         <div className="d-flex">
                           <button
                             className="btn btn-outline-danger me-2"
@@ -334,16 +372,13 @@ const Posts = () => {
         show={showEditModal}
         onHide={() => setShowEditModal(false)}
         size="xl"
-        backdrop='static'
+        backdrop="static"
         centered
       >
         <Modal.Header closeButton>
           <Modal.Title>Edit Post</Modal.Title>
         </Modal.Header>
-        <Modal.Body 
-        className="bg-main"
-        
-        >
+        <Modal.Body className="bg-main">
           {selectedPost && (
             <PostCreation
               post={selectedPost} // Pass selected post data

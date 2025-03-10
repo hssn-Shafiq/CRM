@@ -1,4 +1,5 @@
 import React from "react";
+import TruncateText from "../../Services/TruncateText";
 
 const TikTok = ({ editorContent, uploadedMedia, icon }) => {
   const { images = [], videos = [] } = uploadedMedia || {};
@@ -24,9 +25,15 @@ const TikTok = ({ editorContent, uploadedMedia, icon }) => {
             <div className="tiktok-post-preview-caption isBold">
               Hassan Shafiq
             </div>
-            <div className="tiktok-post-preview-caption"  dangerouslySetInnerHTML={{ __html: editorContent }} />
+            <div className="tiktok-post-preview-caption">
+              <TruncateText
+                text={editorContent || "A caption below"}
+                maxLength={60}
+                color="light ps-0"
+              />
+            </div>
             <div className="tiktok-post-preview-music u-align-children-vertically">
-            <i class="fa-solid fa-music"></i>
+              <i class="fa-solid fa-music"></i>
               <span className="tiktok-post-preview-song">
                 <marquee direction="left">
                   original sound - Hassan Shafiq
