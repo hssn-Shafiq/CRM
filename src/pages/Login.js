@@ -7,6 +7,7 @@ import { db } from "../firebase/Config";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { query, where, getDocs, collection } from "firebase/firestore";
 import { storeUserToLocalStorage } from "../utils/localstorage";
+import { fetchAndStoreRolePermissions } from "../utils/permissions";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -30,6 +31,7 @@ const Login = () => {
 
       const user = userCredentails.user;
       console.log("user id is ", user.uid);
+      
       // Query Firestore where the uid field matches user.uid
       const userQuery = query(
         collection(db, "Users"),
@@ -39,6 +41,7 @@ const Login = () => {
 
       if (!querySnapshot.empty) {
         const userData = querySnapshot.docs[0].data(); // Get the first matching document
+        const userDocId = querySnapshot.docs[0].id; // Get the document ID
 
         // Store user details in localStorage
         storeUserToLocalStorage({
@@ -46,17 +49,29 @@ const Login = () => {
           userName: userData.userName,
           uid: userData.uid,
           profileImageUrl: userData.profileImageUrl,
+          Role: userData.Role || "User", // Make sure Role is included
+          id: userDocId // Store the Firestore document ID
         });
 
-        // Check if the user is an admin
-        if (userData.Role !== "User") {
-          toast.success("Welcome admin");
+        // Fetch and store role permissions
+        await fetchAndStoreRolePermissions();
+
+        // Check if the user is an admin or has any role
+        if (userData.Role && userData.Role !== "User") {
+          toast.success(`Welcome ${userData.Role}`);
+          loginForm.reset();
+          setTimeout(() => {
+            navigate("/admin");
+          }, 1000);
+        } else if (userData.Role === "User") {
+          // If you want regular users to still access the app with limited permissions
+          toast.success("Welcome to the dashboard");
           loginForm.reset();
           setTimeout(() => {
             navigate("/admin");
           }, 1000);
         } else {
-          toast.error("You are not authorized as admin.");
+          toast.error("You are not authorized. Please contact an administrator.");
         }
       } else {
         toast.error("User not found.");

@@ -1,65 +1,104 @@
+// LinkedInConnection.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
+// Constants
 const CLIENT_ID = "786fnf34f2gbey";
-const REDIRECT_URI = "http://localhost:3000/auth/linkedin/callback";
-const AUTH_URL = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(
-  REDIRECT_URI
-)}&scope=openid%20profile%20email`;
+const REDIRECT_URI = encodeURIComponent(
+  "http://localhost:3000/auth/linkedin/callback"
+);
+const SCOPES = encodeURIComponent("openid profile email ");
+const AUTH_URL = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPES}&state=${Math.random().toString(36).substring(7)}`;
+
+// API configuration
+const api = axios.create({
+  baseURL: "http://localhost:5000",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Add request/response interceptors for debugging
+api.interceptors.request.use((request) => {
+  console.log("API Request:", {
+    url: request.url,
+    method: request.method,
+    data: request.data,
+    headers: request.headers,
+  });
+  return request;
+});
+
+api.interceptors.response.use(
+  (response) => {
+    console.log("API Response:", {
+      status: response.status,
+      data: response.data,
+    });
+    return response;
+  },
+  (error) => {
+    console.error("API Error:", {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
+    return Promise.reject(error);
+  }
+);
 
 const LinkedInConnection = () => {
   const navigate = useNavigate();
   const [accessToken, setAccessToken] = useState(
-    () => localStorage.getItem("linkedin_access_token") || ""
+    localStorage.getItem("linkedin_access_token") || ""
   );
-  const [profile, setProfile] = useState(() => {
-    const savedProfile = localStorage.getItem("linkedin_profile");
-    return savedProfile ? JSON.parse(savedProfile) : null;
-  });
-  const [postContent, setPostContent] = useState("");
-  const [message, setMessage] = useState("");
+  const [profile, setProfile] = useState(null);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchAccessToken = async (code) => {
+    setIsLoading(true);
+    setError("");
+    console.log("Initiating token exchange with code:", code);
+
     try {
-      const response = await fetch(
-        "http://localhost:5000/auth/linkedin/token",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code }),
-        }
-      );
-
-      const data = await response.json();
-      setAccessToken(data.access_token);
-      localStorage.setItem("linkedin_access_token", data.access_token);
-      await fetchUserProfile(data.access_token);
-
-      // After successful authentication, redirect to home page
-      navigate('/admin/SchedulePosts/SocialAccounts');
-    } catch (error) {
-      console.error("Error fetching access token:", error);
-      handleLogout(); // Clear data if there's an error
-      navigate('/admin/SchedulePosts/SocialAccounts');
-    }
-  };
-
-  const fetchUserProfile = async (token) => {
-    try {
-      const response = await fetch("https://api.linkedin.com/v2/userinfo", {
-        headers: { Authorization: `Bearer ${token}` },
+      // Changed endpoint to match your server route
+      const response = await api.post("/auth/linkedin/token", {
+        code,
+        redirect_uri: REDIRECT_URI, // Send unencoded redirect_uri
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch profile");
-      }
+      console.log("Token exchange successful:", response.data);
 
-      const data = await response.json();
-      setProfile(data);
-      localStorage.setItem("linkedin_profile", JSON.stringify(data));
+      if (response.data.access_token) {
+        setAccessToken(response.data.access_token);
+        localStorage.setItem(
+          "linkedin_access_token",
+          response.data.access_token
+        );
+
+        // If we have user data, save it
+        if (response.data.user) {
+          setProfile(response.data.user);
+          localStorage.setItem(
+            "linkedin_profile",
+            JSON.stringify(response.data.user)
+          );
+        }
+
+        navigate("/admin/SchedulePosts/SocialAccounts");
+      } else {
+        throw new Error("No access token received");
+      }
     } catch (error) {
-      console.error("Error fetching user profile:", error);
-      handleLogout(); // Clear data if there's an error
+      console.error("Token exchange failed:", error);
+      setError(
+        error.response?.data?.message || "Failed to connect with LinkedIn"
+      );
+      handleLogout();
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -68,99 +107,98 @@ const LinkedInConnection = () => {
     setProfile(null);
     localStorage.removeItem("linkedin_access_token");
     localStorage.removeItem("linkedin_profile");
+    // setMessage("");
   };
 
   useEffect(() => {
-    // Check if we have a stored token but no profile
-    if (accessToken && !profile) {
-      fetchUserProfile(accessToken);
-    }
-
-    // Handle the OAuth callback
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
+    const error = urlParams.get("error");
+    const errorDescription = urlParams.get("error_description");
+
+    console.log("URL Parameters:", {
+      code,
+      error,
+      errorDescription,
+    });
+
+    if (error) {
+      setError(`LinkedIn Error: ${errorDescription || error}`);
+      navigate("/admin/SchedulePosts/SocialAccounts");
+      return;
+    }
+
     if (code) {
       fetchAccessToken(code);
-      // Clean up the URL
+      // Clean up URL
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, [accessToken]);
+  }, [navigate]);
 
-  const handlePost = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/linkedin/post", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ accessToken, content: postContent }),
-      });
+  // const handlePost = async () => {
+  //   if (!postContent.trim()) {
+  //     setMessage("Please enter content to post");
+  //     return;
+  //   }
 
-      if (!response.ok) {
-        throw new Error("Failed to create post");
-      }
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await api.post("/api/linkedin/post", {
+  //       accessToken,
+  //       content: postContent
+  //     });
 
-      const data = await response.json();
-      setMessage("Post created successfully");
-      setPostContent(""); // Clear the post content after successful posting
-    } catch (error) {
-      console.error("Error posting to LinkedIn:", error);
-      if (error.message.includes("401")) {
-        handleLogout(); // Token might be expired
-        setMessage("Session expired. Please login again.");
-      } else {
-        setMessage("Failed to create post");
-      }
-    }
-  };
-
-  // Validate token on component mount
-  useEffect(() => {
-    if (accessToken) {
-      // Verify the token is still valid
-      fetch("https://api.linkedin.com/v2/userinfo", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Invalid token");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setProfile(data);
-          localStorage.setItem("linkedin_profile", JSON.stringify(data));
-        })
-        .catch(() => {
-          handleLogout(); // Clear invalid token
-        });
-    }
-  }, []);
+  //     if (response.data.success) {
+  //       setMessage("Post created successfully");
+  //       setPostContent("");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error posting to LinkedIn:", error);
+  //     if (error.response?.status === 401) {
+  //       setMessage("Session expired. Please login again.");
+  //       handleLogout();
+  //     } else {
+  //       setMessage("Failed to create post. Please try again.");
+  //     }
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
-    <div className="linkedin-integration">
-      <h1>LinkedIn Integration</h1>
-
-      {!accessToken ? (
-        <a href={AUTH_URL}>
-          <button>Connect LinkedIn</button>
-        </a>
-      ) : (
-        <div>
-          <div className="profile-section">
-            <h2>Welcome, {profile?.name}</h2>
-            <button onClick={handleLogout} className="logout-button">
-              Logout
-            </button>
-          </div>
-          <textarea
-            placeholder="Write something to post..."
-            value={postContent}
-            onChange={(e) => setPostContent(e.target.value)}
-          />
-          <button onClick={handlePost}>Post to LinkedIn</button>
+    <div className="linkedin-integration p-4">
+      <h1 className="text-2xl font-bold mb-4">LinkedIn Integration</h1>
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
         </div>
       )}
 
-      {message && <p>{message}</p>}
+      {isLoading ? (
+        <div className="text-center py-4">
+          <p>Connecting to LinkedIn...</p>
+        </div>
+      ) : !accessToken ? (
+        <a href={AUTH_URL} className="inline-block">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Connect LinkedIn
+          </button>
+        </a>
+      ) : (
+        <div className="connected-view">
+          {profile && (
+            <div className="profile-section mb-4">
+              <h2 className="text-xl">Welcome, {profile.name}</h2>
+              <button
+                onClick={handleLogout}
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2"
+              >
+                Disconnect LinkedIn
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

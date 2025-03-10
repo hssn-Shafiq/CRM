@@ -3,14 +3,18 @@
 * {
   font-family: poppins, sans-serif;
 }
-.bg-dark-bl{
+
+.bg-dark-bl {
   background: #292929;
 }
-.bg-warning{
+
+.bg-warning {
   background: red !important;
   transition: all .5s ease-in-out;
 }
-.btn,button{
+
+.btn,
+button {
   background: rgb(2, 143, 194);
   border: none !important;
   font-family: poppins;
@@ -18,10 +22,17 @@
   transition: all .5s ease-in-out;
 
 }
-.btn:hover, button:hover{
+
+a {
+  text-decoration: none;
+}
+
+/* .btn:hover,
+button:hover {
   background: #1890ff;
 
-}
+} */
+
 .trigger {
   padding: 0 24px;
   font-size: 18px;
@@ -37,61 +48,162 @@
 .logo {
   height: 32px;
   margin: 16px;
-  background:#212529 !important;
+  background: #212529 !important;
 }
-.ant-layout {
+
+/* Main layout container */
+.ant-layout.ant-layout-has-sider.css-dev-only-do-not-override-qnu6hi {
+  display: flex;
   min-height: 100vh;
 }
-.ant-layout-sider {
+
+/* Sidebar styling */
+.ant-layout-sider.ant-layout-sider-dark {
   flex: 0 0 230px !important;
   max-width: 230px !important;
   min-width: 230px !important;
   width: 230px !important;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1000;
   border-right: 2px solid hsla(225, 6%, 26%, 1);
-  max-height: 100vh !important;
+  transition: all 0.2s;
 }
-.ant-layout-sider-collapsed {
+
+/* Sidebar children container */
+.ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  /* Prevent content from spilling out */
+}
+
+/* Logo container */
+.logo.d-flex.align-items-center.justify-content-center {
+  padding: 16px 0;
+  flex-shrink: 0;
+  /* Prevent logo from shrinking */
+}
+
+/* Menu container - this is where we add the scrolling */
+.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-dark.bg-main.css-dev-only-do-not-override-qnu6hi {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 24px;
+  /* Add some bottom padding for better scrolling experience */
+}
+
+/* Menu items */
+.ant-menu-item,
+.ant-menu-submenu.ant-menu-submenu-inline {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Main content area */
+.ant-layout.site-layout {
+  margin-left: 230px;
+  transition: margin-left 0.2s;
+  width: calc(100% - 230px);
+}
+
+/* Collapsed state */
+.ant-layout-sider.ant-layout-sider-dark.ant-layout-sider-collapsed {
   flex: 0 0 80px !important;
   max-width: 80px !important;
   min-width: 80px !important;
   width: 80px !important;
 }
+
+/* Adjust main content when sidebar is collapsed */
+.ant-layout-sider-collapsed+.ant-layout.site-layout,
+.ant-layout.site-layout.collapsed-content {
+  margin-left: 80px;
+  width: calc(100% - 80px);
+}
+
+/* Handle menu item display in collapsed state */
+.ant-layout-sider-collapsed .ant-menu-item .ant-menu-item-icon,
+.ant-layout-sider-collapsed .ant-menu-submenu-title .ant-menu-item-icon {
+  margin-right: 0;
+}
+
+/* Fix for menu items with padding */
+.ant-layout-sider-collapsed .ant-menu-item[style*="padding-left"] {
+  padding-left: 24px !important;
+}
+
+.ant-menu.ant-menu-root.ant-menu-inline::-webkit-scrollbar {
+  width: 10px;
+  /* width of vertical scrollbar */
+}
+
+.ant-menu.ant-menu-root.ant-menu-inline::-webkit-scrollbar-track {
+  background: #555;
+  /* scrollbar track */
+}
+
+.ant-menu.ant-menu-root.ant-menu-inline::-webkit-scrollbar-thumb {
+  background: var(--color-212529);
+  /* scrollbar handle */
+  border-radius: 03px;
+}
+
+.ant-menu.ant-menu-root.ant-menu-inline::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  /* scrollbar handle on hover */
+}
+
+:where(.css-dev-only-do-not-override-qnu6hi).ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline,
+:where(.css-dev-only-do-not-override-qnu6hi).ant-menu-dark>.ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+  background-color: #151414;
+}
+
 .sm-logo {
   display: none;
 }
 
-
-
 .ant-layout-sider-collapsed .sm-logo {
   display: block;
 }
+
 .ant-layout-sider-collapsed .lg-logo {
   display: none;
 }
+
 .logo {
   background-color: #212529;
   margin: 0;
   height: 64px;
 }
-.main.ant-layout-content.css-dev-only-do-not-override-1rqnfsa{
+
+.main.ant-layout-content.css-dev-only-do-not-override-1rqnfsa {
   margin: 0px !important;
   min-height: auto !important;
   padding: 20px !important;
 }
+
 main {
   /* height: 85vh; */
   overflow-y: scroll;
   /* background-color: transparent !important; */
   color: white;
 }
+
 main::-webkit-scrollbar {
   width: 0px;
 }
-.page-parent{
+
+.page-parent {
   margin: 2rem 0rem;
 }
 
-.page-title{
+.page-title {
   font-weight: 700;
   font-family: poppins;
   letter-spacing: 1.1px;
@@ -101,7 +213,8 @@ main::-webkit-scrollbar {
   color: white;
   position: relative;
 }
-.page-title::before{
+
+.page-title::before {
   content: "";
   width: 120px;
   height: 4px;
@@ -109,32 +222,38 @@ main::-webkit-scrollbar {
   position: absolute;
   bottom: 0;
 }
+
 .ant-menu-title-content {
   font-size: 16px;
 }
+
 .ant-layout-header h5 {
   line-height: 20px;
   font-size: 14px;
 }
+
 .ant-layout-header p {
   line-height: 20px;
   font-size: 13px;
 }
+
 .ant-layout-header div .badge {
   top: 16px;
   right: -6px;
 }
+
 .error {
   color: red;
   font-size: 12px;
 }
 
 /* login page  */
-.admin-signup-container{
+.admin-signup-container {
   background-image: url(../public/images/registerbg.jpg) !important;
 
 }
-.admin-login-container{
+
+.admin-login-container {
   width: 100%;
   height: 100vh;
   display: flex;
@@ -146,6 +265,7 @@ main::-webkit-scrollbar {
   background-size: cover;
   background-position: center;
 }
+
 .admin-login-container .content img {
   margin: 41px 0px;
 }
@@ -155,37 +275,45 @@ main::-webkit-scrollbar {
   width: 16px;
   height: auto;
 } */
-.admin-login-container .content{
+.admin-login-container .content {
   width: 30%;
   background: white;
   box-shadow: 0px 0px 7px -1px black;
   border-radius: 10px;
   padding: 20px;
 }
-@media (max-width:850px){
-  
-  .admin-login-container .content{
+
+@media (max-width:850px) {
+
+  .admin-login-container .content {
     width: 40%;
   }
 }
-@media (max-width:450px){
-  
-  .admin-login-container .content{
+
+@media (max-width:450px) {
+
+  .admin-login-container .content {
     width: 100%;
   }
-  .admin-login-container .content img{
+
+  .admin-login-container .content img {
     width: 180px;
   }
 }
+
 /* login page end */
 
 /* dashboard designing */
 
-.stats-container .stats-box{
+.stats-container .stats-box {
   box-shadow: -1px 2px 4px black, inset 0px 0px 8px black;
 
-  .sub-title{
+  .sub-title {
     color: white;
     font-family: "Poppins", sans-serif !important;
   }
+}
+
+.ql-editor {
+  padding: 0px !important;
 }

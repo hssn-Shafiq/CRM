@@ -7,7 +7,6 @@ body {
 :root {
   --color-212529: #151719;
   --color-ffd333: #f56308;
-  --color-47ad24: #47ad24;
   --color-e52e2e: #e52e2e;
   --color-828599: #828599;
   --color-3d464d: #ed464d;
@@ -32,12 +31,12 @@ body {
 }
 
 .w-500 {
-  max-width: 498px !important;
+  max-width: 490px !important;
   width: 100% !important;
 }
 
 .w-600 {
-  max-width: 550px !important;
+  max-width: 530px !important;
   width: 100% !important;
 }
 
@@ -171,4 +170,22 @@ input:focus-visible {
 .modal-content {
   background-color: var(--color-212529) !important;
   color: var(--color-c3d4da) !important;
+}
+
+
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  max-width: calc(100% - 30px);
+  vertical-align: middle;
+  padding: 0px 1rem;
+}
+
+.more-text {
+  color: rgba(255, 255, 255, 0.546);
+  font-weight: bold;
+  cursor: default;
+  /* margin-left: 5px; */
 }

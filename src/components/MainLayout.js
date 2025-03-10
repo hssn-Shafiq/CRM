@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { DeliveredProcedureOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import {
+  DeliveredProcedureOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from "@ant-design/icons";
 import {
   AiOutlineDashboard,
   AiOutlineSetting,
@@ -26,7 +30,10 @@ import { BiUser } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { getAuth } from "firebase/auth";
 import { getUserFromLocalStorage } from "../utils/localstorage";
-import { getRoutePermissions } from "../utils/permissions";
+import {
+  fetchAndStoreRolePermissions,
+  getFilteredMenuItems,
+} from "../utils/permissions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -34,18 +41,28 @@ const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
   const [userData, setUserData] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
+  const [menuItems, setMenuItems] = useState([]);
   const navigate = useNavigate();
   const auth = getAuth();
 
   useEffect(() => {
     const user = getUserFromLocalStorage();
     setUserData(user);
+
+    // Refresh role permissions when component mounts
+    const refreshPermissions = async () => {
+      await fetchAndStoreRolePermissions();
+      generateMenuItems(user);
+    };
+
+    refreshPermissions();
   }, []);
 
   const handleLogout = () => {
     auth.signOut();
     localStorage.removeItem("user");
-    toast.success("you are logged out");
+    localStorage.removeItem("rolePermissions");
+    toast.success("You are logged out");
 
     setTimeout(() => {
       navigate("/");
@@ -54,12 +71,11 @@ const MainLayout = () => {
 
   const handleMenuClick = ({ key }) => {
     if (key === "signout") {
-      auth.signOut();
+      handleLogout();
       return;
     }
 
     if (key !== "") {
-
       const user = auth.currentUser;
       if (!user) {
         toast.error("Please login to continue");
@@ -73,161 +89,153 @@ const MainLayout = () => {
     navigate(key);
   };
 
+  const generateMenuItems = (user) => {
+    const defaultMenuItems = [
+      {
+        key: "",
+        icon: <AiOutlineDashboard className="fs-4" />,
+        label: "Dashboard",
+      },
+      {
+        key: "Users",
+        icon: <FaUser className="fs-4" />,
+        label: "Manage Users",
+        children: [
+          {
+            key: "Users/User-List",
+            icon: <AiOutlineUserSwitch className="fs-4" />,
+            label: "Users Role Management",
+          },
+        ],
+      },
+      {
+        key: "SchedulePosts",
+        icon: <FaCopy className="fs-4" />,
+        label: "Schedule Posts",
+        children: [
+          {
+            key: "SchedulePosts/Create-Post",
+            icon: <FaPlusCircle className="fs-4" />,
+            label: "Create Post",
+          },
+          {
+            key: "SchedulePosts/Calendar",
+            icon: <FaCalendar className="fs-4" />,
+            label: "Calendar",
+          },
+          {
+            key: "SchedulePosts/Posts",
+            icon: <FaCopy className="fs-4" />,
+            label: "Posts",
+          },
+          {
+            key: "SchedulePosts/SocialAccounts",
+            icon: <FaUsers className="fs-4" />,
+            label: "Social Accounts",
+          },
+        ],
+      },
+      {
+        key: "Marketing",
+        icon: <FaUsers className="fs-4" />,
+        label: "Marketing",
+        children: [
+          {
+            key: "Contacts",
+            icon: <BsDatabaseSlash className="fs-4" />,
+            label: "Contacts",
+          },
+          {
+            key: "Emails",
+            icon: <FaMailBulk className="fs-4" />,
+            label: "Emails",
+          },
+          {
+            key: "Templates",
+            icon: <FaLayerGroup className="fs-4" />,
+            label: "Templates",
+          },
+          {
+            key: "CustomerSegments",
+            icon: <FaUserFriends className="fs-4" />,
+            label: "Segments",
+          },
+        ],
+      },
+      {
+        key: "Shopify",
+        icon: <FaShopify className="fs-4" />,
+        label: "Shopify Store",
+        children: [
+          {
+            key: "Shopify/OrderList",
+            icon: <FaFirstOrder className="fs-4" />,
+            label: "Orders",
+          },
+          {
+            key: "Shopify/Delivered-Orders",
+            icon: <DeliveredProcedureOutlined className="fs-4" />,
+            label: "Delivered Orders",
+          },
+          {
+            key: "Shopify/Cancelled-Orders",
+            icon: <FaTrash className="fs-4" />,
+            label: "Cancelled Orders",
+          },
+        ],
+      },
+      {
+        key: "Settings",
+        icon: <AiOutlineSetting className="fs-4" />,
+        label: "Settings",
+      },
+      {
+        key: "RegisteredUser",
+        icon: <BiUser className="fs-4" />,
+        label: "Registered User",
+      },
+    ];
+
+    // If user doesn't exist yet, just show the default menu
+    if (!user) {
+      setMenuItems(defaultMenuItems);
+      return;
+    }
+
+    // Filter menu items based on user role
+    const userRole = user.Role || "User";
+    const filteredItems = getFilteredMenuItems(defaultMenuItems, userRole);
+    setMenuItems(filteredItems);
+  };
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  // Filter the menu items based on the user's role
-
-
-
   return (
-
     <>
-
-
-      <Layout /* onContextMenu={(e) => e.preventDefault()} */>
-        
-          <Sider trigger={null} collapsible collapsed={collapsed}>
-            <div className="logo d-flex align-items-center justify-content-center">
-              <h2 className="text-white fs-5 text-center py-2 mb-0 ">
-                <span className="sm-logo">
-                  <img src="/images/af1-short.png" alt="crm-logo" width={80} />
-                </span>
-                <span className="lg-logo">
-                  {" "}
-                  <img src="/images/af1-white.png" alt="crm-logo" width={140} />
-                </span>
-              </h2>
-            </div>
-            <Menu
-              theme="dark"
-              mode="inline"
-              className="bg-main"
-              defaultSelectedKeys={[""]}
-              onClick={handleMenuClick}
-              items={[
-                {
-                  key: "",
-                  icon: <AiOutlineDashboard className="fs-4" />,
-                  label: "Dashboard",
-                },
-
-                {
-                  key: "Manage Users",
-                  icon: <FaUser className="fs-4" />,
-                  label: "Manage Users",
-                  children: [
-                    {
-                      key: "Users/User-List",
-                      icon: <AiOutlineUserSwitch className="fs-4" />,
-                      label: "Users Role Management",
-                    },
-                    // {
-                    //   key: "Users/User-Role",
-                    //   icon: <AiOutlineUserSwitch className="fs-4" />,
-                    //   label: "User Role",
-                    // },
-                    // {
-                    //   key: "Users/User-Permission",
-                    //   icon: <FaUserLock className="fs-4" />,
-                    //   label: "User Permission",
-                    // },
-                  ],
-                },
-
-                {
-                  key: "Schedule Posts",
-                  icon: <FaCopy className="fs-4" />,
-                  label: "Schedule Posts",
-                  children: [
-                    {
-                      key: "SchedulePosts/Create-Post",
-                      icon: <FaPlusCircle className="fs-4" />,
-                      label: "Create Post",
-                    },
-                    {
-                      key: "SchedulePosts/Calendar",
-                      icon: <FaCalendar className="fs-4" />,
-                      label: "Calendar",
-                    },
-                    {
-                      key: "SchedulePosts/Posts",
-                      icon: <FaCopy className="fs-4" />,
-                      label: "Posts",
-                    },
-                    {
-                      key: "SchedulePosts/SocialAccounts",
-                      icon: <FaUsers className="fs-4" />,
-                      label: "Social Accounts",
-                    },
-                  ],
-                },
-                {
-                  key: "Track Leads",
-                  icon: <FaUsers className="fs-4" />,
-                  label: "Marketing",
-                  children: [
-                    {
-                      key: "Contacts",
-                      icon: <BsDatabaseSlash className="fs-4" />,
-                      label: "Contacts",
-                    },
-                    {
-                      key: "Emails",
-                      icon: <FaMailBulk className="fs-4" />,
-                      label: "Emails",
-                    },
-                    {
-                      key: "Templates",
-                      icon: <FaLayerGroup className="fs-4" />,
-                      label: "Templates",
-                    },
-                    {
-                      key: "CustomerSegments",
-                      icon: <FaUserFriends className="fs-4" />,
-                      label: "Segments",
-                    },
-                  ],
-                },
-                {
-                  key: "Shopify Store",
-                  icon: <FaShopify className="fs-4" />,
-                  label: "Shopify Store",
-                  children: [
-                    {
-                      key: "Shopify/OrderList",
-                      icon: <FaFirstOrder className="fs-4" />,
-                      label: "Orders",
-                    },
-
-                    {
-                      key: "Shopify/Delivered-Orders",
-                      icon: <DeliveredProcedureOutlined className="fs-4" />,
-                      label: "Delivered Orders",
-                    },
-                    {
-                      key: "Shopify/Cancelled-Orders",
-                      icon: <FaTrash className="fs-4" />,
-                      label: "Cancelled Orders",
-                    },
-                  ],
-                },
-                {
-                  key: "settings",
-                  icon: <AiOutlineSetting className="fs-4" />,
-                  label: "Settings",
-                },
-
-                {
-                  key: "RegisteredUser",
-                  icon: <BiUser className="fs-4" />,
-                  label: "Registered User",
-                },
-              ]}
-            />
-          </Sider>
+      <Layout>
+        <Sider trigger={null} collapsible collapsed={collapsed}>
+          <div className="logo d-flex align-items-center justify-content-center">
+            <h2 className="text-white fs-5 text-center py-2 mb-0 ">
+              <span className="sm-logo">
+                <img src="/images/af1-short.png" alt="crm-logo" width={80} />
+              </span>
+              <span className="lg-logo">
+                {" "}
+                <img src="/images/af1-white.png" alt="crm-logo" width={140} />
+              </span>
+            </h2>
+          </div>
+          <Menu
+            theme="dark"
+            mode="inline"
+            className="bg-main"
+            defaultSelectedKeys={[""]}
+            onClick={handleMenuClick}
+            items={menuItems}
+          />
+        </Sider>
         <Layout className="site-layout">
           <Header
             className="sticky-top d-flex justify-content-between ps-1 pe-5"
@@ -257,7 +265,11 @@ const MainLayout = () => {
                   <img
                     width={45}
                     height={45}
-                    src={userData ? userData.profileImageUrl : "/images/af1-short.png"}
+                    src={
+                      userData
+                        ? userData.profileImageUrl
+                        : "/images/af1-short.png"
+                    }
                     className="object-fit-cover rounded-circle border-main border-2 border-secondary"
                     alt=""
                   />
@@ -271,7 +283,7 @@ const MainLayout = () => {
                       aria-expanded="false"
                     >
                       <h5 className="mb-0">{userData.userName || "Admin"}</h5>
-                      <p className="mb-0">{userData.email}</p>
+                      <p className="mb-0">{userData.userEmail}</p>
                     </div>
                     <div
                       className="dropdown-menu"
@@ -336,9 +348,8 @@ const MainLayout = () => {
             <Outlet />
           </Content>
         </Layout>
-      </Layout >
+      </Layout>
     </>
-
   );
 };
 export default MainLayout;

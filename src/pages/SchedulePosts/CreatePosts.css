@@ -1,17 +1,21 @@
 .create-post {
-    .create-post-row{
-        width: 1050px;
+    .create-post-row {
+        width: 1020px;
         padding: 0px 0px;
+        position: relative;
     }
-    .card{
+
+    .card {
         border: none;
         border-radius: 10px;
     }
-    .card-body{
-        background-color:  var(--bg-main);
+
+    .card-body {
+        background-color: var(--bg-main);
         border-radius: 10px;
         border: 1px solid rgb(62, 64, 70);
     }
+
     .btn-social-media {
         margin-right: 10px;
     }
@@ -33,19 +37,24 @@
         color: white;
 
     }
-    .btn-labels{
+
+    .btn-labels {
         background: var(--color-red);
     }
-    .top-button{
+
+    .top-button {
         background: var(--color-red);
     }
-    .btn-emoji:hover{
+
+    .btn-emoji:hover {
         background: var(--color-red);
     }
-    .btn-publish{
+
+    .btn-publish {
         color: gray;
     }
-    .btn-publish:hover{
+
+    .btn-publish:hover {
         background-color: var(--color-red);
         color: #000;
     }
@@ -92,15 +101,41 @@
         left: 6px;
         z-index: 1;
     }
-    .writing_post{
+
+    .writing_post {
         position: relative;
     }
-    .writing_post .btn-emoji{
+
+    .writing_post .btn-emoji {
         position: absolute;
         top: 4px;
         right: 0;
     }
 
+}
+
+/* Make the entire post editor fixed */
+.create-post-editor {
+    position: fixed;
+    max-height: 700px;
+}
+
+/* Make the form area scrollable */
+#postForm {
+    max-height: calc(700px - 150px);
+    /* Adjust based on your header/footer heights */
+    overflow-y: auto;
+}
+
+/* If you specifically want the media preview to be scrollable */
+.media-preview-row {
+    max-height: 300px;
+    /* Adjust based on your needs */
+    overflow-y: auto;
+}
+
+.create-post-preview {
+    margin-left: 530px;
 }
 
 .post-card {
@@ -110,6 +145,7 @@
     margin: 20px 0;
     background-color: #191919;
 }
+
 .post-header {
     display: flex;
     align-items: center;
@@ -117,12 +153,14 @@
     padding: 10px;
     border-radius: 10px;
 }
+
 .profile-pic {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
 }
+
 /* .post-content{
     
 
@@ -135,10 +173,12 @@
     justify-content: space-around;
     padding: 10px 0;
 }
+
 .post-actions a {
     text-decoration: none;
     color: #555;
 }
+
 .post-actions a:hover {
     color: var(--color-red);
 }
