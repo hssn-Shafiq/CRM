@@ -30,7 +30,7 @@ const TemplateEditor = () => {
 
     useEffect(() => {
         if (templateFromLocation) {
-            
+
             setTemplateData({
                 name: templateFromLocation.name,
                 subject: templateFromLocation.subject,
@@ -47,14 +47,14 @@ const TemplateEditor = () => {
         }
     }, [location]);
 
-    
+
     React.useEffect(() => {
         if (id) {
             loadTemplate();
         }
     }, [id]);
 
-    
+
     useEffect(() => {
         loadFolders();
     }, []);
@@ -69,9 +69,9 @@ const TemplateEditor = () => {
         }
     };
 
-    
+
     useEffect(() => {
-        
+
         console.log('Initial folder ID from location:', location.state?.folderId);
     }, [location]);
 
@@ -89,7 +89,7 @@ const TemplateEditor = () => {
                 html_content: template.html_content
             });
 
-            
+
             if (template.design_json) {
                 emailEditorRef.current?.editor?.loadDesign(JSON.parse(template.design_json));
             }
@@ -128,7 +128,7 @@ const TemplateEditor = () => {
         setShowFolderModal(true);
     };
 
-    
+
     const handleCreateNewFolder = async () => {
         if (!newFolderName.trim()) {
             toast.warning('Please enter a folder name');
@@ -137,25 +137,25 @@ const TemplateEditor = () => {
 
         try {
             setIsLoading(true);
-            
+
             const folderResponse = await folderApi.createFolder({
                 name: newFolderName,
                 is_active: true,
-                created_by: "2" 
+                created_by: "2"
             });
 
             console.log('New folder created:', folderResponse.data);
 
-            
+
             await loadFolders();
 
-            
+
             const newFolderId = folderResponse.data.id;
 
-            
+
             await saveTemplateToFolder(newFolderId);
 
-            
+
             setNewFolderName('');
 
         } catch (error) {
@@ -172,10 +172,10 @@ const TemplateEditor = () => {
             return;
         }
 
-        
+
         console.log('Selected folder value:', selectedFolder);
 
-        
+
         const folderId = parseInt(selectedFolder);
         if (isNaN(folderId)) {
             console.error('Invalid folder ID:', selectedFolder);
@@ -198,16 +198,16 @@ const TemplateEditor = () => {
             emailEditorRef.current.editor.exportHtml(async (data) => {
                 const { design, html } = data;
 
-                
+
                 const templatePayload = {
                     name: templateData.name,
                     subject: templateData.subject,
                     category: templateData.category,
                     design_json: JSON.stringify(design),
                     html_content: html,
-                    folder_id: folderId,  
+                    folder_id: folderId,
                     is_active: true,
-                    created_by: "2"  
+                    created_by: "2"
                 };
 
                 console.log('Saving template with payload:', templatePayload);
@@ -248,9 +248,9 @@ const TemplateEditor = () => {
                     category: templateData.category,
                     design_json: JSON.stringify(design),
                     html_content: html,
-                    folder_id: null,  
+                    folder_id: null,
                     is_active: true,
-                    created_by: "2"  
+                    created_by: "2"
                 };
 
                 try {
