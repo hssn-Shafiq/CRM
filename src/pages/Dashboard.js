@@ -29,7 +29,7 @@ const Dashboard = () => {
         <DashboardNavbar />
         </div>
           <div className="container mt-4 px-4 px-lg-4   ">
-          <div className="row g-4 g-lg-2">
+          <div className="row g-2 g-lg-2">
         <div className="col-lg-5 col-md-6 col-sm-12 h-100 ">
           <OpportunityStatusCard  />
         </div>
@@ -43,7 +43,7 @@ const Dashboard = () => {
        </div>
        {/* ====second container */}
        <div className="container mt-4 px-4">
-       <div className="row g-4 g-lg-2
+       <div className="row g-2 g-lg-2
        ">
 
         <div className="col-lg-6 col-md-12 col-sm-12 h-100">
