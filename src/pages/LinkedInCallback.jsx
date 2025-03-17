@@ -1,73 +1,110 @@
-// LinkedInCallback.js (Frontend)
-import React, { useEffect } from "react";
+// LinkedInCallback.js
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// Backend API configuration
+// API configuration
 const api = axios.create({
   baseURL: "http://localhost:5000",
   headers: {
     "Content-Type": "application/json",
-    Accept: "application/json",
   },
-  withCredentials: true
 });
-
-// LinkedIn OAuth configuration
-const LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization";
-const CLIENT_ID = "786fnf34f2gbey";
-const REDIRECT_URI = "http://localhost:3000/auth/linkedin/callback"; // Frontend callback URL
-
-// Function to initiate LinkedIn login
-export const initiateLinkedInLogin = () => {
-  const params = new URLSearchParams({
-    response_type: 'code',
-    client_id: CLIENT_ID,
-    redirect_uri: REDIRECT_URI,
-    scope: 'openid profile email',
-    state: Math.random().toString(36).substring(7)
-  });
-
-  window.location.href = `${LINKEDIN_AUTH_URL}?${params.toString()}`;
-};
 
 const LinkedInCallback = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleCallback = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
-
-      if (code) {
-        try {
-          // Send the code to your backend
-          const response = await api.post('/api/auth/linkedin', { 
-            code,
-            redirect_uri: REDIRECT_URI
+      const receivedState = urlParams.get('state');
+      const storedState = localStorage.getItem('linkedin_state');
+      const authError = urlParams.get('error');
+      
+      // Clean up state parameter
+      localStorage.removeItem('linkedin_state');
+      
+      // Handle LinkedIn errors
+      if (authError) {
+        setError(`LinkedIn authentication error: ${urlParams.get('error_description') || authError}`);
+        setLoading(false);
+        return;
+      }
+      
+      // Validate state to prevent CSRF
+      if (!receivedState || receivedState !== storedState) {
+        setError("Invalid authentication state. Please try again.");
+        setLoading(false);
+        return;
+      }
+      
+      if (!code) {
+        setError("Authorization code missing from the callback.");
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        // Important: We now use /api/auth/linkedin endpoint to match our server
+        const response = await api.post('/api/auth/linkedin', {
+          code,
+          redirect_uri: "http://localhost:3000/auth/linkedin/callback" // Must match what was used to get the code
+        });
+        
+        if (response.data.success) {
+          // Store token and user data
+          localStorage.setItem('linkedin_token', response.data.access_token);
+          localStorage.setItem('user_data', JSON.stringify(response.data.user));
+          
+          // Redirect to social accounts page
+          navigate('/admin/SchedulePosts/SocialAccounts', { 
+            replace: true 
           });
-
-          if (response.data.success) {
-            localStorage.setItem('linkedin_token', response.data.access_token);
-            localStorage.setItem('user_data', JSON.stringify(response.data.user));
-            navigate('/admin/SchedulePosts/SocialAccounts');
-          }
-        } catch (error) {
-          console.error('Error during LinkedIn callback:', error);
-          navigate('/admin/SchedulePosts/SocialAccounts');
+        } else {
+          throw new Error(response.data.message || "Failed to authenticate with LinkedIn");
         }
+      } catch (error) {
+        console.error('Error during LinkedIn callback:', error);
+        setError(error.response?.data?.message || error.message || "Authentication failed");
+        setLoading(false);
       }
     };
-
+    
     handleCallback();
   }, [navigate]);
-
+  
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold mb-2">Connecting with LinkedIn</h2>
-        <p>Please wait while we complete the authentication...</p>
-      </div>
+    <div className="d-flex flex-column align-items-center justify-content-center min-vh-50 py-5">
+      {loading ? (
+        <>
+          <div className="spinner-border text-primary mb-3" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <h3 className="mb-2">Connecting with LinkedIn</h3>
+          <p>Please wait while we complete the authentication...</p>
+        </>
+      ) : (
+        <div className="text-center">
+          {error ? (
+            <>
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
+              <button 
+                className="btn btn-primary mt-3"
+                onClick={() => navigate('/admin/SchedulePosts/SocialAccounts')}
+              >
+                Return to Social Accounts
+              </button>
+            </>
+          ) : (
+            <p>Redirecting...</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
