@@ -22,60 +22,58 @@ const Dashboard = () => {
         user="[object Object]"
       >
         <div className="Parent-Dashboard-main-content">
-          {/* Dashboard Navbar */}
+          {" "}
+          {/* Dashboard Navbar */}{" "}
           <div className="parent-Dashboard-Navbar mt-4 ">
             <DashboardNavbar />
-          </div>
+          </div>{" "}
           <div className="container mt-4 px-4 px-lg-4   ">
-            <div className="row g-4 g-lg-2">
+            <div className="row g-2 g-lg-2">
               <div className="col-lg-5 col-md-6 col-sm-12 h-100 ">
                 <OpportunityStatusCard />
-              </div>
+              </div>{" "}
               <div className="col-lg-4 col-md-6 col-sm-12 h-100">
                 <OpportunityValueDashboard />
-              </div>
+              </div>{" "}
               <div className="col-lg-3 col-md-12 col-sm-12 h-100 overflow-hidden">
                 <ConversionRateCard />
-              </div>
-            </div>
-          </div>
-          {/* ====second container */}
+              </div>{" "}
+            </div>{" "}
+          </div>{" "}
+          {/ * === = second container * /}{" "}
           <div className="container mt-4 px-4">
             <div
-              className="row g-4 g-lg-2
-       "
+              className="row g-2 g-lg-2
+        "
             >
               <div className="col-lg-6 col-md-12 col-sm-12 h-100">
                 <SalesFunnelDashboard />
-              </div>
+              </div>{" "}
               <div className="col-lg-6 col-md-12 col-sm-12 h-100">
                 <StageDistributionCard />
               </div>
-            </div>
-          </div>
-          {/* ===end second container */}
-          {/* ====third container */}
+            </div>{" "}
+          </div>{" "}
+          {/* ===end second container */} {/* ====third container */}{" "}
           <div className="container mt-4 px-4">
             <div className="row g-4 g-lg-2">
               <div className="col-lg-6 col-md-6 col-sm-12 h-100">
                 <TaskList />
-              </div>
+              </div>{" "}
               <div className="col-lg-6 col-md-6 col-sm-12 h-100">
                 <ManualActionsComponent />
               </div>
-            </div>
-          </div>
-          {/* ===end third container */}
-          {/* ====Fourth container */}
+            </div>{" "}
+          </div>{" "}
+          {/* ===end third container */} {/* ====Fourth container */}{" "}
           <div className="container mt-4 px-4">
             <div className="row g-4 g-lg-2">
               <div className="col-lg-12 col-md-12 col-sm-12 h-100">
                 <LeadSourceReport />
               </div>
-            </div>
-          </div>
-          {/* ===end Fourth container */}
-          {/* ====Fifth container */}
+            </div>{" "}
+          </div>{" "}
+          {/* ===end Fourth container */} {/* ====Fifth container */}{" "}
           <div className="container mt-4 px-4">
             <div
               className="row g-4 g-lg-2
@@ -84,44 +82,41 @@ const Dashboard = () => {
               <div className="col-lg-12 col-md-12 col-sm-12 h-100">
                 <GoogleAnalyticsReport />
               </div>
-            </div>
-          </div>
-          {/* ===end Fifth container */}
-          {/* ====six container */}
+            </div>{" "}
+          </div>{" "}
+          {/* ===end Fifth container */} {/* ====six container */}{" "}
           <div className="container mt-4 px-4">
             <div className="row g-4 g-lg-2">
               <div className="col-lg-12 col-md-12 col-sm-12 h-100">
                 <GoogleAnalyticsChart />
               </div>
-            </div>
-          </div>
-          {/* ===end six container */}
-          {/* ====six container */}
+            </div>{" "}
+          </div>{" "}
+          {/* ===end six container */} {/* ====six container */}{" "}
           <div className="container mt-4 px-4">
             <div
               className="row g-4 g-lg-2
-         "
+        "
             >
               <div className="col-lg-12 col-md-12 col-sm-12 h-100">
                 <GoogleBusinessProfileDashboard />
               </div>
-            </div>
-          </div>
-          {/* ===end six container */}
-          {/* ====six container */}
+            </div>{" "}
+          </div>{" "}
+          {/* ===end six container */} {/* ====six container */}{" "}
           <div className="container mt-4 px-4 mb-4">
             <div className="row g-4 g-lg-2">
               <div className="col-lg-6 col-md-6 col-sm-12 h-100">
                 <FacebookAdsReport />
-              </div>
+              </div>{" "}
               <div className="col-lg-6 col-md-6 col-sm-12 h-100">
                 <GoogleAdsReport />
               </div>
-            </div>
-          </div>
-          {/* ===end six container */}
-        </div>
-      </div>
+            </div>{" "}
+          </div>{" "}
+          {/* ===end six container */}{" "}
+        </div>{" "}
+      </div>{" "}
     </>
   );
 };

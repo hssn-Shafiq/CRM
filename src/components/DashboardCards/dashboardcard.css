@@ -439,6 +439,13 @@
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
+  
+  .parent-Opportunity-Value .card-body {
+    padding: 34px 20px;
+  }
+  .parent-Opportunity-Value{
+    height: 400px;
+  }
   .parent-Opportunity-Value .card-body {
     padding: 20px 16px;
   }
@@ -449,8 +456,16 @@
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) {
+  .parent-Opportunity-Value .card-body {
+    padding: 28px 20px;
+  }
   .parent-Opportunity-Value .display-6 {
     font-size: 2.25rem;
+  }
+}
+@media (min-width: 991.98px) and (max-width:1156px) {
+  .parent-Opportunity-Value .card-body {
+    padding: 32px 24px;
   }
 }
 
@@ -624,7 +639,13 @@ height: 325px;
     font-size: 2.25rem;
   }
 }
+@media (min-width: 991.98px) and (max-width:1156px) {
+  .parent-conversion-rate .conversion-card-body {
+    padding: 5px 24px;
+    height:fit-content;
 
+  }
+}
 /* Extra large screens */
 @media (min-width: 1224px) {
   .parent-conversion-rate {
@@ -632,7 +653,7 @@ height: 325px;
   }
   
   .parent-conversion-rate .conversion-card-body {
-    padding: 28px 24px;
+    padding: 32px 24px;
   }
   
   .parent-conversion-rate .conversion-display-6 {
