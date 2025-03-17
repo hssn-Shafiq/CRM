@@ -111,14 +111,14 @@ const TemplatePreview = () => {
 
             <div className="template-preview-content">
                 <div className="preview-section">
-                  
+
                     <div
                         className="html-preview"
                         dangerouslySetInnerHTML={{ __html: template.html_content }}
                     />
                 </div>
 
-               
+
             </div>
         </div>
     );

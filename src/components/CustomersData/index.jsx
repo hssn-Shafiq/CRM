@@ -139,11 +139,11 @@ const CustomerData = () => {
                     </td>
                   </tr>
                 )} */}
-                 <tr>
-                    <td colSpan="9" className="text-center">
-                      No leads available
-                    </td>
-                  </tr>
+                <tr>
+                  <td colSpan="9" className="text-center">
+                    No leads available
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -257,9 +257,8 @@ const CustomerData = () => {
               </li>
             ))}
             <li
-              className={`page-item ${
-                currentPage === totalPages && "disabled"
-              }`}
+              className={`page-item ${currentPage === totalPages && "disabled"
+                }`}
             >
               <button
                 className="page-link"
