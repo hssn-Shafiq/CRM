@@ -1,0 +1,78 @@
+/* Customer table styles */
+.leads-table .btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+/* View modal styles */
+.customer-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.modal-header.bg-info {
+  background-color: #17a2b8 !important;
+}
+
+/* Edit modal styles */
+#editCustomerModal .modal-title {
+  font-weight: 600;
+}
+
+/* Filter Header styles */
+.filter-header {
+  background-color: var(--bg-main);
+  color: white;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.lead-type-dropdown .dropdown-item.active {
+  background-color: var(--bg-main);
+  color: white;
+}
+
+.advanced-filters {
+  background-color: var(--bg-main);
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+}
+
+/* SearchBar styles */
+.search-bar .input-group {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.search-bar .form-control:focus {
+  box-shadow: none;
+  border-color: #ced4da;
+}
+
+.search-bar .input-group-text {
+  border-color: #ced4da;
+}
+
+/* Customer table hover effect */
+.leads-table tbody tr:hover {
+  background-color: #f8f9fc;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .customer-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .filter-header {
+    padding: 10px;
+  }
+}
