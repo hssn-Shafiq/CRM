@@ -43,17 +43,17 @@ const Templates = () => {
             // First fetch folders
             const foldersResponse = await folderApi.getFolders();
             const foldersData = foldersResponse.data;
-            
+
             // Fetch all templates
             const allTemplatesResponse = await emailTemplateApi.getAllTemplates();
             const allTemplates = allTemplatesResponse.data;
-            
+
             // Group templates by folder_id
             const foldersWithTemplates = foldersData.map(folder => ({
                 ...folder,
                 templates: allTemplates.filter(template => template.folder_id === folder.id)
             }));
-            
+
             // Add templates without folder (folder_id is null)
             const unfolderedTemplates = allTemplates.filter(template => !template.folder_id);
             if (unfolderedTemplates.length > 0) {
@@ -63,7 +63,7 @@ const Templates = () => {
                     templates: unfolderedTemplates
                 });
             }
-            
+
             setFolders(foldersWithTemplates);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -81,7 +81,7 @@ const Templates = () => {
         switch (option) {
             case "blankTemplate":
                 navigate("/admin/template-editor", {
-                    state: { 
+                    state: {
                         folderId: selectedFolder?.id,
                         isNewTemplate: true
                     }
@@ -109,7 +109,7 @@ const Templates = () => {
                 const newFolderId = response.data.id;
 
                 if (templates.length > 0) {
-                    const updatePromises = templates.map(template => 
+                    const updatePromises = templates.map(template =>
                         emailTemplateApi.updateTemplate(template.id, {
                             ...template,
                             folder_id: newFolderId
@@ -146,14 +146,14 @@ const Templates = () => {
                 const templatesInFolder = folders
                     .find(f => f.id === folderId)
                     ?.templates || [];
-                
+
                 const updatePromises = templatesInFolder.map(template =>
                     emailTemplateApi.updateTemplate(template.id, {
                         ...template,
                         folder_id: null
                     })
                 );
-                
+
                 await Promise.all(updatePromises);
                 await fetchFoldersAndTemplates();
                 setSelectedFolder(null);
@@ -164,14 +164,14 @@ const Templates = () => {
     };
 
     const handleEditTemplate = (template) => {
-        navigate(`/admin/template-editor/${template.id}`, { 
-            state: { 
+        navigate(`/admin/template-editor/${template.id}`, {
+            state: {
                 template: {
                     ...template,
                     folder_id: template.folder_id || selectedFolder?.id
                 },
                 folderId: template.folder_id || selectedFolder?.id
-            } 
+            }
         });
     };
 

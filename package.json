@@ -27,7 +27,7 @@
     "firebase": "^10.9.0",
     "formik": "^2.2.9",
     "jquery": "^3.7.1",
-    "lucide-react": "^0.479.0",
+    "lucide-react": "^0.482.0",
     "mdb-react-ui-kit": "^9.0.0",
     "pdfjs-dist": "^4.6.82",
     "quill-emoji": "^0.2.0",
