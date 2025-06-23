@@ -13,6 +13,8 @@ import { Modal, Button } from "react-bootstrap";
 import DatePicker from "./DatePicker";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
+// import SocialMediaPostingService from "../services/SocialMediaPostingService";
+import SocialMediaPostingService from "../Services/SocialMediaPostingService";
 
 Quill.register("modules/emoji", require("quill-emoji"));
 
@@ -46,11 +48,12 @@ function PostForm({
   const [availablePostTypes, setAvailablePostTypes] = useState(["Post"]);
   const [error, setError] = useState("");
   const datePickerRef = useRef(null);
+  const [isPublishing, setIsPublishing] = useState(false); // For tracking publish vs schedule
+  const [publishResults, setPublishResults] = useState(null); // To store detailed results
 
   useEffect(() => {
     if (selectedPlatforms.length === 0) {
       setAvailablePostTypes(["Post"]); // Default to Post if no platforms selected
-      // setAvailableMediaType(["Post"]);
     } else {
       const commonTypes = selectedPlatforms.reduce((acc, platform) => {
         const platformTypes =
@@ -59,10 +62,9 @@ function PostForm({
           ? platformTypes
           : acc.filter((type) => platformTypes.includes(type));
       }, []);
-      setAvailablePostTypes(commonTypes);
-      // setAvailableMediaType(commonTypes);
+      setAvailablePostTypes(commonTypes.length > 0 ? commonTypes : ["Post"]);
 
-      if (!commonTypes.includes(selectedForm)) {
+      if (commonTypes.length > 0 && !commonTypes.includes(selectedForm)) {
         setSelectedForm(commonTypes[0]);
       }
     }
@@ -134,37 +136,174 @@ function PostForm({
   const handleDateTimeSelect = (date, time) => {
     setScheduleDate(date);
     setScheduleTime(time);
+    setError(""); // Clear any previous date/time related errors
   };
 
   const handleSave = () => {
     setShowModal(false);
   };
-  // Function to handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    // Validation checks
+
+  // Validate form data before submission
+  const validateFormData = (checkSchedule = true) => {
     if (!selectedPlatforms.length) {
       setError("Please select at least one platform.");
-      return;
+      return false;
     }
-    if (!scheduleDate || !scheduleTime) {
-      setError("Please select a date and time for scheduling.");
-      return;
-    }
+
     if (!images.length && !videos.length) {
       setError("Please upload at least one media file.");
-      return;
+      return false;
     }
 
     const plainTextCaption = editorContent.replace(/(<([^>]+)>)/gi, ""); // Remove HTML tags
     if (!plainTextCaption.trim() && selectedForm !== "Story") {
       setError("Caption is required.");
+      return false;
+    }
+
+    // Only check schedule date/time if we're scheduling
+    if (checkSchedule && (!scheduleDate || !scheduleTime)) {
+      setError("Please select a date and time for scheduling.");
+      return false;
+    }
+
+    return true;
+  };
+
+  // Handle publishing the post immediately
+  const handlePublish = async (e) => {
+    e.preventDefault();
+    setIsPublishing(true);
+
+    // For "Publish Now", we don't need to validate schedule date/time
+    if (!validateFormData(false)) {
+      return;
+    }
+
+    await handleSubmitPost();
+  };
+
+  // Handle scheduling the post
+  const handleSchedulePost = async (e) => {
+    e.preventDefault();
+    setIsPublishing(false);
+
+    // Make sure we have date and time
+    if (!scheduleDate || !scheduleTime) {
+      setError("Please select a date and time for scheduling.");
+      handleSchedule(); // Open the date picker
+      return;
+    }
+
+    // Validate the form including schedule date/time
+    if (!validateFormData(true)) {
+      return;
+    }
+
+    await handleSubmitPost();
+  };
+
+  // Common submission handler for both publish and schedule
+  const handleSubmitPost = async () => {
+    setError("");
+    setPublishResults(null);
+
+    try {
+      setLoading(true);
+      setShowModal(false);
+
+      // Extract plain text from editor
+      const plainTextCaption = editorContent.replace(/(<([^>]+)>)/gi, "");
+
+      // Combine all media (both images and videos)
+      const allMedia = [...images, ...videos];
+
+      // Decide whether to publish immediately or schedule
+      if (isPublishing) {
+        // Publish immediately to all selected platforms
+        const result = await SocialMediaPostingService.postToAllPlatforms(
+          plainTextCaption,
+          allMedia,
+          selectedPlatforms,
+          selectedForm
+        );
+
+        setPublishResults(result);
+
+        if (result.success) {
+          toast.success("Post published successfully!");
+        } else {
+          // Handle partial success (some platforms failed)
+          if (result.results && result.results.length > 0) {
+            toast.success(
+              `Published to ${result.results.length} platform(s) successfully!`
+            );
+          }
+
+          // Show errors for failed platforms
+          result.errors.forEach((err) => {
+            toast.error(`Failed to post to ${err.platform}: ${err.error}`);
+          });
+        }
+      } else {
+        // Schedule for later
+        if (!scheduleDate || !scheduleTime) {
+          setError("Please select a date and time for scheduling.");
+          return;
+        }
+
+        const result =
+          await SocialMediaPostingService.schedulePostsToAllPlatforms(
+            plainTextCaption,
+            allMedia,
+            selectedPlatforms,
+            scheduleDate,
+            scheduleTime,
+            selectedForm
+          );
+
+        if (result.success) {
+          toast.success("Post scheduled successfully!");
+        } else {
+          toast.error(`Failed to schedule post: ${result.error}`);
+        }
+      }
+
+      // Reset form after successful submission
+      // Uncomment these if you want to clear the form after submission
+      // setEditorContent("");
+      // setImages([]);
+      // setVideos([]);
+      // setUploadedMedia({ images: [], videos: [] });
+    } catch (error) {
+      console.error("Error posting data:", error);
+      toast.error(error.message || "Error posting data");
+      setError(
+        error.response?.data?.message ||
+          "Failed to create the post. Please check your input data."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Alternative backend submission (keep as fallback)
+  const handleSubmitToBackend = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    // Validation checks
+    if (!validateFormData(true)) {
+      return;
+    }
+
+    if (!scheduleDate || !scheduleTime) {
+      setError("Please select a date and time for scheduling.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("caption", plainTextCaption);
+    formData.append("caption", editorContent.replace(/(<([^>]+)>)/gi, ""));
     formData.append(
       "scheduled_for",
       `${scheduleDate.toISOString().split("T")[0]} ${scheduleTime}`
@@ -202,14 +341,13 @@ function PostForm({
       toast.success("Post scheduled successfully!");
     } catch (error) {
       console.error("Error posting data:", error);
-      toast.error("Error posting data:", error);
+      toast.error("Error posting data:" + error.message);
       setError(
         error.response?.data?.message ||
           "Failed to create the post. Please check your input data."
       );
     } finally {
       setLoading(false);
-      // window.location.reload();
     }
   };
 
@@ -241,6 +379,11 @@ function PostForm({
         {loading ? (
           <div className="text-center p-4">
             <ClipLoader color="#fff" loading={loading} size={50} />
+            <p className="mt-3 text-light">
+              {isPublishing
+                ? "Publishing your post..."
+                : "Scheduling your post..."}
+            </p>
           </div>
         ) : (
           <form id="postForm">
@@ -300,6 +443,7 @@ function PostForm({
                             className="img-thumbnail"
                           />
                           <button
+                            type="button"
                             className="btn btn-danger btn-sm position-absolute top-0 end-0"
                             onClick={() => handleRemoveImage(index)}
                           >
@@ -319,8 +463,8 @@ function PostForm({
                       </div>
                     </div>
                   </div>
-                    )}
-                    
+                )}
+
                 {videos.length > 0 && (
                   <div className="media-preview-main mb-3">
                     <h5 className="text-light">Videos</h5>
@@ -330,11 +474,9 @@ function PostForm({
                           key={index}
                           className="media-preview position-relative"
                         >
-                          <video
-                            src={video}
-                            className="img-thumbnail"
-                          />
+                          <video src={video} className="img-thumbnail" />
                           <button
+                            type="button"
                             className="btn btn-danger btn-sm position-absolute top-0 end-0"
                             onClick={() => handleRemoveVideo(index)}
                           >
@@ -347,17 +489,44 @@ function PostForm({
                 )}
               </div>
             )}
-            {error && <p className="text-danger">{error}</p>}{" "}
-            {/* Display error messages */}
+
+            {error && <p className="text-danger">{error}</p>}
+
+            {/* Display results */}
+            {publishResults && !loading && (
+              <div className="publish-results mb-3">
+                {publishResults.results &&
+                  publishResults.results.length > 0 && (
+                    <div className="alert alert-success">
+                      <strong>Success!</strong> Published to:{" "}
+                      {publishResults.results.map((r) => r.platform).join(", ")}
+                    </div>
+                  )}
+
+                {publishResults.errors && publishResults.errors.length > 0 && (
+                  <div className="alert alert-warning">
+                    <strong>Issues:</strong>
+                    <ul className="mb-0 mt-1">
+                      {publishResults.errors.map((err, i) => (
+                        <li key={i}>
+                          {err.platform}: {err.error}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="date_show">
               <div className="show text-light">
                 {scheduleDate ? (
                   <>
-                   <div className="date_sel d-flex gap-2 align-items-center">
-                    <FaCalendar />
-                    {`${
-                      scheduleDate.toISOString().split("T")[0]
-                    },  ${scheduleTime}`}
+                    <div className="date_sel d-flex gap-2 align-items-center">
+                      <FaCalendar />
+                      {`${
+                        scheduleDate.toISOString().split("T")[0]
+                      },  ${scheduleTime}`}
                     </div>
                   </>
                 ) : (
@@ -366,28 +535,31 @@ function PostForm({
                       <FaCalendar />
                       <p className="mb-0">
                         No date selected{" "}
-                        <button type="button" onClick={handleSchedule}>Select Now</button>
-                        {/* <input type="datetime-local" placeholder="select date " /> */}
+                        <button type="button" onClick={handleSchedule}>
+                          Select Now
+                        </button>
                       </p>
                     </div>
                   </>
                 )}
               </div>
             </div>
-            <div className="d-flex justify-content-end">
+            <div className="d-flex justify-content-end mt-4">
               <button
                 className="btn btn-publish responsive-buttons fw-semibold me-3"
                 type="button"
+                onClick={handlePublish}
                 disabled={loading}
               >
-                {loading ? "Publishing..." : "Publish"}
+                {loading && isPublishing ? "Publishing..." : "Publish Now"}
               </button>
               <button
                 className="btn btn-schedule responsive-buttons fw-semibold me-3"
                 type="button"
-                onClick={handleSubmit}
+                onClick={handleSchedulePost}
+                disabled={loading}
               >
-                Schedule
+                {loading && !isPublishing ? "Scheduling..." : "Schedule"}
               </button>
             </div>
           </form>

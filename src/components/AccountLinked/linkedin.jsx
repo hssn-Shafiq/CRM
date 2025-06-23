@@ -4,7 +4,7 @@ import axios from "axios";
 
 // API configuration
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000",
+  baseURL: " http://localhost:5000",
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,9 +13,10 @@ const api = axios.create({
 // LinkedIn OAuth configuration
 const CLIENT_ID = "786fnf34f2gbey";
 const REDIRECT_URI = encodeURIComponent(
-  "http://localhost:3000/auth/linkedin/callback"
+  process.env.REACT_APP_LINKEDIN_REDIRECT_URI
 );
-const SCOPES = encodeURIComponent("openid profile email");
+// In your LinkedInConnection.js
+const SCOPES = encodeURIComponent("openid profile email w_member_social");
 const STATE = Math.random().toString(36).substring(7);
 const AUTH_URL = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPES}&state=${STATE}`;
 

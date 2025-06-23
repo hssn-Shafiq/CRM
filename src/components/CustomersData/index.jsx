@@ -1,33 +1,64 @@
+/* eslint-disable no-undef */
 // src/Components/CustomerData.jsx
 import React, { useState, useEffect, useMemo } from "react";
 import RequestFromLeads from "../Leads/RequestFromLeads";
 import OrderPaddingLeads from "../Leads/OrderPaddingLeads";
 import OrderDeliverLeads from "../Leads/OrderDeliverLeads";
 import SendEmailLeads from "../Leads/SendEmailLeads";
-import { fetchCustomers } from "../../Services/shopifyService"; // Using your existing fetch function
+import { fetchCustomers } from "../../Services/shopifyService";
+import { fetchCustomLeads, deleteCustomLead } from "../../Services/firebaseService";
+import { exportToExcel } from "../../utils/excelExport";
 import Loader from "../Loader";
+import CustomerTable from "./CustomerTable";
+import EditCustomerModal from "./EditCustomerModal";
+import ViewCustomerModal from "./ViewCustomerModal";
+import FilterHeader from "./FilterHeader";
+import AddCustomLeadModal from "./CustomData/AddCustomLeadModal";
+import ExcelImportModal from "./CustomData/ExcelImportModal";
+import BulkDeleteModal from "./BulkDeleteModal";
+import ExportModal from "./ExportModal";
+import "./CustomerStyles.css";
 
 const CustomerData = () => {
-  const [allCustomers, setAllCustomers] = useState([]); // Store all customers
+  // Shopify leads state
+  const [allCustomers, setAllCustomers] = useState([]);
+  // Custom leads state
+  const [customLeads, setCustomLeads] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [editCustomer, setEditCustomer] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedLead, setSelectedLead] = useState("All Leads");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilters, setActiveFilters] = useState({
+    country: '',
+    leadType: '',
+    hasEmail: false,
+    hasPhone: false,
+    sortBy: 'name',
+    sortOrder: 'asc'
+  });
   const customersPerPage = 10;
 
-  // Fetch all customer data once on component mount
+  // New state for tabs
+  const [activeTab, setActiveTab] = useState('shopify'); // 'shopify' or 'custom'
+  const [importingExcel, setImportingExcel] = useState(false);
+  const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Fetch Shopify customers
   useEffect(() => {
     const getCustomers = async () => {
       setLoading(true);
       try {
         const customerData = await fetchCustomers();
-        // Ensure we have an array, even if the API returns null/undefined
-        setAllCustomers(Array.isArray(customerData) ? customerData : []);
+        setAllCustomers(Array.isArray(customerData) ? customerData.map(c => ({...c, source: 'shopify'})) : []);
       } catch (err) {
-        console.error("Error fetching customers:", err);
-        setError(err.message || "Failed to fetch customers");
+        console.error("Error fetching Shopify customers:", err);
+        setError(err.message || "Failed to fetch Shopify customers");
       } finally {
         setLoading(false);
       }
@@ -35,20 +66,144 @@ const CustomerData = () => {
     getCustomers();
   }, []);
 
-  // Function to filter leads based on the selected type
+  // Fetch custom leads
+  useEffect(() => {
+    const getCustomLeads = async () => {
+      if (activeTab === 'custom') {
+        setLoading(true);
+        try {
+          const leadsData = await fetchCustomLeads();
+          setCustomLeads(Array.isArray(leadsData) ? leadsData : []);
+        } catch (err) {
+          console.error("Error fetching custom leads:", err);
+          setError(err.message || "Failed to fetch custom leads");
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    getCustomLeads();
+  }, [activeTab]);
+
+  // Function to handle search
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1); // Reset to first page on new search
+  };
+
+  // Function to handle filter changes
+  const handleFilterChange = (newFilters) => {
+    setActiveFilters(newFilters);
+    setCurrentPage(1); // Reset to first page on filter change
+  };
+
+  // Function to handle new leads added
+  const handleLeadAdded = (newLead) => {
+    setCustomLeads(prev => [newLead, ...prev]);
+  };
+
+  // Function to handle Excel import completion
+  const handleImportComplete = (importedLeads) => {
+    setCustomLeads(prev => [...importedLeads, ...prev]);
+  };
+
+  // Apply filters and search to the appropriate data source based on active tab
   const filteredCustomers = useMemo(() => {
-    if (selectedLead === "All Leads") {
-      return allCustomers; // Show all customers
+    // Determine which data source to use based on active tab
+    const dataSource = activeTab === 'shopify' ? allCustomers : customLeads;
+
+    // Start with all customers from the selected source
+    let result = [...dataSource];
+
+    // Apply lead type filter from the main dropdown
+    if (selectedLead !== "All Leads") {
+      result = result.filter(customer => customer.leadType === selectedLead);
     }
-    return allCustomers.filter(
-      (customer) => customer.leadType === selectedLead
-    );
-  }, [allCustomers, selectedLead]);
+
+    // Apply search term
+    if (searchTerm) {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      result = result.filter(customer => {
+        // Get the address data for this customer
+        const address = customer.default_address || {};
+
+        // Fields to search in
+        const firstName = (address.first_name || customer.first_name || '').toLowerCase();
+        const lastName = (address.last_name || customer.last_name || '').toLowerCase();
+        const email = (customer.email || '').toLowerCase();
+        const phone = (address.phone || customer.phone || '').toLowerCase();
+        const company = (address.company || customer.company || '').toLowerCase();
+
+        // Combined name for searching
+        const fullName = `${firstName} ${lastName}`;
+
+        // Check if the search term appears in any of the fields
+        return (
+          fullName.includes(lowerSearchTerm) ||
+          email.includes(lowerSearchTerm) ||
+          phone.includes(lowerSearchTerm) ||
+          company.includes(lowerSearchTerm)
+        );
+      });
+    }
+
+    // Apply additional filters from the filter panel
+    if (activeFilters.country) {
+      result = result.filter(customer => {
+        const address = customer.default_address || {};
+        const country = (address.country || customer.country || '');
+        return country === activeFilters.country;
+      });
+    }
+
+    if (activeFilters.leadType) {
+      result = result.filter(customer => customer.leadType === activeFilters.leadType);
+    }
+
+    if (activeFilters.hasEmail) {
+      result = result.filter(customer => customer.email && customer.email.trim() !== '');
+    }
+
+    if (activeFilters.hasPhone) {
+      result = result.filter(customer => {
+        const address = customer.default_address || {};
+        const phone = address.phone || customer.phone;
+        return phone && phone.trim() !== '';
+      });
+    }
+
+    // Apply sorting
+    result.sort((a, b) => {
+      const addressA = a.default_address || {};
+      const addressB = b.default_address || {};
+
+      let valueA, valueB;
+
+      if (activeFilters.sortBy === 'name') {
+        valueA = `${addressA.first_name || a.first_name || ''} ${addressA.last_name || a.last_name || ''}`.toLowerCase();
+        valueB = `${addressB.first_name || b.first_name || ''} ${addressB.last_name || b.last_name || ''}`.toLowerCase();
+      } else if (activeFilters.sortBy === 'country') {
+        valueA = (addressA.country || a.country || '').toLowerCase();
+        valueB = (addressB.country || b.country || '').toLowerCase();
+      } else if (activeFilters.sortBy === 'email') {
+        valueA = (a.email || '').toLowerCase();
+        valueB = (b.email || '').toLowerCase();
+      }
+
+      if (activeFilters.sortOrder === 'asc') {
+        return valueA.localeCompare(valueB);
+      } else {
+        return valueB.localeCompare(valueA);
+      }
+    });
+
+    return result;
+  }, [allCustomers, customLeads, selectedLead, searchTerm, activeFilters, activeTab]);
 
   // Calculate pagination
   const totalItems = filteredCustomers.length;
   const totalPages = Math.ceil(totalItems / customersPerPage);
-  
+
   // Get current page data
   const currentCustomers = useMemo(() => {
     const indexOfLastCustomer = currentPage * customersPerPage;
@@ -59,159 +214,309 @@ const CustomerData = () => {
   // Handle page changes
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    // Scroll to top when changing pages
     window.scrollTo(0, 0);
   };
 
   // Function to handle delete
-  const handleDelete = (id) => {
+  const handleDelete = async (id, source) => {
     if (window.confirm("Are you sure you want to delete this customer?")) {
-      const updatedCustomers = allCustomers.filter((customer) => customer.id !== id);
-      setAllCustomers(updatedCustomers);
-      
-      // If after deletion the current page would be empty and not the first page,
-      // go to the previous page
-      const newTotalPages = Math.ceil(updatedCustomers.length / customersPerPage);
-      if (currentPage > newTotalPages && currentPage > 1) {
-        setCurrentPage(currentPage - 1);
+      try {
+        if (source === 'custom') {
+          // Delete from Firebase for custom leads
+          await deleteCustomLead(id);
+          setCustomLeads(prev => prev.filter(lead => lead.id !== id));
+        } else {
+          // Handle Shopify customers as before
+          const updatedCustomers = allCustomers.filter((customer) => customer.id !== id);
+          setAllCustomers(updatedCustomers);
+        }
+
+        const newTotalPages = Math.ceil((filteredCustomers.length - 1) / customersPerPage);
+        if (currentPage > newTotalPages && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
+      } catch (err) {
+        console.error("Error deleting customer:", err);
+        setError(err.message || "Failed to delete customer");
       }
+    }
+  };
+
+  // Function to handle view customer details
+  const handleView = (customer) => {
+    // Get complete customer data
+    const fullCustomer = customer.source === 'custom' 
+      ? customLeads.find(c => c.id === customer.id)
+      : allCustomers.find(c => c.id === customer.id);
+      
+    setSelectedCustomer(fullCustomer);
+    
+    // Open the modal
+    if (typeof bootstrap !== 'undefined') {
+      const modal = new bootstrap.Modal(document.getElementById('viewCustomerModal'));
+      modal.show();
     }
   };
 
   // Function to handle edit
   const handleEdit = (customer) => {
-    // Get complete customer data including default_address
-    const fullCustomer = allCustomers.find(c => c.id === customer.id);
+    // Get complete customer data
+    const fullCustomer = customer.source === 'custom' 
+      ? customLeads.find(c => c.id === customer.id)
+      : allCustomers.find(c => c.id === customer.id);
     
     // Create an enriched customer object with data from default_address
+    const address = fullCustomer?.default_address || {};
     const enrichedCustomer = {
-      ...customer,
-      // If editing is needed for other address fields, add them here
-      address2: fullCustomer?.default_address?.address2 || '',
-      zip: fullCustomer?.default_address?.zip || '',
-      country_code: fullCustomer?.default_address?.country_code || '',
-      province_code: fullCustomer?.default_address?.province_code || '',
-      original: fullCustomer // Store the original for reference
+      id: fullCustomer.id,
+      first_name: address.first_name || fullCustomer.first_name || '',
+      last_name: address.last_name || fullCustomer.last_name || '',
+      email: fullCustomer.email || '',
+      phone: address.phone || fullCustomer.phone || '',
+      company: address.company || fullCustomer.company || '',
+      address1: address.address1 || fullCustomer.address1 || '',
+      address2: address.address2 || fullCustomer.address2 || '',
+      city: address.city || fullCustomer.city || '',
+      country: address.country || fullCustomer.country || '',
+      country_code: address.country_code || fullCustomer.country_code || '',
+      province: address.province || fullCustomer.province || '',
+      province_code: address.province_code || fullCustomer.province_code || '',
+      zip: address.zip || fullCustomer.zip || '',
+      original: fullCustomer, // Store the original for reference
+      source: customer.source // Keep track of the source
     };
     
     setEditCustomer(enrichedCustomer);
     setIsEditing(true);
     
-    // Open the modal if Bootstrap is available
+    // Open the modal
     if (typeof bootstrap !== 'undefined') {
-      // eslint-disable-next-line no-undef
-      const modal = new bootstrap.Modal(document.getElementById('leadFormModal'));
+      const modal = new bootstrap.Modal(document.getElementById('editCustomerModal'));
       modal.show();
     }
   };
 
   // Function to add a new customer
   const handleAdd = () => {
-    setEditCustomer({
-      id: null,
-      first_name: '',
-      last_name: '',
-      company: '',
-      address1: '',
-      address2: '',
-      country: '',
-      country_code: '',
-      province: '',
-      province_code: '',
-      city: '',
-      zip: '',
-      email: '',
-      phone: ''
-    });
-    setIsEditing(false);
-    // Open the modal if Bootstrap is available
+    // Different handling based on the active tab
+    if (activeTab === 'custom') {
+      // For custom leads, open the custom lead modal
+      if (typeof bootstrap !== 'undefined') {
+        const modal = new bootstrap.Modal(document.getElementById('addCustomLeadModal'));
+        modal.show();
+      }
+    } else {
+      // For Shopify, use the existing edit modal but in "add" mode
+      setEditCustomer({
+        id: null,
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone: '',
+        company: '',
+        address1: '',
+        address2: '',
+        city: '',
+        country: '',
+        country_code: '',
+        province: '',
+        province_code: '',
+        zip: '',
+        source: 'shopify'
+      });
+      setIsEditing(false);
+      
+      // Open the modal
+      if (typeof bootstrap !== 'undefined') {
+        const modal = new bootstrap.Modal(document.getElementById('editCustomerModal'));
+        modal.show();
+      }
+    }
+  };
+
+  // Open Excel import modal
+  const handleOpenExcelImport = () => {
     if (typeof bootstrap !== 'undefined') {
-      // eslint-disable-next-line no-undef
-      const modal = new bootstrap.Modal(document.getElementById('leadFormModal'));
+      const modal = new bootstrap.Modal(document.getElementById('excelImportModal'));
       modal.show();
     }
   };
 
-  // Function to handle save
-  const handleSave = (e) => {
-    e.preventDefault();
+  // Open bulk delete modal
+  const handleOpenBulkDeleteModal = () => {
+    if (selectedCustomers.length === 0) return;
     
+    if (typeof bootstrap !== 'undefined') {
+      const modal = new bootstrap.Modal(document.getElementById('bulkDeleteModal'));
+      modal.show();
+    }
+  };
+
+  // Function to handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedCustomers.length === 0) return;
+    
+    setIsDeleting(true);
     try {
-      // In a real app, you'd call an API here
-      if (isEditing) {
-        // Get the original customer to preserve any fields we're not explicitly changing
-        const originalCustomer = editCustomer.original || allCustomers.find(c => c.id === editCustomer.id);
-        
-        // Create updated customer with proper structure
-        const updatedCustomer = {
-          ...originalCustomer,
-          email: editCustomer.email,
-          first_name: editCustomer.first_name,
-          last_name: editCustomer.last_name,
-          // Update default_address if it exists, otherwise create it
-          default_address: {
-            ...(originalCustomer?.default_address || {}),
-            first_name: editCustomer.first_name,
-            last_name: editCustomer.last_name,
-            company: editCustomer.company,
-            address1: editCustomer.address1,
-            address2: editCustomer.address2,
-            city: editCustomer.city,
-            country: editCustomer.country,
-            country_code: editCustomer.country_code,
-            province: editCustomer.province,
-            province_code: editCustomer.province_code,
-            zip: editCustomer.zip,
-            phone: editCustomer.phone
-          }
-        };
-        
-        // Update customers array
-        const updatedCustomers = allCustomers.map(c => 
-          c.id === editCustomer.id ? updatedCustomer : c
-        );
-        setAllCustomers(updatedCustomers);
-      } else {
-        // Add new customer with proper structure including default_address
-        const newCustomerId = Date.now();
-        const newCustomer = { 
-          id: newCustomerId,
-          email: editCustomer.email,
-          first_name: editCustomer.first_name,
-          last_name: editCustomer.last_name,
-          leadType: selectedLead !== "All Leads" ? selectedLead : "Request From Leads",
-          // Create proper default_address structure
-          default_address: {
-            id: newCustomerId + 1, // Just to have a different ID
-            customer_id: newCustomerId,
-            first_name: editCustomer.first_name,
-            last_name: editCustomer.last_name,
-            company: editCustomer.company,
-            address1: editCustomer.address1,
-            address2: editCustomer.address2,
-            city: editCustomer.city,
-            country: editCustomer.country,
-            country_code: editCustomer.country_code,
-            province: editCustomer.province,
-            province_code: editCustomer.province_code,
-            zip: editCustomer.zip,
-            phone: editCustomer.phone,
-            default: true
-          }
-        };
-        setAllCustomers([...allCustomers, newCustomer]);
+      // Create an array of promises to delete each selected customer
+      const deletePromises = selectedCustomers.map(customer => 
+        deleteCustomLead(customer.id)
+      );
+      
+      // Execute all delete operations
+      await Promise.all(deletePromises);
+      
+      // Update the customLeads state by filtering out deleted leads
+      setCustomLeads(prev => 
+        prev.filter(lead => !selectedCustomers.some(selected => selected.id === lead.id))
+      );
+      
+      // Clear selection
+      setSelectedCustomers([]);
+      
+      // Close the modal
+      if (typeof bootstrap !== 'undefined') {
+        const modalElement = document.getElementById('bulkDeleteModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) {
+          modalInstance.hide();
+        }
       }
       
-      // Close the modal if Bootstrap is available
-      if (typeof bootstrap !== 'undefined') {
-        const modalEl = document.getElementById('leadFormModal');
-        // eslint-disable-next-line no-undef
-        const modal = bootstrap.Modal.getInstance(modalEl);
-        if (modal) modal.hide();
+      // Show success message (optional)
+      // You could add a toast notification here
+    } catch (err) {
+      console.error("Error during bulk delete:", err);
+      setError(err.message || "Failed to delete leads");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Function to handle save (for both Shopify and custom leads)
+  const handleSave = async (updatedCustomer) => {
+    try {
+      if (updatedCustomer.source === 'custom') {
+        // Handle save for custom leads - we'll use the Firebase service
+        if (isEditing) {
+          // Update existing lead
+          const originalCustomer = updatedCustomer.original || customLeads.find(c => c.id === updatedCustomer.id);
+          
+          const customerToSave = {
+            ...originalCustomer,
+            email: updatedCustomer.email,
+            first_name: updatedCustomer.first_name,
+            last_name: updatedCustomer.last_name,
+            default_address: {
+              ...(originalCustomer?.default_address || {}),
+              first_name: updatedCustomer.first_name,
+              last_name: updatedCustomer.last_name,
+              company: updatedCustomer.company,
+              address1: updatedCustomer.address1,
+              address2: updatedCustomer.address2,
+              city: updatedCustomer.city,
+              country: updatedCustomer.country,
+              province: updatedCustomer.province,
+              zip: updatedCustomer.zip,
+              phone: updatedCustomer.phone
+            }
+          };
+          
+          // Update in Firebase would go here
+          // For now, just update the state
+          setCustomLeads(prev => 
+            prev.map(lead => lead.id === updatedCustomer.id ? customerToSave : lead)
+          );
+        }
+      } else {
+        // Handle save for Shopify customers (same as before)
+        if (isEditing) {
+          const originalCustomer = updatedCustomer.original || allCustomers.find(c => c.id === updatedCustomer.id);
+          
+          const customerToSave = {
+            ...originalCustomer,
+            email: updatedCustomer.email,
+            first_name: updatedCustomer.first_name,
+            last_name: updatedCustomer.last_name,
+            default_address: {
+              ...(originalCustomer?.default_address || {}),
+              first_name: updatedCustomer.first_name,
+              last_name: updatedCustomer.last_name,
+              company: updatedCustomer.company,
+              address1: updatedCustomer.address1,
+              address2: updatedCustomer.address2,
+              city: updatedCustomer.city,
+              country: updatedCustomer.country,
+              country_code: updatedCustomer.country_code,
+              province: updatedCustomer.province,
+              province_code: updatedCustomer.province_code,
+              zip: updatedCustomer.zip,
+              phone: updatedCustomer.phone
+            }
+          };
+          
+          const updatedCustomers = allCustomers.map(c => 
+            c.id === updatedCustomer.id ? customerToSave : c
+          );
+          setAllCustomers(updatedCustomers);
+        } else {
+          // Add new customer with proper structure including default_address
+          const newCustomerId = Date.now();
+          const newCustomer = { 
+            id: newCustomerId,
+            email: updatedCustomer.email,
+            first_name: updatedCustomer.first_name,
+            last_name: updatedCustomer.last_name,
+            leadType: selectedLead !== "All Leads" ? selectedLead : "Request From Leads",
+            source: 'shopify',
+            default_address: {
+              id: newCustomerId + 1,
+              customer_id: newCustomerId,
+              first_name: updatedCustomer.first_name,
+              last_name: updatedCustomer.last_name,
+              company: updatedCustomer.company,
+              address1: updatedCustomer.address1,
+              address2: updatedCustomer.address2,
+              city: updatedCustomer.city,
+              country: updatedCustomer.country,
+              country_code: updatedCustomer.country_code,
+              province: updatedCustomer.province,
+              province_code: updatedCustomer.province_code,
+              zip: updatedCustomer.zip,
+              phone: updatedCustomer.phone,
+              default: true
+            }
+          };
+          setAllCustomers([...allCustomers, newCustomer]);
+        }
       }
     } catch (err) {
       console.error("Error saving customer:", err);
       setError(err.message || "Failed to save customer");
+    }
+  };
+
+  // Function to handle export
+  const handleExport = () => {
+    // Decide which data to export based on active tab and filters
+    const dataToExport = activeTab === 'shopify' ? 
+      filteredCustomers.filter(c => c.source === 'shopify') : 
+      filteredCustomers.filter(c => c.source !== 'shopify');
+    
+    // Generate appropriate filename
+    const timestamp = new Date().toISOString().slice(0, 10);
+    const tabName = activeTab === 'shopify' ? 'Shopify' : 'Custom';
+    const leadFilter = selectedLead !== 'All Leads' ? `-${selectedLead.replace(/\s+/g, '-')}` : '';
+    const filename = `${tabName}-Leads${leadFilter}-${timestamp}`;
+    
+    // Export the data
+    exportToExcel(dataToExport, filename);
+  };
+
+  const handleAdvancedExport = () => {
+    if (typeof bootstrap !== 'undefined') {
+      const modal = new bootstrap.Modal(document.getElementById('exportModal'));
+      modal.show();
     }
   };
 
@@ -228,85 +533,15 @@ const CustomerData = () => {
         return <SendEmailLeads leads={currentCustomers} />;
       case "All Leads":
         return (
-          <div className="table-responsive">
-            <table className="table table-hover align-middle leads-table" id="customerTable">
-              <thead>
-                <tr className="border-main">
-                  <th>Name</th>
-                  {/* <th>Company</th> */}
-                  {/* <th>Address</th> */}
-                  <th>Country</th>
-                  <th>State</th>
-                  <th>City</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentCustomers && currentCustomers.length > 0 ? (
-                  currentCustomers.map((customer) => {
-                    // Extract from default_address if available, otherwise use top-level data
-                    const address = customer.default_address || {};
-                    
-                    // Use address fields if available, otherwise fallback to top-level fields
-                    const firstName = address.first_name || customer.first_name || '';
-                    const lastName = address.last_name || customer.last_name || '';
-                    const company = address.company || customer.company || '';
-                    const addressLine = address.address1 || customer.address1 || '';
-                    const country = address.country || customer.country || '';
-                    const province = address.province || customer.province || '';
-                    const city = address.city || customer.city || '';
-                    const phone = address.phone || customer.phone || '';
-                    
-                    return (
-                    <tr key={customer.id}>
-                      <td>{`${firstName} ${lastName} `}</td>
-                      {/* <td>{company || "N/A"}</td> */}
-                      {/* <td>{addressLine || "N/A"}</td> */}
-                      <td>{country || "N/A"}</td>
-                      <td>{province || "N/A"}</td>
-                      <td>{city || "N/A"}</td>
-                      <td>{customer.email || "N/A"}</td>
-                      <td>{phone || "N/A"}</td>
-                      <td>
-                        <button 
-                          className="btn btn-warning btn-sm me-2"
-                          onClick={() => handleEdit({
-                            id: customer.id,
-                            first_name: firstName,
-                            last_name: lastName,
-                            company: company,
-                            address1: addressLine,
-                            country: country,
-                            province: province,
-                            city: city,
-                            email: customer.email,
-                            phone: phone,
-                          })}
-                        >
-                          <i className="fa fa-pencil" />
-                        </button>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(customer.id)}
-                        >
-                          <i className="fa fa-trash" />
-                        </button>
-                      </td>
-                    </tr>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td colSpan="9" className="text-center">
-                      No leads available
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <CustomerTable 
+            customers={currentCustomers} 
+            onView={handleView}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            enableBulkActions={activeTab === 'custom'} // Only enable bulk actions for custom tab
+            onBulkSelectChange={setSelectedCustomers}
+            selectedCustomers={selectedCustomers}
+          />
         );
       default:
         return <div>Please select a lead type from the dropdown.</div>;
@@ -324,77 +559,118 @@ const CustomerData = () => {
   return (
     <>
       <div className="container-fluid lead-table-container mt-5">
-        {/* Header */}
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <div className="col-lg-6">
-            <div className="dropdown">
-              <button
-                className="btn bg-light text-dark border-dark dropdown-toggle"
-                type="button"
-                id="leadsDropdown"
-                data-bs-toggle="dropdown"
+        {/* Tabs for Shopify vs Custom Leads */}
+        <ul className="nav nav-tabs mb-3">
+          <li className="nav-item">
+            <button 
+              className={`nav-link ${activeTab === 'shopify' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('shopify');
+                setSelectedCustomers([]);  // Clear selection when switching tabs
+              }}
+            >
+              Shopify Leads
+            </button>
+          </li>
+          <li className="nav-item">
+            <button 
+              className={`nav-link ${activeTab === 'custom' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('custom');
+                setSelectedCustomers([]);  // Clear selection when switching tabs
+              }}
+            >
+              Custom Leads
+            </button>
+          </li>
+          
+          {/* Action buttons on the right */}
+          <li className="ms-auto d-flex align-items-center mb-2">
+            {/* Export button - always visible */}
+            <div className="dropdown me-2">
+              <button 
+                className="btn btn-success dropdown-toggle" 
+                type="button" 
+                id="exportDropdown" 
+                data-bs-toggle="dropdown" 
                 aria-expanded="false"
+                disabled={filteredCustomers.length === 0}
               >
-                {selectedLead || "Select Lead Type"}
+                <i className="fa fa-download me-1"></i> Export
               </button>
-              <ul className="dropdown-menu" aria-labelledby="leadsDropdown">
+              <ul className="dropdown-menu" aria-labelledby="exportDropdown">
                 <li>
-                  <a
-                    className="dropdown-item"
-                    href="#!"
-                    onClick={() => setSelectedLead("All Leads")}
+                  <button 
+                    className="dropdown-item" 
+                    onClick={handleExport}
                   >
-                    All Leads
-                  </a>
+                    Quick Export
+                  </button>
                 </li>
                 <li>
-                  <a
-                    className="dropdown-item"
-                    href="#!"
-                    onClick={() => setSelectedLead("Request From Leads")}
+                  <button 
+                    className="dropdown-item" 
+                    onClick={handleAdvancedExport}
                   >
-                    Request From Leads
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    href="#!"
-                    onClick={() => setSelectedLead("Order Padding Leads")}
-                  >
-                    Order Padding Leads
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    href="#!"
-                    onClick={() => setSelectedLead("Order Deliver Leads")}
-                  >
-                    Order Deliver Leads
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    href="#!"
-                    onClick={() => setSelectedLead("Send Email Leads")}
-                  >
-                    Send Email Leads
-                  </a>
+                    Advanced Export...
+                  </button>
                 </li>
               </ul>
             </div>
-          </div>
-          <div>
-            <button className="btn btn-primary" onClick={handleAdd}>
-              <i className="fa fa-plus me-1"></i> Add Lead
+            
+            {activeTab === 'custom' && (
+              <>
+                <button 
+                  className="btn bg-dark text-light me-2" 
+                  onClick={handleOpenExcelImport}
+                >
+                  <i className="fa fa-file-excel me-1"></i> Import Excel
+                </button>
+                
+                {/* Bulk actions - only show when items are selected */}
+                {selectedCustomers.length > 0 && (
+                  <button 
+                    className="btn btn-danger me-2" 
+                    onClick={handleOpenBulkDeleteModal}
+                  >
+                    <i className="fa fa-trash me-1"></i> Delete Selected ({selectedCustomers.length})
+                  </button>
+                )}
+              </>
+            )}
+            <button 
+              className="btn btn-primary" 
+              onClick={handleAdd}
+            >
+              <i className="fa-solid fa-plus-circle me-1"></i> Add New Lead
             </button>
-          </div>
-        </div>
+          </li>
+        </ul>
+
+        {/* Header with filters */}
+        <FilterHeader 
+          selectedLead={selectedLead}
+          onLeadChange={setSelectedLead}
+          onSearch={handleSearch}
+          onFilterChange={handleFilterChange}
+        />
 
         {/* Render the selected lead component */}
-        <div className="lead-content">{renderLeadComponent()}</div>
+        <div className="lead-content">
+          {selectedLead === "All Leads" ? (
+            <CustomerTable 
+              customers={currentCustomers} 
+              onView={handleView}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              enableBulkActions={activeTab === 'custom'} // Only enable bulk actions for custom tab
+              onBulkSelectChange={setSelectedCustomers}
+              selectedCustomers={selectedCustomers}
+            />
+          ) : (
+            renderLeadComponent()
+          )}
+        </div>
 
         {/* Pagination - only show if we have more than 1 page */}
         {totalPages > 1 && (
@@ -410,7 +686,6 @@ const CustomerData = () => {
                 </button>
               </li>
               
-              {/* Dynamic pagination with limited page buttons */}
               {(() => {
                 let pages = [];
                 
@@ -478,244 +753,36 @@ const CustomerData = () => {
         )}
       </div>
 
-      {/* Modal for Adding/Editing Lead */}
-      <div
-        className="modal fade"
-        id="leadFormModal"
-        tabIndex={-1}
-        aria-labelledby="leadFormModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-lg">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5
-                className="modal-title text-dark text-center"
-                id="leadFormModalLabel"
-              >
-                {isEditing ? "Edit Lead" : "Add Lead"}
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              {editCustomer && (
-                <form onSubmit={handleSave}>
-                  <div className="row">
-                    <div className="col-lg-6 mb-3">
-                      <label className="form-label text-dark">First Name</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editCustomer.first_name || ''}
-                        onChange={(e) =>
-                          setEditCustomer({
-                            ...editCustomer,
-                            first_name: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="col-lg-6 mb-3">
-                      <label className="form-label text-dark">Last Name</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editCustomer.last_name || ''}
-                        onChange={(e) =>
-                          setEditCustomer({
-                            ...editCustomer,
-                            last_name: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label text-dark">Company</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={editCustomer.company || ''}
-                      onChange={(e) =>
-                        setEditCustomer({
-                          ...editCustomer,
-                          company: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label text-dark">Address</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={editCustomer.address1 || ''}
-                      onChange={(e) =>
-                        setEditCustomer({
-                          ...editCustomer,
-                          address1: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label text-dark">Address 2</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={editCustomer.address2 || ''}
-                      onChange={(e) =>
-                        setEditCustomer({
-                          ...editCustomer,
-                          address2: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="row">
-                    <div className="col-lg-6 mb-3">
-                      <label className="form-label text-dark">Country</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editCustomer.country || ''}
-                        onChange={(e) =>
-                          setEditCustomer({
-                            ...editCustomer,
-                            country: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="col-lg-6 mb-3">
-                      <label className="form-label text-dark">Country Code</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editCustomer.country_code || ''}
-                        onChange={(e) =>
-                          setEditCustomer({
-                            ...editCustomer,
-                            country_code: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-lg-3 mb-3">
-                      <label className="form-label text-dark">State/Province</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editCustomer.province || ''}
-                        onChange={(e) =>
-                          setEditCustomer({
-                            ...editCustomer,
-                            province: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="col-lg-3 mb-3">
-                      <label className="form-label text-dark">Province Code</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editCustomer.province_code || ''}
-                        onChange={(e) =>
-                          setEditCustomer({
-                            ...editCustomer,
-                            province_code: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="col-lg-3 mb-3">
-                      <label className="form-label text-dark">City</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editCustomer.city || ''}
-                        onChange={(e) =>
-                          setEditCustomer({
-                            ...editCustomer,
-                            city: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="col-lg-3 mb-3">
-                      <label className="form-label text-dark">ZIP/Postal Code</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editCustomer.zip || ''}
-                        onChange={(e) =>
-                          setEditCustomer({
-                            ...editCustomer,
-                            zip: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-lg-6 mb-3">
-                      <label className="form-label text-dark">Email</label>
-                      <input
-                        type="email"
-                        className="form-control"
-                        value={editCustomer.email || ''}
-                        onChange={(e) =>
-                          setEditCustomer({
-                            ...editCustomer,
-                            email: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="col-lg-6 mb-3">
-                      <label className="form-label text-dark">Phone</label>
-                      <input
-                        type="tel"
-                        className="form-control"
-                        value={editCustomer.phone || ''}
-                        onChange={(e) =>
-                          setEditCustomer({
-                            ...editCustomer,
-                            phone: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="d-flex justify-content-end mt-3">
-                    <button type="button" className="btn btn-secondary me-2" data-bs-dismiss="modal">
-                      Cancel
-                    </button>
-                    <button type="submit" className="btn btn-primary">
-                      {isEditing ? "Update Lead" : "Add Lead"}
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Modals */}
+      <EditCustomerModal
+        customer={editCustomer}
+        isEditing={isEditing}
+        onSave={handleSave}
+      />
+      
+      <ViewCustomerModal
+        customer={selectedCustomer}
+      />
+      
+      <AddCustomLeadModal
+        onLeadAdded={handleLeadAdded}
+      />
+      
+      <ExcelImportModal
+        onImportComplete={handleImportComplete}
+      />
+      
+      {/* Add the new BulkDeleteModal */}
+      <BulkDeleteModal
+        selectedCount={selectedCustomers.length}
+        onConfirm={handleBulkDelete}
+        isDeleting={isDeleting}
+      />
+
+      <ExportModal 
+        data={filteredCustomers} 
+        activeTab={activeTab} 
+      />
     </>
   );
 };

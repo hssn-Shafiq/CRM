@@ -1,54 +1,69 @@
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import { getUserFromLocalStorage } from '../utils/localstorage';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
+import { hasRoutePermission, fetchAndStoreRolePermissions } from "../utils/permissions";
+import { getUserFromLocalStorage } from "../utils/localstorage";
+import RouteLoader from "./RouteLoader";
 
-/**
- * A component that restricts access to routes based on user roles and permissions.
- * 
- * @param {Object} props
- * @param {string} props.requiredRoute - The route path that needs permission
- * @param {React.ReactNode} props.children - Child components to render if user has permission
- * @returns {React.ReactNode}
- */
-const ProtectedRoute = ({ requiredRoute, children }) => {
-  const user = getUserFromLocalStorage();
+const ProtectedRoute = ({ children, requiredRoute }) => {
+  const [isAuthorized, setIsAuthorized] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // If user is not logged in, redirect to login
-  if (!user) {
-    toast.error("Please login to continue");
+  // Immediately check if user exists in localStorage before any async operations
+  const userExists = getUserFromLocalStorage() !== null;
+
+  useEffect(() => {
+    // If no user exists, skip the authorization check completely
+    if (!userExists) {
+      setIsAuthorized(false);
+      setIsLoading(false);
+      return;
+    }
+
+    const checkAuthorization = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Make sure permissions are loaded before checking
+        await fetchAndStoreRolePermissions();
+        
+        // Safely check permissions with error handling
+        try {
+          const hasPermission = hasRoutePermission(requiredRoute);
+          setIsAuthorized(hasPermission);
+        } catch (permError) {
+          console.error("Permission check error:", permError);
+          // Default to true if there's an error checking permissions
+          setIsAuthorized(true);
+        }
+      } catch (error) {
+        console.error("Error checking authorization:", error);
+        setIsAuthorized(false);
+      } finally {
+        // Add a small delay for smoother transitions
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 300);
+      }
+    };
+
+    checkAuthorization();
+  }, [requiredRoute, userExists]);
+
+  // If user doesn't exist, immediately redirect to login
+  if (!userExists) {
     return <Navigate to="/" replace />;
-  } 
+  }
 
-  // Check if user role has permission for the required route
-  const userRole = user.Role || "User";
-  
-  // Get the route permissions from localStorage
-  const rolePermissions = JSON.parse(localStorage.getItem("rolePermissions")) || {};
-  
-  // Get the routes allowed for this user's role
-  const allowedRoutes = rolePermissions[userRole] || [];
-  
-  // Special case: Admin role has access to everything
-  if (userRole === "Admin") {
-    return children ? children : <Outlet />;
+  // Only show loading if user exists and we're checking permissions
+  if (isLoading) {
+    return <RouteLoader text="Please Wait..." />;
   }
-  
-  // Extract the main route category (e.g., "Shopify/OrderList" -> "Shopify")
-  // This is used to determine if the user has access to a main category
-  const mainCategory = requiredRoute.split('/')[0];
-  
-  // Check if user has permission for this specific route or its parent category
-  const hasPermission = 
-    allowedRoutes.includes(requiredRoute) || 
-    allowedRoutes.includes(mainCategory);
-  
-  if (!hasPermission) {
-    toast.error("You don't have permission to access this page");
-    return <Navigate to="/admin" replace />;
+
+  if (isAuthorized === false) {
+    return <Navigate to="/" replace />;
   }
-  
-  return children ? children : <Outlet />;
+
+  return children;
 };
 
 export default ProtectedRoute;

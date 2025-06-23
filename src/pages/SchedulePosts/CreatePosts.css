@@ -116,7 +116,7 @@
 
 /* Make the entire post editor fixed */
 .create-post-editor {
-    position: fixed;
+    /* position: fixed; */
     max-height: 700px;
 }
 
@@ -135,7 +135,7 @@
 }
 
 .create-post-preview {
-    margin-left: 530px;
+    /* margin-left: 530px; */
 }
 
 .post-card {

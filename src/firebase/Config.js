@@ -18,7 +18,7 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 const imageDb = getStorage(app);
 
-export {storage, imageDb, db, auth};
+export {storage, imageDb, db, auth, app};
 
 
 export const addUserRole = (collectionName, data) => {
