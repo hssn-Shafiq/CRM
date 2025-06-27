@@ -3,15 +3,16 @@ import LinkedInService from './LinkedInService';
 import FacebookService from './FacebookService';
 import ApiConfiguration from './ApiConfiguration';
 import SocialMediaPostScheduler from './SocialMediaPostScheduler';
-
+import PinterestService from './PinterestService';
 // Export all services
 export {
   LinkedInService,
   FacebookService,
   ApiConfiguration,
-  SocialMediaPostScheduler
+  SocialMediaPostScheduler,
+  PinterestService
 };
-
+  
 // Also export a unified service for convenience
 export default class SocialMediaService {
   static async postToAllPlatforms(content, media, platforms, type = "Post") {
@@ -22,6 +23,7 @@ export default class SocialMediaService {
     const platformTokens = {
       linkedin: localStorage.getItem("linkedin_token"),
       facebook: localStorage.getItem("facebook_token"),
+      pinterest: localStorage.getItem("pinterest_token"),
       // Add other platforms as needed
     };
 
@@ -65,6 +67,15 @@ export default class SocialMediaService {
             
           case "facebook":
             result = await FacebookService.post(content, media, token);
+            break;
+
+             case "pinterest":
+            const boardId = platformSettings.boardId;
+            if (boardId) {
+              result = await PinterestService.postToBoard(content, media, token, boardId);
+            } else {
+              result = await PinterestService.post(content, media, token);
+            }
             break;
           // Add cases for other platforms
           default:

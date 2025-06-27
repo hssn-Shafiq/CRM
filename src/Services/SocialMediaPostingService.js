@@ -1,7 +1,8 @@
 // SocialMediaPostingService.js - transitional file for backwards compatibility
 import SocialMediaService, {
   LinkedInService,
-  FacebookService
+  FacebookService,
+  PinterestService
 } from './SocialMediaServices';
 
 // For backwards compatibility - redirect to the new structure
@@ -36,6 +37,23 @@ class SocialMediaPostingService {
     return FacebookService.post(content, media, accessToken);
   }
   
+    // Pinterest methods
+  static async postToPinterest(content, media, accessToken) {
+    return PinterestService.post(content, media, accessToken);
+  }
+  
+  static async postToPinterestWithMedia(content, mediaFiles, accessToken) {
+    return PinterestService.postWithMedia(content, mediaFiles, accessToken);
+  }
+  
+  static async getPinterestBoards(accessToken) {
+    return PinterestService.getBoards(accessToken);
+  }
+  
+  static async postToPinterestBoard(content, media, accessToken, boardId) {
+    return PinterestService.postToBoard(content, media, accessToken, boardId);
+  }
+
   // Unified methods
   static async postToAllPlatforms(content, media, platforms, type = "Post") {
     return SocialMediaService.postToAllPlatforms(content, media, platforms, type);
