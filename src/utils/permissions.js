@@ -24,6 +24,13 @@ export const fetchAndStoreRolePermissions = async () => {
     // Store in localStorage for easy access
     localStorage.setItem("rolePermissions", JSON.stringify(rolePermissions));
 
+    // Also store allowed routes for current user if user is logged in
+    const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+    if (currentUser.Role) {
+      const allowedRoutes = rolePermissions[currentUser.Role] || [];
+      localStorage.setItem("allowedRoutes", JSON.stringify(allowedRoutes));
+    }
+
     return rolePermissions;
   } catch (error) {
     console.error("Error fetching role permissions:", error);

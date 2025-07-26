@@ -31,6 +31,16 @@ const RoleModal = ({
       "Templates",
       "CustomerSegments",
     ],
+    Invoicing: [
+      "Invoicing",
+      "Invoicing/Dashboard",
+      "Invoicing/List", 
+      "Invoicing/Create",
+      "Invoicing/Edit",
+      "Invoicing/Detail",
+      "Invoicing/Templates",
+      "Invoicing/Automation"
+    ],
     Shopify: [
       "Shopify",
       "Shopify/OrderList",

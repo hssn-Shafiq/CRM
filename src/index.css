@@ -138,6 +138,9 @@ button:hover {
   padding-left: 24px !important;
 }
 
+.ant-menu.ant-menu-root.ant-menu-inline{
+  overflow-y: scroll;
+}
 .ant-menu.ant-menu-root.ant-menu-inline::-webkit-scrollbar {
   width: 10px;
   /* width of vertical scrollbar */

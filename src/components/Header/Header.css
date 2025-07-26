@@ -1,0 +1,22 @@
+.header {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background-color: white;
+}
+
+.header-logo {
+  height: 40px;
+  width: auto;
+  margin-right: 12px;
+}
+
+.header-login-btn {
+  min-width: 90px;
+  font-weight: 500;
+}
+
+@media (max-width: 991.98px) {
+  .header-login-btn {
+    margin-top: 12px;
+    width: 100%;
+  }
+}
