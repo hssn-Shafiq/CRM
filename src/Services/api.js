@@ -4,12 +4,10 @@ export const emailTemplateApi = {
     // Template APIs
     getAllTemplates: () => api.get('/email-templates'),
     createTemplate: (templateData) => {
-        console.log('Creating template with data:', templateData);
         return api.post('/email-templates', templateData);
     },
     getTemplate: (id) => api.get(`/email-templates/${id}`),
     updateTemplate: (id, templateData) => {
-        console.log('Updating template with data:', templateData);
         return api.put(`/email-templates/${id}`, templateData);
     },
     deleteTemplate: (id) => api.delete(`/email-templates/${id}`),

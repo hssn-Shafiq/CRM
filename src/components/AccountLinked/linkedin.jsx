@@ -2,6 +2,29 @@
 import React, { useState, useEffect } from "react";
 import { Axios } from "../../config";
 
+// Utility function to clean content and prevent UTF-8 issues
+const sanitizeContent = (content) => {
+  if (!content) return '';
+  
+  // Remove or replace problematic characters
+  return content
+    // Remove emojis and other unicode symbols
+    .replace(/[\u{1F600}-\u{1F64F}]/gu, '') // Emoticons
+    .replace(/[\u{1F300}-\u{1F5FF}]/gu, '') // Misc Symbols
+    .replace(/[\u{1F680}-\u{1F6FF}]/gu, '') // Transport & Map
+    .replace(/[\u{2600}-\u{26FF}]/gu, '')   // Misc symbols
+    .replace(/[\u{2700}-\u{27BF}]/gu, '')   // Dingbats
+    // Replace smart quotes with regular quotes
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
+    // Remove other problematic unicode characters
+    .replace(/[\u2013\u2014]/g, '-')
+    .replace(/[\u2026]/g, '...')
+    // Normalize whitespace
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
 const LinkedInConnection = () => {
   const [accessToken, setAccessToken] = useState(
     localStorage.getItem("linkedin_token") || ""
@@ -111,6 +134,61 @@ const LinkedInConnection = () => {
     }
   };
 
+  const testContentEncoding = (content) => {
+    try {
+      // Test if content can be safely JSON encoded
+      JSON.stringify({ test: content });
+      
+      // Test for problematic characters
+      const problematicChars = /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
+      if (problematicChars.test(content)) {
+        return {
+          valid: false,
+          error: "Content contains emojis or special characters that may cause encoding issues"
+        };
+      }
+      
+      return { valid: true };
+    } catch (error) {
+      return {
+        valid: false,
+        error: "Content contains invalid characters that cannot be encoded"
+      };
+    }
+  };
+
+  const testPost = async () => {
+    try {
+      setIsLoading(true);
+      setError("");
+      
+      // Test content with potential issues
+      const testContent = 'Test post with special chars: "hello" \'world\' – test — emoji: 😊';
+      console.log("Original content:", testContent);
+      
+      // Test content validation
+      const validation = testContentEncoding(testContent);
+      console.log("Content validation:", validation);
+      
+      if (!validation.valid) {
+        console.log("Content failed validation:", validation.error);
+        const cleanContent = sanitizeContent(testContent);
+        console.log("Cleaned content:", cleanContent);
+        
+        // Test cleaned content
+        const cleanValidation = testContentEncoding(cleanContent);
+        console.log("Clean content validation:", cleanValidation);
+      }
+      
+      alert(`Content validation test completed. Check console for details.`);
+    } catch (error) {
+      console.error('Content test failed:', error);
+      alert(`Content test failed: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div>
       {isLoading ? (
@@ -130,6 +208,12 @@ const LinkedInConnection = () => {
             className="btn btn-secondary btn-sm ms-2"
           >
             Test Connection
+          </button>
+          <button 
+            onClick={testPost} 
+            className="btn btn-warning btn-sm ms-2"
+          >
+            Test Content
           </button>
         </div>
       ) : (

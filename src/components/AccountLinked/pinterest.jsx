@@ -13,6 +13,7 @@ const PinterestConnection = () => {
   const [accessToken, setAccessToken] = useState(
     localStorage.getItem("pinterest_token") || ""
   );
+  console.log("Access Token:", accessToken);
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");

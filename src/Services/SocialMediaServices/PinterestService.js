@@ -10,11 +10,6 @@ class PinterestService {
         );
       }
 
-      console.log(
-        "Posting to Pinterest with token:",
-        accessToken.substring(0, 10) + "..."
-      );
-
       const response = await api.post("/pinterest/post", {
         accessToken,
         content,
@@ -27,26 +22,10 @@ class PinterestService {
         platform: "pinterest",
       };
     } catch (error) {
-      console.error("Pinterest posting error:", error);
-
-      // Improve error message based on status code
-      let errorMessage = "Failed to post to Pinterest";
-      if (error.response) {
-        if (error.response.status === 401) {
-          errorMessage =
-            "Pinterest authentication expired. Please reconnect your account.";
-        } else if (error.response.status === 403) {
-          errorMessage =
-            "You don't have permission to post to Pinterest. Please check your account settings.";
-        } else if (error.response.status === 404) {
-          errorMessage =
-            "Pinterest API endpoint not found. Server configuration issue.";
-        }
-      }
+      console.error("Pinterest posting error:", error)
 
       throw {
         success: false,
-        error: errorMessage,
         platform: "pinterest",
         originalError: error,
       };

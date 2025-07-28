@@ -27,15 +27,6 @@ const PinterestCallback = () => {
       const storedState = localStorage.getItem("pinterest_state");
       const authError = urlParams.get("error");
 
-      console.log("Pinterest callback triggered");
-      console.log(
-        "Code:",
-        code ? "Present (length: " + code.length + ")" : "Missing"
-      );
-      console.log(
-        "State check:",
-        receivedState === storedState ? "Matched" : "Mismatched"
-      );
       
       // Clean up state parameter
       localStorage.removeItem("pinterest_state");
@@ -66,12 +57,8 @@ const PinterestCallback = () => {
 
       try {
         const redirectUri = process.env.REACT_APP_PINTEREST_REDIRECT_URI || "http://localhost:3000/auth/pinterest/callback";
-  
-        console.log("Making Pinterest token exchange request with:");
-        console.log("- Redirect URI:", redirectUri);
-        console.log("- Client ID:", process.env.REACT_APP_PINTEREST_CLIENT_ID);
-        
-        const response = await api.post("/api/auth/pinterest", {
+          
+        const response = await api.post("/auth/pinterest", {
           code,
           redirect_uri: redirectUri,
         });

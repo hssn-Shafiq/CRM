@@ -1,9 +1,32 @@
 import api from './ApiConfiguration';
 
 class LinkedInService {
+  
+  static sanitizeContent(content) {
+    if (!content) return '';
+    
+    
+    return content
+      
+      .replace(/[\u{1F600}-\u{1F64F}]/gu, '') 
+      .replace(/[\u{1F300}-\u{1F5FF}]/gu, '') 
+      .replace(/[\u{1F680}-\u{1F6FF}]/gu, '') 
+      .replace(/[\u{2600}-\u{26FF}]/gu, '')   
+      .replace(/[\u{2700}-\u{27BF}]/gu, '')   
+      
+      .replace(/[\u201C\u201D]/g, '"')
+      .replace(/[\u2018\u2019]/g, "'")
+      
+      .replace(/[\u2013\u2014]/g, '-')
+      .replace(/[\u2026]/g, '...')
+      
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
   static async post(content, media, accessToken) {
     try {
-      // Check if we have a valid token
+      
       if (!accessToken) {
         throw new Error(
           "No LinkedIn access token found. Please reconnect your account."
@@ -29,7 +52,7 @@ class LinkedInService {
     } catch (error) {
       console.error("LinkedIn posting error:", error);
 
-      // Improve error message based on status code
+      
       let errorMessage = "Failed to post to LinkedIn";
       if (error.response) {
         if (error.response.status === 401) {
@@ -55,33 +78,42 @@ class LinkedInService {
 
   static async postWithMedia(content, mediaFiles, accessToken) {
     try {
-      // Check if we have a valid token
+      
       if (!accessToken) {
         throw new Error(
           "No LinkedIn access token found. Please reconnect your account."
         );
       }
 
-      // Clean and validate content to prevent UTF-8 issues
-      const cleanContent = content ? content.trim() : '';
+      
+      const cleanContent = this.sanitizeContent(content || '');
       if (!cleanContent) {
         throw new Error("Content is required for posting");
       }
 
+      
+      try {
+        JSON.stringify({ test: cleanContent });
+      } catch (error) {
+        throw new Error("Content contains invalid characters that cannot be processed");
+      }
+
       console.log("Posting to LinkedIn with media:");
+      console.log("- Original content:", content);
+      console.log("- Clean content:", cleanContent);
       console.log("- Content length:", cleanContent.length);
       console.log("- Media files count:", mediaFiles.length);
       console.log("- Token:", accessToken.substring(0, 10) + "...");
 
-      // Create FormData to send files
+      
       const formData = new FormData();
       formData.append("content", cleanContent);
       formData.append("accessToken", accessToken);
 
-      // Add media files as an array
+      
       if (mediaFiles && mediaFiles.length > 0) {
         for (let i = 0; i < mediaFiles.length; i++) {
-          // Convert blob URL to actual file
+          
           try {
             console.log(`Processing media file ${i + 1}/${mediaFiles.length}:`, mediaFiles[i]);
 
@@ -93,12 +125,12 @@ class LinkedInService {
             const blob = await response.blob();
             console.log(`Media ${i + 1} blob size:`, blob.size, 'type:', blob.type);
 
-            // Validate file size (max 10MB)
+            
             if (blob.size > 10 * 1024 * 1024) {
               throw new Error(`Media file ${i + 1} is too large (max 10MB)`);
             }
 
-            // Determine file extension from blob type
+            
             let extension = 'jpg';
             if (blob.type.includes('png')) extension = 'png';
             else if (blob.type.includes('gif')) extension = 'gif';
@@ -109,17 +141,17 @@ class LinkedInService {
               type: blob.type || "image/jpeg",
             });
 
-            formData.append("media[]", file); // Use media[] to create an array
+            formData.append("media[]", file); 
             console.log(`Added media file: ${filename} (${file.size} bytes)`);
           } catch (error) {
             console.error(`Error processing media file ${i + 1}:`, error);
-            // Don't throw here, just skip the problematic file
-            // throw new Error(`Failed to process media file ${i + 1}: ${error.message}`);
+            
+            
           }
         }
       }
 
-      // Send the post with media
+      
       const response = await api.post(
         "/linkedin/post-with-media",
         formData,
