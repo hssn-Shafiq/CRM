@@ -10,7 +10,7 @@ class FacebookService {
         );
       }
 
-      const response = await api.post("/api/facebook/post", {
+      const response = await api.post("/facebook/post", {
         accessToken,
         content,
         media_urls: media,
@@ -47,7 +47,7 @@ class FacebookService {
           const file = new File([blob], filename, {
             type: blob.type || "image/jpeg",
           });
-          formData.append("media", file);
+          formData.append("media[]", file);
         } catch (error) {
           console.error("Error processing media file:", error);
         }
@@ -55,7 +55,7 @@ class FacebookService {
 
       // Send the post with media
       const response = await api.post(
-        "/api/facebook/post-with-media",
+        "/facebook/post-with-media",
         formData,
         {
           headers: {

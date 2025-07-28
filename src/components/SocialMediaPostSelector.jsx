@@ -19,6 +19,7 @@ function SocialMediaPostSelector({ selectedPlatforms, setSelectedPlatforms }) {
   const [connectedAccounts, setConnectedAccounts] = useState({
     linkedin: null,
     facebook: null,
+    pinterest: null,
     // Add other platforms here as you implement them
   });
   const [tooltipVisible, setTooltipVisible] = useState(null);
@@ -38,6 +39,18 @@ function SocialMediaPostSelector({ selectedPlatforms, setSelectedPlatforms }) {
       }
     }
 
+    const pinterestData = localStorage.getItem("pinterest_user_data");
+    if (pinterestData) {
+      try {
+        setConnectedAccounts(prev => ({
+          ...prev,
+          pinterest: JSON.parse(pinterestData)
+        }));
+      } catch (e) {
+        console.error("Failed to parse Pinterest profile data", e);
+      }
+    }
+    
     // Add similar checks for other platforms as you implement them
     // For example:
     // const facebookData = localStorage.getItem("facebook_user_data");

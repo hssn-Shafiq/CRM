@@ -6,11 +6,13 @@ import "react-toastify/dist/ReactToastify.css";
 import "./post.css";
 // import img01 from '../../../public/images/facebook-circle.svg'
 import LinkedInConnection from "../../components/AccountLinked/linkedin";
+import PinterestConnection from "../../components/AccountLinked/pinterest";
 import Header from "./Components/Header";
 const SocialAccounts = () => {
   const CLIENT_ID = process.env.REACT_APP_LINKEDIN_REDIRECT_URI;
   console.log("linkedin client id is ", CLIENT_ID);
   console.log("facebook id: ", process.env.REACT_APP_FACEBOOK_ID);
+  console.log("pinterest id: ", process.env.REACT_APP_PINTEREST_CLIENT_ID);
   const [fbData, setFbData] = useState({
     isLoggedIn: false,
     name: "",
@@ -158,6 +160,17 @@ const SocialAccounts = () => {
                   </div>{" "}
                   <span className="bar-span-custom" />
                   <LinkedInConnection />
+                </div>
+              </div>
+
+              <div className="col-12">
+                <div className="account-connect-custom d-flex align-items-center">
+                  <div className="d-flex align-items-center text-light">
+                    <img src="/images/pinterest-circle.svg" width={25} alt="Pinterest" />
+                    <h5>Pinterest</h5>
+                  </div>
+                  <span className="bar-span-custom" />
+                  <PinterestConnection />
                 </div>
               </div>
             </div>

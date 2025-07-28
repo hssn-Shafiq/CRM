@@ -1,9 +1,20 @@
-// LinkedInCallback.js
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Axios } from "../config";
+import axios from "axios";
 
-const LinkedInCallback = () => {
+const CRM_API_URL = process.env.REACT_APP_CRM_API_URL;
+const BEARER_TOKEN = process.env.REACT_APP_BEARER_TOKEN;
+
+// API configuration
+const api = axios.create({
+  baseURL: CRM_API_URL,
+  headers: {
+    Authorization: `Bearer ${BEARER_TOKEN}`,
+    "Content-Type": "application/json",
+  },
+});
+
+const PinterestCallback = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -13,10 +24,10 @@ const LinkedInCallback = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
       const receivedState = urlParams.get("state");
-      const storedState = localStorage.getItem("linkedin_state");
+      const storedState = localStorage.getItem("pinterest_state");
       const authError = urlParams.get("error");
 
-      console.log("LinkedIn callback triggered");
+      console.log("Pinterest callback triggered");
       console.log(
         "Code:",
         code ? "Present (length: " + code.length + ")" : "Missing"
@@ -25,13 +36,14 @@ const LinkedInCallback = () => {
         "State check:",
         receivedState === storedState ? "Matched" : "Mismatched"
       );
+      
       // Clean up state parameter
-      localStorage.removeItem("linkedin_state");
+      localStorage.removeItem("pinterest_state");
 
-      // Handle LinkedIn errors
+      // Handle Pinterest errors
       if (authError) {
         setError(
-          `LinkedIn authentication error: ${
+          `Pinterest authentication error: ${
             urlParams.get("error_description") || authError
           }`
         );
@@ -53,21 +65,21 @@ const LinkedInCallback = () => {
       }
 
       try {
-        const redirectUri = process.env.REACT_APP_LINKEDIN_REDIRECT_URI || "http://localhost:3000/linkedin/callback";
+        const redirectUri = process.env.REACT_APP_PINTEREST_REDIRECT_URI || "http://localhost:3000/auth/pinterest/callback";
   
-        console.log("Making LinkedIn token exchange request with:");
+        console.log("Making Pinterest token exchange request with:");
         console.log("- Redirect URI:", redirectUri);
-        console.log("- Client ID:", process.env.REACT_APP_LINKEDIN_CLIENT_ID);
+        console.log("- Client ID:", process.env.REACT_APP_PINTEREST_CLIENT_ID);
         
-        const response = await Axios.post("auth/linkedin", {
+        const response = await api.post("/api/auth/pinterest", {
           code,
           redirect_uri: redirectUri,
         });
 
         if (response.data.success) {
           // Store token and user data
-          localStorage.setItem("linkedin_token", response.data.access_token);
-          localStorage.setItem("user_data", JSON.stringify(response.data.user));
+          localStorage.setItem("pinterest_token", response.data.access_token);
+          localStorage.setItem("pinterest_user_data", JSON.stringify(response.data.user));
 
           // Redirect to social accounts page
           navigate("/admin/SchedulePosts/SocialAccounts", {
@@ -75,14 +87,14 @@ const LinkedInCallback = () => {
           });
         } else {
           throw new Error(
-            response.data.message || "Failed to authenticate with LinkedIn"
+            response.data.message || "Failed to authenticate with Pinterest"
           );
         }
       } catch (error) {
-        console.error("Error during LinkedIn callback:", error);
+        console.error("Error during Pinterest callback:", error);
         if (error.response && error.response.data) {
           console.error(
-            "Detailed LinkedIn error:",
+            "Detailed Pinterest error:",
             JSON.stringify(error.response.data)
           );
         }
@@ -105,7 +117,7 @@ const LinkedInCallback = () => {
           <div className="spinner-border text-primary mb-3" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
-          <h3 className="mb-2">Connecting with LinkedIn</h3>
+          <h3 className="mb-2">Connecting with Pinterest</h3>
           <p>Please wait while we complete the authentication...</p>
         </>
       ) : (
@@ -131,4 +143,4 @@ const LinkedInCallback = () => {
   );
 };
 
-export default LinkedInCallback;
+export default PinterestCallback;

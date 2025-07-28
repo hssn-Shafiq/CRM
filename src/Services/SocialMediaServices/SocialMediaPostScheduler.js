@@ -15,7 +15,7 @@ class SocialMediaPostScheduler {
         scheduleDate.toISOString().split("T")[0]
       }T${scheduleTime}:00`;
 
-      const response = await api.post("/api/schedule/posts", {
+      const response = await api.post("/schedule/posts", {
         content,
         media_urls: media,
         platforms,
@@ -38,7 +38,7 @@ class SocialMediaPostScheduler {
 
   static async getScheduledPosts() {
     try {
-      const response = await api.get("/api/schedule/posts");
+      const response = await api.get("/schedule/posts");
       return {
         success: true,
         data: response.data,

@@ -9,10 +9,10 @@ const isLocalhost = Boolean(
       /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
     )
 );
-export const SERVER_URL = isLocalhost
-  ? "http://localhost:5000/"
-  : "https://api.supaemaileditor.techfortified.com/";
+export const SERVER_URL = isLocalhost 
+  ? "http://127.0.0.1:8000"
+  : "https://api.supaemaileditor.techfortified.com";
 
-export const API_URL = `${SERVER_URL}api/`;
+export const API_URL = `${SERVER_URL}/api/`;
 
 export const Axios = axios.create({ withCredentials: true, baseURL: API_URL });

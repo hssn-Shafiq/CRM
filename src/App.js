@@ -38,6 +38,7 @@ import TermsCondition from "./pages/TermsCondition";
 import TemplateEditor from "./pages/TemplateEditor";
 import TemplatePreview from "./pages/TemplatePreview";
 import LinkedInCallback from "./AccountCallBack/LinkedInCallback";
+import PinterestCallback from "./AccountCallBack/PinterestCallback";
 // import RouteLoader from "./component/RouteLoader";
 import RouteLoader from "./components/RouteLoader";
 import { useEffect, useState, Suspense } from "react";
@@ -119,7 +120,7 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-and-conditions" element={<TermsCondition />} />
           <Route path="/auth/linkedin/callback" element={<LinkedInCallback />} />
-
+ <Route path="/auth/pinterest/callback" element={<PinterestCallback />} />
           <Route path="/admin" element={<MainLayout />}>
             {/* Dashboard is accessible to all logged-in users */}
             <Route
