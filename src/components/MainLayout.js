@@ -24,6 +24,12 @@ import {
   FaUsers,
   FaTrash,
   FaUserFriends,
+  FaFileInvoiceDollar,
+  FaRobot,
+  FaPalette,
+  FaEye,
+  FaEdit,
+  FaChartLine,
 } from "react-icons/fa";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { BiUser } from "react-icons/bi";
@@ -145,6 +151,7 @@ const MainLayout = () => {
             icon: <BsDatabaseSlash className="fs-4" />,
             label: "Contacts",
           },
+          
           {
             key: "Emails",
             icon: <FaMailBulk className="fs-4" />,
@@ -163,6 +170,38 @@ const MainLayout = () => {
         ],
       },
       {
+        key: "Invoicing",
+        icon: <FaFileInvoiceDollar className="fs-4" />,
+        label: "Invoicing System",
+        children: [
+          {
+            key: "Invoicing/Dashboard",
+            icon: <FaChartLine className="fs-4" />,
+            label: "Dashboard",
+          },
+          {
+            key: "Invoicing/List",
+            icon: <FaEye className="fs-4" />,
+            label: "Invoice List",
+          },
+          {
+            key: "Invoicing/Create",
+            icon: <FaPlusCircle className="fs-4" />,
+            label: "Create Invoice",
+          },
+          {
+            key: "Invoicing/Templates",
+            icon: <FaPalette className="fs-4" />,
+            label: "Templates",
+          },
+          {
+            key: "Invoicing/Automation",
+            icon: <FaRobot className="fs-4" />,
+            label: "Automation Rules",
+          },
+        ],
+      },
+      {
         key: "Shopify",
         icon: <FaShopify className="fs-4" />,
         label: "Shopify Store",
@@ -177,7 +216,8 @@ const MainLayout = () => {
             icon: <DeliveredProcedureOutlined className="fs-4" />,
             label: "Delivered Orders",
           },
-          {
+         
+           {
             key: "Shopify/Cancelled-Orders",
             icon: <FaTrash className="fs-4" />,
             label: "Cancelled Orders",
@@ -345,6 +385,7 @@ const MainLayout = () => {
               draggable
               theme="light"
             />
+            {/* <DebugPermissions /> */}
             <Outlet />
           </Content>
         </Layout>

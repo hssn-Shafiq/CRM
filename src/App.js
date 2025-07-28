@@ -41,24 +41,27 @@ import LinkedInCallback from "./AccountCallBack/LinkedInCallback";
 import PinterestCallback from "./AccountCallBack/PinterestCallback";
 // import RouteLoader from "./component/RouteLoader";
 import RouteLoader from "./components/RouteLoader";
+import HomePage from "./pages/Home";
 import { useEffect, useState, Suspense } from "react";
+import AboutUs from "./pages/AboutUs";
+import Invoicing from './pages/Invoicing';
 
 // Route change tracker component
 const RouteChangeTracker = ({ setIsRouteChanging }) => {
   const location = useLocation();
-  
+
   useEffect(() => {
     setIsRouteChanging(true);
-    
+
     // Set a short timeout to simulate minimum loading time
     // This prevents flickering for very fast transitions
     const timer = setTimeout(() => {
       setIsRouteChanging(false);
     }, 500);
-    
+
     return () => clearTimeout(timer);
   }, [location, setIsRouteChanging]);
-  
+
   return null;
 };
 
@@ -101,18 +104,27 @@ function App() {
     <Router>
       {/* Route change tracker */}
       <RouteChangeTracker setIsRouteChanging={setIsRouteChanging} />
-      
+
       {/* Show loader during route changes */}
       {isRouteChanging && <RouteLoader text="Loading..." />}
-      
+
       <Suspense fallback={<RouteLoader text="Loading Content..." />}>
         <Routes>
           {/* Root path - Redirect based on authentication status */}
-          <Route
+            <Route
             path="/"
+            element={<HomePage />}
+          />
+          {/* Root path - Redirect based on authentication status */}
+            <Route
+            path="/about-us"
+            element={<AboutUs />}
+          />
+          <Route
+            path="/login"
             element={isAuthenticated ? <Navigate to="/admin" replace /> : <Login />}
           />
-          
+
           <Route path="ForgotPassword" element={<ForgotPassword />} />
           <Route path="/signup" element={<Register />} />
           <Route path="/reset-password" element={<Resetpassword />} />
@@ -142,6 +154,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+           
             <Route
               path="Users/User-List"
               element={
@@ -302,12 +316,22 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            {/* Invoicing Routes - Admin Only */}
+            <Route
+              path="invoicing/*"
+              element={
+                <ProtectedRoute requiredRoute="Invoicing">
+                  <Invoicing />
+                </ProtectedRoute>
+              }
+            />
           </Route>
 
           {/* Catch all undefined routes and redirect to dashboard if authenticated, otherwise to login */}
-          <Route 
-            path="*" 
-            element={isAuthenticated ? <Navigate to="/admin" replace /> : <Navigate to="/" replace />} 
+          <Route
+            path="*"
+            element={isAuthenticated ? <Navigate to="/admin" replace /> : <Navigate to="/" replace />}
           />
         </Routes>
       </Suspense>
