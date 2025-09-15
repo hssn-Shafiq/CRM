@@ -1,22 +1,285 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form, Row, Col, Card, Spinner, Alert, Badge } from 'react-bootstrap';
-import { FaPlus, FaEdit, FaTrash, FaEye, FaCopy, FaFileAlt, FaSearch, FaFilter, FaPalette } from 'react-icons/fa';
+import { Modal, Button, Form, Row, Col, Card, Spinner, Alert, Badge, Tabs, Tab } from 'react-bootstrap';
+import { FaPlus, FaEdit, FaTrash, FaEye, FaCopy, FaFileAlt, FaSearch, FaFilter, FaPalette, FaStar } from 'react-icons/fa';
 import invoiceTemplateService from '../../../Services/invoiceTemplateService';
 import './InvoiceTemplates.css';
+
+// Predefined Templates Configuration
+const PREDEFINED_TEMPLATES = [
+  {
+    id: 'template_professional',
+    name: 'Professional Business',
+    description: 'Clean and professional template suitable for corporate businesses',
+    category: 'general',
+    isPredefined: true,
+    isDefault: false,
+    headerContent: 'INVOICE',
+    footerContent: 'Thank you for your business! Payment is due within 30 days.',
+    logoPath: '/images/logo.png', // Static logo from public folder
+    styling: {
+      primaryColor: '#2c3e50',
+      secondaryColor: '#34495e',
+      accentColor: '#3498db',
+      fontFamily: 'Arial, sans-serif',
+      fontSize: '14px',
+      headerBackground: '#2c3e50',
+      headerTextColor: '#ffffff',
+      borderColor: '#bdc3c7'
+    },
+    layout: {
+      logoPosition: 'top-left',
+      headerStyle: 'modern',
+      tableStyle: 'bordered',
+      footerStyle: 'minimal'
+    },
+    fields: {
+      showLogo: true,
+      showCompanyInfo: true,
+      showCustomerInfo: true,
+      showItemDetails: true,
+      showTaxBreakdown: true,
+      showNotes: true,
+      showTerms: true,
+      showInvoiceNumber: true,
+      showDate: true,
+      showDueDate: true
+    }
+  },
+  {
+    id: 'template_creative',
+    name: 'Creative Design',
+    description: 'Modern and colorful template perfect for creative agencies and designers',
+    category: 'service',
+    isPredefined: true,
+    isDefault: false,
+    headerContent: 'CREATIVE INVOICE',
+    footerContent: 'Let\'s create something amazing together! Payment terms: Net 15 days.',
+    logoPath: '/images/af1-logo.jpg', // Different logo for variety
+    styling: {
+      primaryColor: '#e74c3c',
+      secondaryColor: '#f39c12',
+      accentColor: '#9b59b6',
+      fontFamily: 'Roboto, sans-serif',
+      fontSize: '15px',
+      headerBackground: 'linear-gradient(135deg, #e74c3c, #f39c12)',
+      headerTextColor: '#ffffff',
+      borderColor: '#e74c3c'
+    },
+    layout: {
+      logoPosition: 'top-center',
+      headerStyle: 'gradient',
+      tableStyle: 'striped',
+      footerStyle: 'colorful'
+    },
+    fields: {
+      showLogo: true,
+      showCompanyInfo: true,
+      showCustomerInfo: true,
+      showItemDetails: true,
+      showTaxBreakdown: true,
+      showNotes: true,
+      showTerms: false,
+      showInvoiceNumber: true,
+      showDate: true,
+      showDueDate: true
+    }
+  },
+  {
+    id: 'template_minimal',
+    name: 'Minimal Clean',
+    description: 'Simple and clean template focusing on clarity and minimalism',
+    category: 'general',
+    isPredefined: true,
+    isDefault: true, // Set as default
+    headerContent: 'Invoice',
+    footerContent: 'Thank you for choosing our services.',
+    logoPath: '/images/af1-short.png', // Minimal logo
+    styling: {
+      primaryColor: '#2c3e50',
+      secondaryColor: '#95a5a6',
+      accentColor: '#27ae60',
+      fontFamily: 'Helvetica, sans-serif',
+      fontSize: '13px',
+      headerBackground: '#ffffff',
+      headerTextColor: '#2c3e50',
+      borderColor: '#ecf0f1'
+    },
+    layout: {
+      logoPosition: 'top-left',
+      headerStyle: 'clean',
+      tableStyle: 'clean',
+      footerStyle: 'simple'
+    },
+    fields: {
+      showLogo: true,
+      showCompanyInfo: true,
+      showCustomerInfo: true,
+      showItemDetails: true,
+      showTaxBreakdown: false,
+      showNotes: false,
+      showTerms: false,
+      showInvoiceNumber: true,
+      showDate: true,
+      showDueDate: true
+    }
+  }
+];
+
+// Template preview component for better organization
+const TemplatePreview = ({ template, onSelect, onPreview, isSelected = false }) => {
+  return (
+    <Card className={`predefined-template-card h-100 ${isSelected ? 'selected' : ''}`}>
+      <Card.Header 
+        className="predefined-template-header"
+        style={{ 
+          background: template.styling.headerBackground,
+          color: template.styling.headerTextColor,
+          borderColor: template.styling.borderColor
+        }}
+      >
+        <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex align-items-center">
+            <FaStar className="me-2" />
+            <div>
+              <h6 className="mb-0 text-white">{template.name}</h6>
+              <Badge bg="light" text="dark" className="mt-1">
+                Predefined
+              </Badge>
+            </div>
+          </div>
+          {template.isDefault && (
+            <Badge bg="warning" text="dark">Default</Badge>
+          )}
+        </div>
+      </Card.Header>
+      
+      <Card.Body>
+        <p className="text-muted small mb-3">{template.description}</p>
+        
+        {/* Template Preview */}
+        <div className="template-preview-container">
+          <div 
+            className="mini-invoice-preview"
+            style={{ 
+              fontFamily: template.styling.fontFamily,
+              fontSize: '10px',
+              border: `1px solid ${template.styling.borderColor}`
+            }}
+          >
+            {/* Mini Header */}
+            <div 
+              className="mini-header p-2"
+              style={{ 
+                background: template.styling.headerBackground,
+                color: template.styling.headerTextColor
+              }}
+            >
+              <div className="d-flex justify-content-between align-items-center">
+                {template.logoPath && template.fields.showLogo && (
+                  <img 
+                    src={template.logoPath} 
+                    alt="Logo" 
+                    className="mini-logo"
+                    style={{ width: '20px', height: '20px', objectFit: 'contain' }}
+                  />
+                )}
+                <strong>{template.headerContent}</strong>
+              </div>
+            </div>
+            
+            {/* Mini Content */}
+            <div className="mini-content p-2">
+              <div className="row">
+                <div className="col-6">
+                  <div className="mini-line mb-1" style={{ backgroundColor: template.styling.secondaryColor }}></div>
+                  <div className="mini-line short mb-1" style={{ backgroundColor: template.styling.accentColor }}></div>
+                </div>
+                <div className="col-6">
+                  <div className="mini-line mini mb-1" style={{ backgroundColor: template.styling.primaryColor }}></div>
+                  <div className="mini-line short mb-1" style={{ backgroundColor: template.styling.secondaryColor }}></div>
+                </div>
+              </div>
+              
+              {/* Mini Table */}
+              <div className="mini-table mt-2">
+                <div 
+                  className="mini-table-header"
+                  style={{ backgroundColor: template.styling.secondaryColor, height: '8px' }}
+                ></div>
+                <div className="mini-table-row" style={{ height: '6px', backgroundColor: '#f8f9fa' }}></div>
+                <div className="mini-table-row" style={{ height: '6px' }}></div>
+              </div>
+            </div>
+            
+            {/* Mini Footer */}
+            {template.footerContent && (
+              <div className="mini-footer p-1 text-center" style={{ backgroundColor: '#f8f9fa', fontSize: '8px' }}>
+                <small className="text-muted">{template.footerContent.substring(0, 30)}...</small>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Template Features */}
+        <div className="template-features mt-3">
+          <small className="text-muted">Features:</small>
+          <div className="feature-tags">
+            {template.fields.showLogo && <span className="feature-tag">Logo</span>}
+            {template.fields.showTaxBreakdown && <span className="feature-tag">Tax</span>}
+            {template.fields.showNotes && <span className="feature-tag">Notes</span>}
+            {template.layout.headerStyle && <span className="feature-tag">{template.layout.headerStyle}</span>}
+          </div>
+        </div>
+      </Card.Body>
+      
+      <Card.Footer className="bg-transparent">
+        <div className="btn-group w-100" role="group">
+          <Button
+            variant={isSelected ? "success" : "outline-primary"}
+            size="sm"
+            onClick={() => onSelect(template)}
+            className="flex-grow-1"
+          >
+            {isSelected ? "Selected" : "Select"}
+          </Button>
+          <Button
+            variant="outline-secondary"
+            size="sm"
+            onClick={() => onPreview(template)}
+            title="Preview"
+          >
+            <FaEye />
+          </Button>
+        </div>
+      </Card.Footer>
+    </Card>
+  );
+};
 
 const InvoiceTemplates = () => {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
+  // Modal states
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState(null);
   const [deletingTemplate, setDeletingTemplate] = useState(null);
   const [previewTemplate, setPreviewTemplate] = useState(null);
+  
+  // Filter and search states
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
+  
+  // Tab management
+  const [activeTab, setActiveTab] = useState('custom'); // 'predefined' or 'custom'
+  
+  // Selected predefined template
+  const [selectedPredefinedTemplate, setSelectedPredefinedTemplate] = useState(
+    PREDEFINED_TEMPLATES.find(t => t.isDefault) || PREDEFINED_TEMPLATES[0]
+  );
   
   const [formData, setFormData] = useState({
     name: '',
@@ -201,6 +464,31 @@ const InvoiceTemplates = () => {
     setShowPreviewModal(true);
   };
 
+  // Predefined template handlers
+  const handleSelectPredefinedTemplate = (template) => {
+    setSelectedPredefinedTemplate(template);
+    // You can add additional logic here like saving to localStorage
+    localStorage.setItem('selectedInvoiceTemplate', JSON.stringify(template));
+  };
+
+  const handlePreviewPredefinedTemplate = (template) => {
+    setPreviewTemplate(template);
+    setShowPreviewModal(true);
+  };
+
+  const handleUsePredefinedTemplate = (template) => {
+    // Create a new custom template based on the predefined one
+    const newTemplate = {
+      ...template,
+      id: undefined, // Remove ID so it gets a new one
+      name: `${template.name} (Custom)`,
+      isPredefined: false,
+      isDefault: false
+    };
+    handleShowModal();
+    setFormData(newTemplate);
+  };
+
   const filteredTemplates = templates?.filter(template => {
     const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          template.description?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -245,7 +533,7 @@ const InvoiceTemplates = () => {
                 className="me-2"
               >
                 <FaPlus className="me-1" />
-                New Template
+                New Custom Template
               </Button>
             </Col>
           </Row>
@@ -257,12 +545,70 @@ const InvoiceTemplates = () => {
           </Alert>
         )}
 
-        {/* Filters */}
-        <Card className="mb-4">
-          <Card.Body>
+        {/* Template Tabs */}
+        <Tabs
+          activeKey={activeTab}
+          onSelect={(k) => setActiveTab(k)}
+          className="mb-4 custom-tabs"
+        >
+          {/* Predefined Templates Tab */}
+          <Tab eventKey="predefined" title={
+            <span>
+              <FaStar className="me-2" />
+              Built-in Templates
+            </span>
+          }>
+            <div className="predefined-templates-section">
+              {/* Selected Template Info */}
+              {selectedPredefinedTemplate && (
+                <Alert variant="info" className="mb-4">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <strong>Currently Selected:</strong> {selectedPredefinedTemplate.name}
+                      <br />
+                      <small className="text-muted">{selectedPredefinedTemplate.description}</small>
+                    </div>
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => handleUsePredefinedTemplate(selectedPredefinedTemplate)}
+                    >
+                      <FaCopy className="me-1" />
+                      Create Custom Copy
+                    </Button>
+                  </div>
+                </Alert>
+              )}
+
+              {/* Predefined Templates Grid */}
+              <Row>
+                {PREDEFINED_TEMPLATES.map((template) => (
+                  <Col lg={4} md={6} className="mb-4" key={template.id}>
+                    <TemplatePreview
+                      template={template}
+                      onSelect={handleSelectPredefinedTemplate}
+                      onPreview={handlePreviewPredefinedTemplate}
+                      isSelected={selectedPredefinedTemplate?.id === template.id}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            </div>
+          </Tab>
+
+          {/* Custom Templates Tab */}
+          <Tab eventKey="custom" title={
+            <span>
+              <FaPalette className="me-2" />
+              Custom Templates
+            </span>
+          }>
+            {/* Filters */}
+            <Card className="mb-4">
+              <Card.Body>
             <Row className="align-items-center">
               <Col md={6}>
-                <div className="search-box">
+                <div className="search-box invoice-search-box">
                   <FaSearch className="search-icon" />
                   <Form.Control
                     type="text"
@@ -274,7 +620,7 @@ const InvoiceTemplates = () => {
                 </div>
               </Col>
               <Col md={3}>
-                <div className="filter-box">
+                <div className="filter-box invoice-filter-box">
                   <FaFilter className="filter-icon" />
                   <Form.Select
                     value={filterCategory}
@@ -425,7 +771,8 @@ const InvoiceTemplates = () => {
             </Card.Body>
           </Card>
         )}
-      </div>
+          </Tab>
+        </Tabs>
 
       {/* Create/Edit Template Modal */}
       <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>
@@ -756,6 +1103,8 @@ const InvoiceTemplates = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      
+      </div>
     </div>
   );
 };

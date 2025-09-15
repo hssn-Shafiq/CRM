@@ -70,7 +70,7 @@ const PostCreation = ({ post, setShowModal }) => {
     try {
       // console.log("date which is submitting is ", formData);
       const response = await axios.put(
-        `https://crmapi.alayaarts.com/api/posts/${post.id}`, // Update post API
+        `https://crm.digibuzzify.com/api/posts/${post.id}`, // Update post API
         {
           caption: plainTextCaption,
         },

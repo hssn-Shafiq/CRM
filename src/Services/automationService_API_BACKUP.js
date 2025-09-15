@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || "https://crmapi.alayaarts.com/api";
+const API_URL = process.env.REACT_APP_API_URL || "https://crm.digibuzzify.com/api";
 const BEARER_TOKEN = process.env.REACT_APP_BEARER_TOKEN || "1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc";
 
 // Helper function for API requests

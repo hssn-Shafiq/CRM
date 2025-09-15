@@ -71,7 +71,7 @@ const MainLayout = () => {
     toast.success("You are logged out");
 
     setTimeout(() => {
-      navigate("/");
+      navigate("/login");
     }, 1000);
   };
 
@@ -87,7 +87,7 @@ const MainLayout = () => {
         toast.error("Please login to continue");
 
         setTimeout(() => {
-          navigate("/");
+          navigate("/login");
         }, 1000);
         return;
       }
@@ -212,6 +212,11 @@ const MainLayout = () => {
             label: "Orders",
           },
           {
+            key: "Shopify/CustomOrderList",
+            icon: <DeliveredProcedureOutlined className="fs-4" />,
+            label: "Custom Orders",
+          },
+          {
             key: "Shopify/Delivered-Orders",
             icon: <DeliveredProcedureOutlined className="fs-4" />,
             label: "Delivered Orders",
@@ -311,7 +316,7 @@ const MainLayout = () => {
                         : "/images/af1-short.png"
                     }
                     className="object-fit-cover rounded-circle border-main border-2 border-secondary"
-                    alt=""
+                    alt="user-avatar"
                   />
                 </div>
                 {userData ? (
@@ -360,7 +365,7 @@ const MainLayout = () => {
                   </>
                 ) : (
                   <div className="">
-                    <Link to="/" className="nav-link">
+                    <Link to="/login" className="nav-link">
                       <b>Login</b>
                     </Link>
                   </div>

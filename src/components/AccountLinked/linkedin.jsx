@@ -5,7 +5,7 @@ import { Axios } from "../../config";
 // Utility function to clean content and prevent UTF-8 issues
 const sanitizeContent = (content) => {
   if (!content) return '';
-  
+
   // Remove or replace problematic characters
   return content
     // Remove emojis and other unicode symbols
@@ -54,7 +54,7 @@ const LinkedInConnection = () => {
 
   const fetchProfile = async () => {
     if (!accessToken) return;
-    
+
     try {
       setIsLoading(true);
       setError("");
@@ -63,7 +63,7 @@ const LinkedInConnection = () => {
           Authorization: `Bearer ${accessToken}`
         }
       });
-      
+
       if (response.data.success) {
         const userData = response.data.user;
         setProfile(userData);
@@ -86,18 +86,18 @@ const LinkedInConnection = () => {
     try {
       setIsLoading(true);
       setError("");
-      
+
       console.log("Initiating LinkedIn auth with redirect URI:", REDIRECT_URI);
-      
+
       // Get auth URL from Laravel backend
       const response = await Axios.get('auth/linkedin/url', {
         params: {
           redirect_uri: REDIRECT_URI
         }
       });
-      
+
       console.log("Auth URL response:", response.data);
-      
+
       if (response.data.success) {
         // Store state parameter for CSRF protection
         localStorage.setItem("linkedin_state", response.data.state);
@@ -138,7 +138,7 @@ const LinkedInConnection = () => {
     try {
       // Test if content can be safely JSON encoded
       JSON.stringify({ test: content });
-      
+
       // Test for problematic characters
       const problematicChars = /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
       if (problematicChars.test(content)) {
@@ -147,7 +147,7 @@ const LinkedInConnection = () => {
           error: "Content contains emojis or special characters that may cause encoding issues"
         };
       }
-      
+
       return { valid: true };
     } catch (error) {
       return {
@@ -161,25 +161,25 @@ const LinkedInConnection = () => {
     try {
       setIsLoading(true);
       setError("");
-      
+
       // Test content with potential issues
       const testContent = 'Test post with special chars: "hello" \'world\' – test — emoji: 😊';
       console.log("Original content:", testContent);
-      
+
       // Test content validation
       const validation = testContentEncoding(testContent);
       console.log("Content validation:", validation);
-      
+
       if (!validation.valid) {
         console.log("Content failed validation:", validation.error);
         const cleanContent = sanitizeContent(testContent);
         console.log("Cleaned content:", cleanContent);
-        
+
         // Test cleaned content
         const cleanValidation = testContentEncoding(cleanContent);
         console.log("Clean content validation:", cleanValidation);
       }
-      
+
       alert(`Content validation test completed. Check console for details.`);
     } catch (error) {
       console.error('Content test failed:', error);
@@ -197,20 +197,20 @@ const LinkedInConnection = () => {
         </div>
       ) : !accessToken ? (
         <div>
-          <button 
-            onClick={initiateLinkedInAuth} 
+          <button
+            onClick={initiateLinkedInAuth}
             className="btn btn-primary btn-connect-custom"
           >
             Connect
           </button>
-          <button 
-            onClick={testConnection} 
+          <button
+            onClick={testConnection}
             className="btn btn-secondary btn-sm ms-2"
           >
             Test Connection
           </button>
-          <button 
-            onClick={testPost} 
+          <button
+            onClick={testPost}
             className="btn btn-warning btn-sm ms-2"
           >
             Test Content
@@ -221,11 +221,11 @@ const LinkedInConnection = () => {
           {profile && (
             <>
               {profile.picture && (
-                <img 
-                  src={profile.picture} 
-                  alt="Profile" 
-                  width="40" 
-                  height="40" 
+                <img
+                  src={profile.picture}
+                  alt="Profile"
+                  width="40"
+                  height="40"
                   style={{ borderRadius: "50%" }}
                   className="me-2"
                 />
@@ -233,8 +233,8 @@ const LinkedInConnection = () => {
               <span className="ms-2">
                 {profile.name || profile.given_name || profile.family_name || "LinkedIn User"}
               </span>
-              <button 
-                onClick={handleLogout} 
+              <button
+                onClick={handleLogout}
                 className="btn btn-sm btn-danger ms-3"
               >
                 Disconnect
@@ -244,7 +244,12 @@ const LinkedInConnection = () => {
         </div>
       )}
 
-      {error && <div className="text-danger mt-2">{error}</div>}
+      {error && <div className="text-danger mt-2">{error} <button
+        onClick={initiateLinkedInAuth}
+        className="btn btn-primary btn-connect-custom"
+      >
+        Connect
+      </button></div>}
     </div>
   );
 };

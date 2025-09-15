@@ -35,7 +35,7 @@ const Posts = () => {
           "Bearer 1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc";
 
         const response = await axios.get(
-          "https://crmapi.alayaarts.com/api/posts",
+          "https://crm.digibuzzify.com/api/posts",
           {
             headers: {
               Authorization: `${token}`, // Include the token in the request headers
@@ -103,7 +103,7 @@ const Posts = () => {
 
     try {
       setLoading(true); // Show loader during deletion
-      await axios.delete(`https://crmapi.alayaarts.com/api/posts/${postId}`, {
+      await axios.delete(`https://crm.digibuzzify.com/api/posts/${postId}`, {
         headers: {
           Authorization: `${token}`, // Include the token in the request headers
           "Content-Type": "multipart/form-data", // Set content type to FormData

@@ -151,6 +151,7 @@ class LinkedInService {
         }
       }
 
+      // const linkedinApiUrl = "http://localhost:5000"
       
       const response = await api.post(
         "/linkedin/post-with-media",

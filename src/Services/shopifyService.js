@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || "https://crmapi.alayaarts.com/api/shopify";
+const API_URL = process.env.REACT_APP_API_URL || "https://crm.digibuzzify.com/api/shopify";
 const BEARER_TOKEN = process.env.REACT_APP_BEARER_TOKEN || "1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc";
 const CACHE_EXPIRY = 30 * 60 * 1000; // 30 minutes in milliseconds
 
@@ -125,6 +125,119 @@ export const fetchShopifyCustomers = async (filterType) => {
     throw error;
   }
 };
+
+// ...existing code...
+
+export const fetchRequestOrders = async (queryParams = '') => {
+  try {
+    let allData = [];
+    let currentPage = 1;
+    let hasMorePages = true;
+
+    while (hasMorePages) {
+      // Add cache-busting parameter if not already present
+      const separator = queryParams.includes('?') ? '&' : '?';
+      const cacheBuster = queryParams.includes('_t=') ? '' : `${separator}_t=${Date.now()}`;
+      
+      // Add pagination parameters
+      const paginationParams = queryParams.includes('page=') ? '' : `&page=${currentPage}&per_page=100`;
+      
+      const response = await fetch(`${API_URL}/Requestorders${queryParams}${cacheBuster}${paginationParams}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      // Handle different response structures
+      if (result.data && Array.isArray(result.data)) {
+        allData = [...allData, ...result.data];
+        
+        // Check pagination info
+        if (result.pagination) {
+          const { current_page, last_page } = result.pagination;
+          console.log(`Fetched page ${current_page} of ${last_page}. Total records so far: ${allData.length}`);
+          
+          if (current_page >= last_page) {
+            hasMorePages = false;
+          } else {
+            currentPage++;
+          }
+        } else {
+          hasMorePages = false;
+        }
+      } else if (Array.isArray(result)) {
+        allData = result;
+        hasMorePages = false;
+      } else {
+        throw new Error('Unexpected response format');
+      }
+    }
+
+    console.log(`Total records fetched: ${allData.length}`);
+    return allData;
+  } catch (error) {
+    console.error('Error fetching request orders:', error);
+    throw error;
+  }
+};
+
+
+
+
+// Post request form orders
+
+export const postRequestOrders = async (orderData) => {
+  try {
+    // Log the data being sent to debug
+    console.log('Sending order data to API:', orderData);
+    
+    const response = await fetch(`${API_URL}/Requestorders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add any authentication headers if required
+        // 'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(orderData)
+    });
+
+    // Log the response status and body for debugging
+    console.log('API Response Status:', response.status);
+    
+    if (!response.ok) {
+      // Get the response body to see the exact error
+      const errorBody = await response.text();
+      console.error('API Error Response:', errorBody);
+      
+      try {
+        const errorJson = JSON.parse(errorBody);
+        console.error('Parsed Error:', errorJson);
+        throw new Error(`API Error ${response.status}: ${errorJson.message || errorJson.error || 'Unknown error'}`);
+      } catch (parseError) {
+        throw new Error(`API Error ${response.status}: ${errorBody || 'Unknown error'}`);
+      }
+    }
+
+    const result = await response.json();
+    console.log('API Response Data:', result);
+    return result;
+  } catch (error) {
+    console.error('Error posting request orders:', error);
+    throw error;
+  }
+};
+
+
 
 // Fetch initial data for all segments
 export const prefetchAllSegments = async () => {

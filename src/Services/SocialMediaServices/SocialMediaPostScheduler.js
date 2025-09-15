@@ -54,7 +54,7 @@ class SocialMediaPostScheduler {
 
   static async cancelScheduledPost(postId) {
     try {
-      const response = await api.delete(`/api/schedule/posts/${postId}`);
+      const response = await api.delete(`/schedule/posts/${postId}`);
       return {
         success: true,
         data: response.data,

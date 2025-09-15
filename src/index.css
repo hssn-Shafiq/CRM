@@ -192,10 +192,11 @@ button:hover {
 }
 
 main {
-  /* height: 85vh; */
+  height: 100vh;
   overflow-y: scroll;
   /* background-color: transparent !important; */
   color: white;
+  padding-bottom: 1rem;
 }
 
 main::-webkit-scrollbar {

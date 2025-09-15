@@ -329,7 +329,7 @@ function PostForm({
       setShowModal(false);
       const token = "Bearer 1|nq8njnFmxYLoda5ImMgwwdxXGb7ONugJLpCCYsYff4264dcc";
       const response = await axios.post(
-        "https://crmapi.alayaarts.com/api/posts",
+        "https://crm.digibuzzify.com/api/posts",
         formData,
         {
           headers: {

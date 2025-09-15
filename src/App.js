@@ -45,6 +45,7 @@ import HomePage from "./pages/Home";
 import { useEffect, useState, Suspense } from "react";
 import AboutUs from "./pages/AboutUs";
 import Invoicing from './pages/Invoicing';
+import RequestOrders from "./pages/RequestFormOrders";
 
 // Route change tracker component
 const RouteChangeTracker = ({ setIsRouteChanging }) => {
@@ -242,11 +243,20 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="Shopify/Order/:orderId"
               element={
                 <ProtectedRoute requiredRoute="Shopify/OrderList">
                   <OrderDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="Shopify/CustomOrderList"
+              element={
+                <ProtectedRoute requiredRoute="Shopify/CustomOrderList">
+                  <RequestOrders />
                 </ProtectedRoute>
               }
             />

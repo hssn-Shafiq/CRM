@@ -1,4 +1,4 @@
-const API_URL = "https://crmapi.alayaarts.com/api"; // Getting the API base URL from the .env file
+const API_URL = "https://crm.digibuzzify.com/api"; // Getting the API base URL from the .env file
 const ACCESS_TOKEN = process.env.REACT_APP_SHOPIFY_ACCESS_TOKEN; // Shopify Access Token from .env
 const BEARER_TOKEN = process.env.REACT_APP_BEARER_TOKEN; // Bearer Token from .env
 

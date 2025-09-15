@@ -44,6 +44,7 @@ const RoleModal = ({
     Shopify: [
       "Shopify",
       "Shopify/OrderList",
+      "Shopify/CustomOrderList",
       "Shopify/Delivered-Orders",
       "Shopify/Cancelled-Orders",
     ],
